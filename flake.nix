@@ -22,5 +22,8 @@
 					modules = [ ./home.nix ];
 				};
 			};
+
+			inherit home-manager;
+			inherit (home-manager) packages;
 		};
 }

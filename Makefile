@@ -1,4 +1,7 @@
 .PHONY: update
 
 update:
-	home-manager switch --flake .#main
+	nix run .#home-manager -- switch --flake .#main
+
+clean:
+	nix-collect-garbage -d

@@ -1,12 +1,13 @@
-{ lib, pkgs, ... }:
-{
+{ lib, pkgs, ... }: let
+	username = "max";
+in {
 	home = {
 		packages = with pkgs; [
 			hello
 		];
 
-		username = "max";
-		homeDirectory = "/home/max";
+		inherit username;
+		homeDirectory = "/home/${username}";
 
 		# "NEVER CHANGE THIS"
 		stateVersion = "24.11";
