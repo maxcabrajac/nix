@@ -5,6 +5,8 @@ in {
 		packages = with pkgs; [
 			hyprland
 			nixgl.auto.nixGLDefault
+			home-manager
+			eww
 		];
 
 		inherit username;

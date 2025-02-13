@@ -13,6 +13,7 @@
 		# nixgl.url = "github:nix-community/nixGL";
 		# This is a in-progress PR
 		nixgl.url = "github:bb010g/nixGL";
+		eww.url = "github:maxcabrajac/eww/include_dir";
 	};
 
 	nixConfig = {
@@ -20,20 +21,19 @@
 		extra-trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
 	};
 
-	outputs = { nixpkgs, home-manager, hyprland, nixgl, ... }:
+	outputs = { nixpkgs, home-manager, hyprland, nixgl, eww, ... }:
 		let
 			lib = nixpkgs.lib;
 			system = "x86_64-linux";
-			pkgs = builtins.foldl' lib.recursiveUpdate {} [
-				(
-					import nixpkgs {
-						inherit system;
-						config.allowUnfree = true;
-						overlays = [ nixgl.overlay ];
-					}
-				)
-				hyprland.packages.${system}
-			];
+			pkgs = import nixpkgs {
+				inherit system;
+				config.allowUnfree = true;
+				overlays = [
+					nixgl.overlay
+					(_:_:{ inherit (hyprland.packages.${system}); })
+					(_:_:{ inherit (eww.packages.${system}) eww; })
+				];
+			};
 		in {
 			homeConfigurations = {
 				main = home-manager.lib.homeManagerConfiguration {
