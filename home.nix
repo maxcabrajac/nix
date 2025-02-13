@@ -3,7 +3,8 @@
 in {
 	home = {
 		packages = with pkgs; [
-			hello
+			hyprland
+			nixgl.auto.nixGLDefault
 		];
 
 		inherit username;
