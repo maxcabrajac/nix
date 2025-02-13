@@ -1,7 +1,9 @@
 .PHONY: update
 
+CORES = $(shell nproc --all)
+
 switch:
-	nix run .#home-manager -- switch --flake .#main --impure
+	nix run .#home-manager -- switch --flake .#main --impure --cores $(CORES)
 
 update:
 	nix flake update
