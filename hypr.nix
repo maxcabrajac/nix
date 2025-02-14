@@ -1,9 +1,11 @@
-{ lib, pkgs, ... }: let
-	package = (pkgs.writeShellApplication {
+{ lib, pkgs, ... }: {
+	package = pkgs.writeShellApplication {
 		name = "hypr";
 		runtimeInputs = with pkgs; [ nixgl.auto.nixGLDefault hyprland ];
 		text = "nixGL Hyprland";
-	});
-in {
-	inherit package;
+	};
+
+	config = {
+
+	};
 }

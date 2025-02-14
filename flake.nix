@@ -14,6 +14,10 @@
 		# This is a in-progress PR
 		nixgl.url = "github:bb010g/nixGL";
 		eww.url = "github:maxcabrajac/eww/include_dir";
+		bttr_dispatchers = {
+			url = "github:maxcabrajac/bttr_dispatchers";
+			inputs.hyprland.follows = "hyprland";
+		};
 	};
 
 	nixConfig = {
@@ -21,17 +25,18 @@
 		extra-trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
 	};
 
-	outputs = { nixpkgs, home-manager, hyprland, nixgl, eww, ... }:
+	outputs = inp@{ nixpkgs, home-manager, hyprland, nixgl, eww, ... }:
 		let
 			lib = nixpkgs.lib;
-			system = "x86_64-linux";
+			system = builtins.currentSystem;
 			pkgs = import nixpkgs {
 				inherit system;
 				config.allowUnfree = true;
 				overlays = [
-					nixgl.overlay
-					(_:_:{ inherit (hyprland.packages.${system}); })
-					(_:_:{ inherit (eww.packages.${system}); })
+					inp.nixgl.overlay
+					(_:_: hyprland.packages.${system})
+					(_:_: inp.eww.packages.${system})
+					(_:_: { hypr_plugs = [ inp.bttr_dispatchers.packages.${system}.bttr_dispatchers ]; })
 				];
 			};
 		in {
@@ -40,7 +45,6 @@
 					inherit pkgs;
 					modules = [
 						./home.nix
-						./hypr.nix
 					];
 				};
 			};
