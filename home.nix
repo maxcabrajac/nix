@@ -1,10 +1,10 @@
 { lib, pkgs, ... }: let
 	username = "max";
+	hypr = import ./hypr.nix { inherit lib pkgs; };
 in {
 	home = {
 		packages = with pkgs; [
-			hyprland
-			nixgl.auto.nixGLDefault
+			hypr.package
 			home-manager
 			eww
 		];

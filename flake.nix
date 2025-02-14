@@ -31,7 +31,7 @@
 				overlays = [
 					nixgl.overlay
 					(_:_:{ inherit (hyprland.packages.${system}); })
-					(_:_:{ inherit (eww.packages.${system}) eww; })
+					(_:_:{ inherit (eww.packages.${system}); })
 				];
 			};
 		in {
@@ -40,6 +40,7 @@
 					inherit pkgs;
 					modules = [
 						./home.nix
+						./hypr.nix
 					];
 				};
 			};
