@@ -45,7 +45,7 @@
 					inherit pkgs;
 					modules = [
 						./home.nix
-						./hypr.nix
+						./window_managers/hyprland.nix
 					];
 				};
 			};
