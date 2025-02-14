@@ -14,4 +14,10 @@ in {
 		stateVersion = "24.11";
 	};
 
+
+	nixGL = {
+		packages = pkgs.nixgl;
+		defaultWrapper = "mesa";
+		offloadWrapper = "mesa";
+	};
 }

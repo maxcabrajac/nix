@@ -1,20 +1,20 @@
-{ lib, pkgs, ... }: let
-	runner = with pkgs; writeShellApplication {
+{ lib, pkgs, config, ... }: let
+	# Wrapper has to be installed alongside the main package, otherwise xdg-portal-hyprland's cachix is invalidated
+	wrapper = with pkgs; writeShellApplication {
 		name = "hypr";
-		runtimeInputs = [ nixgl.auto.nixGLDefault hyprland ];
-		text = "nixGL Hyprland";
+		runtimeInputs = [ (config.lib.nixGL.wrap hyprland) ];
+		text = "Hyprland";
 	};
 in {
 	home = {
 		packages = with pkgs; [
-			runner
+			wrapper
 			eww
 		];
 	};
 
 	wayland.windowManager.hyprland = {
 		enable = true;
-
 		plugins = pkgs.hypr_plugs;
 
 		extraConfig = ''
