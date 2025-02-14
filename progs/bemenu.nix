@@ -1,6 +1,15 @@
-{ lib, pkgs, config, ... }: {
+{ ... }: {
 	programs.bemenu = {
-		enable = true;
-		prompt = "aaaaaaa";
+		settings = {
+			line-height = 20;
+			fn = "Fira Code Semi-Bold";
+			tb = "#$THEME_PRI";
+			tf = "#$THEME_BG";
+			fb = "#$THEME_BG";
+			ff = "#$THEME_PRI";
+			hb = "#$THEME_PRI";
+			hf = "#$THEME_BG";
+			hp = 8;
+		};
 	};
 }

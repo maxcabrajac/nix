@@ -5,7 +5,15 @@
 		runtimeInputs = [ (config.lib.nixGL.wrap hyprland) ];
 		text = "Hyprland";
 	};
+	enable = { enable = true; };
+	disable = { enable = false; };
 in {
+
+	programs = {
+		bemenu = enable;
+	};
+
+
 	home = {
 		packages = with pkgs; [
 			wrapper
