@@ -45,6 +45,7 @@
 					inherit pkgs;
 					modules = [
 						./home.nix
+						./hypr.nix
 					];
 				};
 			};
