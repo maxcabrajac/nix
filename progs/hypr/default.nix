@@ -2,15 +2,12 @@
 with lib;
 let
 	cfg = config.programs.hypr;
-	# Wrapper has to be installed alongside the main package, otherwise xdg-portal-hyprland's cachix is invalidated
-	wrapper = with pkgs; writeShellApplication {
-		name = "hypr";
-		runtimeInputs = [ (config.lib.nixGL.wrap hyprland) ];
-		text = "Hyprland";
-	};
 in {
 
-	imports = [ ./no_gaps_on_maximize.nix ];
+	imports = [
+		./no_gaps_on_maximize.nix
+		./wrapper.nix
+	];
 
 	options = {
 		programs.hypr.enable = mkEnableOption "hypr";
@@ -18,7 +15,6 @@ in {
 
 	config = mkIf cfg.enable {
 		home.packages = with pkgs; [
-			wrapper
 			kitty
 			dunst
 			(
