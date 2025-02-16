@@ -17,7 +17,16 @@ in {
 	};
 
 	config = mkIf cfg.enable {
-		home.packages = with pkgs; [ wrapper kitty dunst ];
+		home.packages = with pkgs; [
+			wrapper
+			kitty
+			dunst
+			(
+				writers.writePython3Bin "bttr"
+					{ libraries = []; doCheck = false; }
+					(builtins.readFile ./scripts/bttr.py)
+			)
+		];
 
 		wayland.windowManager.hyprland = {
 			enable = true;
@@ -43,7 +52,7 @@ in {
 				};
 
 				dwindle = {
-					force_split = 1; # split to the right
+					force_split = 2; # split to the right
 					pseudotile = false;
 				};
 			};
@@ -92,7 +101,7 @@ in {
 			# See https://wiki.hyprland.org/Configuring/Keywords/ for more
 
 			# Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-			bind = $mainMod, Return, exec, $terminal
+			bind = $mainMod, Return, exec, kitty
 			bind = $mainMod, M, killactive
 			bind = $mainMod SHIFT, Q, exit
 			bind = $mainMod, F, togglefloating
