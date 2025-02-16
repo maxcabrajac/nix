@@ -9,33 +9,53 @@ let
 		text = "Hyprland";
 	};
 in {
+
+	imports = [ ./no_gaps_on_maximize.nix ];
+
 	options = {
 		programs.hypr.enable = mkEnableOption "hypr";
 	};
 
 	config = mkIf cfg.enable {
-		home.packages = [ wrapper ];
+		home.packages = with pkgs; [ wrapper kitty dunst ];
 
 		wayland.windowManager.hyprland = {
 			enable = true;
 			plugins = pkgs.hypr_plugs;
 
+			settings = {
+				debug = {
+					disable_logs = true;
+				};
+
+				exec-once = [
+					"dunst"
+				];
+
+				env = [
+					"DMENU,bemenu"
+				];
+
+				general = {
+					layout = "dwindle";
+					allow_tearing = false;
+					no_focus_fallback = true;
+				};
+
+				dwindle = {
+					force_split = 1; # split to the right
+					pseudotile = false;
+				};
+			};
+
 			extraConfig = ''
 			$mainMod = SUPER
-			$terminal = kitty
 
 			env = PATH,$HOME/.bin/hyprland/:$PATH
-
-			env = XDG_SESSION_DESKTOP,Hyprland
-
-			debug {
-				disable_logs = false
-			}
 
 			exec-once = eventHandler
 
 			# Execute your favorite apps at launch
-			exec-once = dunst &
 			exec-once = $XDG_CONFIG_HOME/eww/run.sh & setWallpaper &
 			exec-once = xss-lock -l lock &
 			exec-once = youtube-music & sleep 1; telegram-desktop &
@@ -45,37 +65,9 @@ in {
 			source = $hypr_dir/hardware.conf
 			source = $hypr_dir/styling.conf
 
-			# Plugins
-			exec-once = hyprpm reload
-			source = $hypr_dir/hyprgrass.conf
-
-			env = DMENU,bemenu
-
 			# Some default env vars.
-			env = XCURSOR_SIZE,24
-			env = QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that
-
-			general {
-				layout = dwindle
-				allow_tearing = false
-				no_focus_fallback = true
-			}
-
-			input {
-				mouse_refocus = false
-			}
-
-			dwindle {
-				force_split = 2
-				pseudotile = yes
-			}
-
-			workspace = w[tv1], gapsout:0, gapsin:0
-			workspace = f[1], gapsout:0, gapsin:0
-			windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
-			windowrulev2 = rounding 0, floating:0, onworkspace:w[tv1]
-			windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
-			windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
+			# env = XCURSOR_SIZE,24
+			# env = QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that
 
 			misc {
 				disable_hyprland_logo = true
