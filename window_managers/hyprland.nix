@@ -6,6 +6,8 @@ in {
 	programs = {
 		bemenu = enable;
 		hypr = enable;
+		zathura = enable;
+		lf = enable;
 	};
 
 	home = {

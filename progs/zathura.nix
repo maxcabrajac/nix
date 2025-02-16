@@ -1,6 +1,5 @@
 { ... }: {
 	programs.zathura = {
-		enable = true;
 		mappings = {
 			"n" = "scroll down";
 			"N" = "navigate next";

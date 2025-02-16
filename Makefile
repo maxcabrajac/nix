@@ -10,4 +10,4 @@ update:
 	make switch
 
 clean:
-	nix-collect-garbage -d
+	nix-collect-garbage
