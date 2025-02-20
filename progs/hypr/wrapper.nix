@@ -7,15 +7,15 @@ let
 		runtimeInputs = [ (config.lib.nixGL.wrap hyprland) ];
 		text = "Hyprland";
 	};
-	desktop_entry = with pkgs; makeDesktopItem {
-		name = "hyprland";
-		destination = "/usr/share/wayland-sessions/";
-		desktopName = "Hyprland";
-		comment = "NixGL wrapped Hyprland instance";
-		exec = (lib.getExe wrapper);
-	};
+	# desktop_entry = with pkgs; makeDesktopItem {
+	# 	name = "hyprland";
+	# 	destination = "/usr/share/wayland-sessions/";
+	# 	desktopName = "Hyprland";
+	# 	comment = "NixGL wrapped Hyprland instance";
+	# 	exec = (lib.getExe wrapper);
+	# };
 in {
 	config = lib.mkIf cfg.enable {
-		home.packages = [ wrapper desktop_entry ];
+		home.packages = [ wrapper ];
 	};
 }
