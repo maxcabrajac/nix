@@ -36,13 +36,21 @@
 					inp.nixgl.overlay
 					(_:_: hyprland.packages.${system})
 					(_:_: inp.eww.packages.${system})
-					(_:_: { hypr_plugs = [ inp.bttr_dispatchers.packages.${system}.bttr_dispatchers ]; })
+					(_:_: { hypr_plugs = [
+						inp.bttr_dispatchers.packages.${system}.bttr_dispatchers
+					]; })
 				];
 			};
 		in {
 			homeConfigurations = {
 				main = home-manager.lib.homeManagerConfiguration {
 					inherit pkgs;
+					extraSpecialArgs = {
+						maxLib = import ./lib {
+							inherit pkgs;
+							lib = lib // home-manager.lib;
+						};
+					};
 					modules = [
 						./home.nix
 						./progs
