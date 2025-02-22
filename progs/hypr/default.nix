@@ -1,7 +1,8 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, maxLib, ... }:
 with lib;
 let
 	cfg = config.programs.hypr;
+	scripts = maxLib.scriptDir { inherit pkgs; } ./scripts;
 in {
 
 	imports = [
@@ -17,12 +18,7 @@ in {
 		home.packages = with pkgs; [
 			kitty
 			dunst
-			(
-				writers.writePython3Bin "bttr"
-					{ libraries = []; doCheck = false; }
-					(builtins.readFile ./scripts/bttr.py)
-			)
-		];
+		] ++ scripts;
 
 		wayland.windowManager.hyprland = {
 			enable = true;
