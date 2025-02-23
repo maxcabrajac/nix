@@ -76,26 +76,49 @@
 		(runtimeInputs: { inherit runtimeInputs; })
 	];
 
+	# TODO: improve this
+	inheritDescription = attr: _: lib.attrsets.filterAttrs (name: _: name == attr);
+
 	processDescription = dep_repos: fpipe
 		(map (f: spec: spec // (f dep_repos spec.desc)) [
 			buildRuntimeInputs
+			(inheritDescription "inheritPath")
 		]);
 
-	handlers = {
-		# TODO: writeShellApplication uses bash internally. Swap it with dash for faster startups
-		# TODO: while rewriting in dash remember to avoid wrapping if it is useless
-		sh = safeCall pkgs.writeShellApplication;
-		py = (spec: let
-			package = (
-				pkgs.writers.writePython3Bin spec.name
-					# TODO: add support for python libs
-					{ libraries = []; doCheck = false; }
-					spec.text
-			);
-			in handlers.sh (spec // {
-				text = "${lib.getExe package}";
-			})
+	handlers = with pkgs.writers; {
+		sh = receivedSpec: with lib.strings; let
+			defaultSpec = {
+				name = null;
+				text = null;
+				package = null;
+			};
+			wrapRequiredSpec = {
+				runtimeInputs = [];
+				inheritPath = true;
+			};
+			spec = defaultSpec // wrapRequiredSpec // receivedSpec;
+			wrapIsRequired = (builtins.intersectAttrs wrapRequiredSpec spec) != wrapRequiredSpec;
+		in
+			if wrapIsRequired || spec.package == null then
+				writeDashBin spec.name
+					{}
+					(concatStringsSep "\n" [
+						(optionalString (spec.runtimeInputs != [] || spec.inheritPath != true)
+							''export PATH="${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"''
+						)
+						spec.text
+					])
+			else
+				spec.package;
+		py = spec: handlers.from_package spec
+			(writePython3Bin
+				spec.name
+				# TODO: add support for python libs
+				{ libraries = []; doCheck = false; }
+				spec.text
 		);
+		from_package = spec: package:
+			handlers.sh (spec // { inherit package; text = ''${lib.getExe package} "$@"''; });
 	};
 
 	makeScript = dep_repos: fpipe [
