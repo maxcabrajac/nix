@@ -1,11 +1,11 @@
-args@{ lib, pkgs, ... }: let
+args@{ lib, pkgs, helpers, ... }: let
 	username = "max";
 in {
 	home = {
 		packages = with pkgs; [
 			home-manager
 			neovim
-		];
+		] ++ helpers.all;
 
 		inherit username;
 		homeDirectory = "/home/${username}";

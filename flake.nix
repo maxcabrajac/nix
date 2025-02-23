@@ -41,15 +41,17 @@
 					]; })
 				];
 			};
+			maxLib = import ./lib {
+				inherit pkgs;
+				lib = lib // home-manager.lib;
+			};
+			helpers = maxLib.scriptDir { inherit pkgs; } ./scripts;
 		in {
 			homeConfigurations = {
 				main = home-manager.lib.homeManagerConfiguration {
 					inherit pkgs;
 					extraSpecialArgs = {
-						maxLib = import ./lib {
-							inherit pkgs;
-							lib = lib // home-manager.lib;
-						};
+						inherit maxLib helpers;
 					};
 					modules = [
 						./home.nix

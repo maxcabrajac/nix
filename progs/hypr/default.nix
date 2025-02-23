@@ -18,7 +18,7 @@ in {
 		home.packages = with pkgs; [
 			kitty
 			dunst
-		] ++ scripts;
+		] ++ scripts.all;
 
 		wayland.windowManager.hyprland = {
 			enable = true;

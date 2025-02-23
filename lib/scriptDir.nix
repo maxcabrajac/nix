@@ -124,12 +124,20 @@
 	makeScript = dep_repos: fpipe [
 		readScript
 		(processDescription dep_repos)
-		(spec: handlers.${spec.extension} spec)
+		(spec: {
+			${spec.name} = handlers.${spec.extension} spec;
+		})
+
 	];
-	scriptDir = dep_repos: fpipe [
-		readDir
-		(map (makeScript dep_repos))
-	];
+	scriptDir = dep_repos: dir: let
+		repo = pipe dir [
+			readDir
+			(map (makeScript dep_repos))
+			(lib.lists.foldr (a: b: a // b) {})
+		];
+	in
+		repo // { all = lib.attrsets.attrValues repo; };
+
 in {
 	inherit scriptDir makeScript;
 }
