@@ -35,6 +35,7 @@
 	commentStr = {
 		sh = "#";
 		py = "#";
+		bash = "#";
 	};
 	descriptionFlag = "??";
 
@@ -91,6 +92,7 @@
 				name = null;
 				text = null;
 				package = null;
+				useBash = false;
 			};
 			wrapRequiredSpec = {
 				runtimeInputs = [];
@@ -98,10 +100,10 @@
 			};
 			spec = defaultSpec // wrapRequiredSpec // receivedSpec;
 			wrapIsRequired = (builtins.intersectAttrs wrapRequiredSpec spec) != wrapRequiredSpec;
+			wrapper = if spec.useBash then writeBashBin else writeDashBin;
 		in
 			if wrapIsRequired || spec.package == null then
-				writeDashBin spec.name
-					{}
+				wrapper spec.name
 					(concatStringsSep "\n" [
 						(optionalString (spec.runtimeInputs != [] || spec.inheritPath != true)
 							''export PATH="${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"''
@@ -110,6 +112,7 @@
 					])
 			else
 				spec.package;
+		bash = spec: handlers.sh (spec // { useBash = true; });
 		py = spec: handlers.from_package spec
 			(writePython3Bin
 				spec.name
