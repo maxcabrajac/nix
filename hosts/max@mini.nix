@@ -2,6 +2,7 @@
 	imports = [
 		../profiles/hyprland.nix
 		../profiles/terminal.nix
+		../profiles/fonts.nix
 	];
 
 	home = {
