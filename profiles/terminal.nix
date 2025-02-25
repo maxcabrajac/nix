@@ -9,7 +9,7 @@ in {
 
 	home = {
 		packages = with pkgs; [
-			nvim
+			neovim
 		];
 	};
 }

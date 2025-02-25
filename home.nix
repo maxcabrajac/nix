@@ -1,25 +1,16 @@
 args@{ lib, pkgs, helpers, ... }: let
-	username = "max";
+	username = builtins.getEnv "USER";
+	hostname = builtins.getEnv "HOST";
 in {
 	imports = [
-		./profiles/hyprland.nix
-		./profiles/terminal.nix
+		(./. + "/hosts/${username}@${hostname}.nix")
 	];
 
 	home = {
-		packages = helpers.all;
-
 		inherit username;
 		homeDirectory = "/home/${username}";
 
 		# "NEVER CHANGE THIS"
 		stateVersion = "24.11";
-	};
-
-
-	nixGL = {
-		packages = pkgs.nixgl;
-		defaultWrapper = "mesa";
-		offloadWrapper = "mesa";
 	};
 }
