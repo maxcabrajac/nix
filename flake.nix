@@ -56,7 +56,6 @@
 					modules = [
 						./home.nix
 						./progs
-						./window_managers/hyprland.nix
 					];
 				};
 			};

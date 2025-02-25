@@ -1,11 +1,13 @@
 args@{ lib, pkgs, helpers, ... }: let
 	username = "max";
 in {
+	imports = [
+		./profiles/hyprland.nix
+		./profiles/terminal.nix
+	];
+
 	home = {
-		packages = with pkgs; [
-			home-manager
-			neovim
-		] ++ helpers.all;
+		packages = helpers.all;
 
 		inherit username;
 		homeDirectory = "/home/${username}";
