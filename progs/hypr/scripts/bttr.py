@@ -1,6 +1,7 @@
 #??inheritPath=false
 #??[runtimeInputs]
 #??pkgs = ["hyprland"]
+#??END
 
 from __future__ import annotations
 from abc import ABC, abstractmethod
