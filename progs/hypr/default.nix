@@ -9,7 +9,7 @@ in {
 	imports = [
 		./no_gaps_on_maximize.nix
 		./wrapper.nix
-		./hyprlock.nix
+		./idlelock.nix
 	];
 
 	options = {
@@ -21,10 +21,6 @@ in {
 			kitty
 			dunst
 		] ++ scripts.all;
-
-		programs = {
-			hyprlock = enable;
-		};
 
 		wayland.windowManager.hyprland = {
 			enable = true;
