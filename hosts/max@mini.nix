@@ -9,6 +9,8 @@
 		packages = (maxLib.scriptDir inputs ../scripts).all;
 	};
 
+	programs.hyprlock.package = pkgs.emptyDirectory;
+
 	nixGL = {
 		packages = pkgs.nixgl;
 	};

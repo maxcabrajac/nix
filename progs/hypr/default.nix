@@ -3,11 +3,13 @@ with lib;
 let
 	cfg = config.programs.hypr;
 	scripts = maxLib.scriptDir { inherit pkgs; } ./scripts;
+	enable = { enable = true; };
 in {
 
 	imports = [
 		./no_gaps_on_maximize.nix
 		./wrapper.nix
+		./hyprlock.nix
 	];
 
 	options = {
@@ -19,6 +21,10 @@ in {
 			kitty
 			dunst
 		] ++ scripts.all;
+
+		programs = {
+			hyprlock = enable;
+		};
 
 		wayland.windowManager.hyprland = {
 			enable = true;
