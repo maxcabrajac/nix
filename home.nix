@@ -3,7 +3,7 @@ args@{ lib, pkgs, helpers, ... }: let
 	hostname = builtins.getEnv "HOST";
 in {
 	imports = [
-		(./. + "/hosts/${username}@${hostname}.nix")
+		(./. + "/hosts/${hostname}.nix")
 	];
 
 	home = {
