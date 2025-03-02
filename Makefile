@@ -10,6 +10,8 @@ switch:
 update:
 	nix flake update
 	make switch
+	git commit flake.lock -m Upgrade
+
 
 clean:
 	nix-collect-garbage
