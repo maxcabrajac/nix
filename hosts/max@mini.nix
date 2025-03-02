@@ -9,6 +9,7 @@
 		packages = (maxLib.scriptDir inputs ../scripts).all;
 	};
 
+	# nix-based pam.so doesn't seem to work on arch
 	programs.hyprlock.package = pkgs.emptyDirectory;
 
 	nixGL = {
