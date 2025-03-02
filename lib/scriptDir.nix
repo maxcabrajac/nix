@@ -121,7 +121,7 @@
 				spec.text
 		);
 		from_package = spec: package:
-			handlers.sh (spec // { inherit package; text = ''exec ${lib.getExe package}''; });
+			handlers.sh (spec // { inherit package; text = ''exec ${lib.getExe package} "$@"''; });
 	};
 
 	makeScript = dep_repos: fpipe [
