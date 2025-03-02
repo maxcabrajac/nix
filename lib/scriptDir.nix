@@ -130,8 +130,8 @@
 		(spec: {
 			${spec.name} = handlers.${spec.extension} spec;
 		})
-
 	];
+
 	scriptDir = dep_repos: dir: let
 		repo = pipe dir [
 			readDir
