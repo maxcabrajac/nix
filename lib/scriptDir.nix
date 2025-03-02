@@ -133,11 +133,11 @@
 	];
 
 	scriptDir = dep_repos: dir: let
-		repo = pipe dir [
+		repo = lib.fixedPoints.fix (self: pipe dir [
 			readDir
-			(map (makeScript dep_repos))
+			(map (makeScript (dep_repos // { inherit self; })))
 			(lib.lists.foldr (a: b: a // b) {})
-		];
+		]);
 	in
 		repo // { all = lib.attrsets.attrValues repo; };
 
