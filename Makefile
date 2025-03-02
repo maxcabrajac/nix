@@ -10,7 +10,7 @@ switch:
 update:
 	nix flake update
 	make switch
-	git commit flake.lock -m Upgrade
+	git commit flake.lock -m "Upgrade $$(date +%d-%m-%Y)"
 
 
 clean:
