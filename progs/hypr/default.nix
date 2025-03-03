@@ -60,7 +60,6 @@ in {
 
 			# Execute your favorite apps at launch
 			exec-once = $XDG_CONFIG_HOME/eww/run.sh & setWallpaper &
-			exec-once = xss-lock -l lock &
 			exec-once = youtube-music & sleep 1; telegram-desktop &
 
 			# Source a file (multi-file configs)
