@@ -25,6 +25,7 @@ in {
 		wayland.windowManager.hyprland = {
 			enable = true;
 			plugins = pkgs.hypr_plugs;
+			systemd.enableXdgAutostart = true;
 
 			settings = {
 				debug = {
@@ -49,6 +50,30 @@ in {
 					force_split = 2; # split to the right
 					pseudotile = false;
 				};
+
+				misc = {
+					disable_hyprland_logo = true;
+
+					# TODO: do something to generalize swallowing
+					enable_swallow = true;
+					swallow_regex = ".*kitty.*";
+					swallow_exception_regex = ".*(wev|cargo run).*";
+
+					force_default_wallpaper = 0;
+					initial_workspace_tracking = let
+						disable = 0;
+						only_first_window = 1;
+						all_children = 2;
+					in
+						all_children;
+
+					new_window_takes_over_fullscreen = let
+						behind = 0;
+						takes_over = 1;
+						unfullscreen = 2;
+					in
+						unfullscreen;
+				};
 			};
 
 			extraConfig = ''
@@ -69,17 +94,7 @@ in {
 
 			# Some default env vars.
 			# env = XCURSOR_SIZE,24
-			# env = QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that
-
-			misc {
-				disable_hyprland_logo = true
-				enable_swallow = true
-				swallow_regex = (kitty)
-				swallow_exception_regex = .*(wev|xev|cargo run).*
-				force_default_wallpaper = 0 # Set to 0 to disable the anime mascot wallpapers
-
-				new_window_takes_over_fullscreen = 2
-			}
+			env = QT_QPA_PLATFORMTHEME,qt6ct # change to qt6ct if you have that
 
 			# Example windowrule v1
 			# windowrule = float, ^(kitty)$
