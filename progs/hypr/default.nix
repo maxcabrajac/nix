@@ -7,9 +7,10 @@ let
 in {
 
 	imports = [
+		./idlelock.nix
+		./keybind_manager.nix
 		./no_gaps_on_maximize.nix
 		./wrapper.nix
-		./idlelock.nix
 	];
 
 	options = {
