@@ -38,12 +38,12 @@ in {
 
 			listener = let min = 60; in [
 				{
-					timeout = 2 * min;
+					timeout = 5 * min;
 					on-timeout = lock;
 				}
 
 				{
-					timeout = 5 * min;
+					timeout = 6 * min;
 					on-timeout = screen off;
 					on-resume = screen on;
 				}
