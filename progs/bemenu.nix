@@ -1,4 +1,4 @@
-{ ... }: {
+{ lib, config, ... }: {
 	programs.bemenu = {
 		settings = {
 			line-height = 20;
@@ -13,7 +13,7 @@
 		};
 	};
 
-	global.keybinds = [
+	global.keybinds = lib.mkIf config.programs.bemenu.enable [
 		{ mods = "M"; key = "space"; cmd = "menu_run"; }
 	];
 }
