@@ -97,19 +97,25 @@
 			wrapRequiredSpec = {
 				runtimeInputs = [];
 				inheritPath = true;
+				env = {};
 			};
-			spec = defaultSpec // wrapRequiredSpec // receivedSpec;
+			spec = deepMerge [defaultSpec wrapRequiredSpec receivedSpec];
 			wrapIsRequired = (builtins.intersectAttrs wrapRequiredSpec spec) != wrapRequiredSpec;
 			wrapper = if spec.useBash then writeBashBin else writeDashBin;
 		in
 			if wrapIsRequired || spec.package == null then
-				wrapper spec.name
-					(concatStringsSep "\n" [
-						(optionalString (spec.runtimeInputs != [] || spec.inheritPath != true)
-							''export PATH="${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"''
-						)
-						spec.text
-					])
+				pipe [
+					(optionalString (spec.runtimeInputs != [] || spec.inheritPath != true)
+						''export PATH="${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"''
+					)
+					(lib.mapAttrsToList (name: val: "export ${name}=${builtins.toString val}") spec.env)
+					spec.text
+				] [
+					lib.flatten
+					(filter (line: line != ""))
+					(concatStringsSep "\n")
+					(wrapper spec.name)
+				]
 			else
 				spec.package;
 		bash = spec: handlers.sh (spec // { useBash = true; });
