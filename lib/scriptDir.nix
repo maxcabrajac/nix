@@ -1,6 +1,6 @@
 { lib, pkgs, ... } @ input: let
 	inherit (import ./readDir.nix input) readDir;
-	inherit (import ./safeFuncs.nix input) safeCall;
+	inherit (import ./util.nix input) deepMerge;
 
 	inherit (builtins) map filter;
 	inherit (lib.trivial) flip pipe;
@@ -124,23 +124,24 @@
 			handlers.sh (spec // { inherit package; text = ''exec ${lib.getExe package} "$@"''; });
 	};
 
-	makeScript = dep_repos: fpipe [
+in rec {
+
+	makeScript = default_spec: dep_repos: fpipe [
 		readScript
 		(processDescription dep_repos)
 		(spec: {
-			${spec.name} = handlers.${spec.extension} spec;
+			${spec.name} = handlers.${spec.extension} (deepMerge [default_spec spec]);
 		})
 	];
 
-	scriptDir = dep_repos: dir: let
+	scriptDirInject = default_spec: dep_repos: dir: let
 		repo = lib.fixedPoints.fix (self: pipe dir [
 			readDir
-			(map (makeScript (dep_repos // { inherit self; })))
+			(map (makeScript default_spec (dep_repos // { inherit self; })))
 			(lib.lists.foldr (a: b: a // b) {})
 		]);
 	in
 		repo // { all = lib.attrsets.attrValues repo; };
 
-in {
-	inherit scriptDir makeScript;
+	scriptDir = scriptDirInject {};
 }
