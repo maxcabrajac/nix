@@ -23,6 +23,49 @@ in {
 			dunst
 		] ++ scripts.all;
 
+		programs.hypr.keybinds = let
+			bind = mods: key: dispatcher: { inherit mods key dispatcher; };
+		in
+			lib.flatten [
+				(bind "M" "M" "killactive")
+				(bind "MS" "Q" "exit")
+				(bind "M" "F" "togglefloating")
+				(bind "M" "S" "pin")
+				{ mods = "M"; key = "Z"; dispatcher = "fullscreen"; args = [ "1" ]; }
+				{ mods = "MA"; key = "Z"; dispatcher = "fullscreen"; args = [ "0" ]; }
+				(pipe {H = "l"; N = "d"; E = "u"; i = "r"; } [
+					lib.attrsToList
+					(map ({name, value}: {
+						mods = "M";
+						key = name;
+						dispatcher = "movefocus";
+						args = [value];
+					}))
+				])
+				(
+					let
+						bttrbind = mods: key: cmd: {
+							inherit mods key;
+							dispatcher = "execr";
+							args = [ "${lib.getExe scripts.bttr} ${cmd}" ];
+						};
+					in [
+						(bttrbind "M" "U" "monitor_workspace cur rel -1")
+						(bttrbind "M" "Y" "monitor_workspace cur rel +1")
+						(bttrbind "MA" "U" "monitor_workspace cur rel_empty -1")
+						(bttrbind "MA" "Y" "monitor_workspace cur rel_empty +1")
+						(map (ii: let i = builtins.toString ii; in [
+							(bttrbind "M" "${i}" "monitor_workspace cur abs ${i}")
+							(bttrbind "MS" "${i}" "move_to_workspace cur abs ${i}")
+						]) (genList (x: x + 1) 9))
+						(flip imap1 ["T" "D"] (
+							ii: let i = toString ii; in key:
+								bttrbind "M" key "monitor_workspace all special ${i}"
+						))
+					]
+				)
+			];
+
 		wayland.windowManager.hyprland = {
 			enable = true;
 			plugins = pkgs.hypr_plugs;
@@ -111,14 +154,7 @@ in {
 
 			# Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
 			bind = $mainMod, Return, exec, kitty
-			bind = $mainMod, M, killactive
-			bind = $mainMod SHIFT, Q, exit
-			bind = $mainMod, F, togglefloating
-			bind = $mainMod, space, exec, menu_run
 			bind = $mainMod, O, exec, menu_search
-			bind = $mainMod, P, pseudo
-			bind = $mainMod, S, pin
-			bind = $mainMod, J, togglesplit
 
 			# Media
 			bind = ,XF86AudioNext, execr, mediaManager next
@@ -135,48 +171,6 @@ in {
 			# ScrBright
 			binde = ,XF86MonBrightnessUp, execr, scrBright inc 5%
 			binde = ,XF86MonBrightnessDown, execr, scrBright dec 5%
-
-			# Move focus with mainMod + arrow keys
-			bind = $mainMod, H, movefocus, l
-			bind = $mainMod, I, movefocus, r
-			bind = $mainMod, E, movefocus, u
-			bind = $mainMod, N, movefocus, d
-
-			bind = $mainMod, Z, fullscreen, 1
-			bind = $mainMod ALT, Z, fullscreen, 0
-
-			bind = $mainMod, U, execr, bttr monitor_workspace cur rel -1
-			bind = $mainMod, Y, execr, bttr monitor_workspace cur rel +1
-			bind = $mainMod ALT, U, execr, bttr monitor_workspace cur rel_empty -1
-			bind = $mainMod ALT, Y, execr, bttr monitor_workspace cur rel_empty +1
-
-			# Move active window to a workspace with mainMod + SHIFT + [0-9]
-			bind = $mainMod, 1, execr, bttr monitor_workspace cur abs 1
-			bind = $mainMod, 2, execr, bttr monitor_workspace cur abs 2
-			bind = $mainMod, 3, execr, bttr monitor_workspace cur abs 3
-			bind = $mainMod, 4, execr, bttr monitor_workspace cur abs 4
-			bind = $mainMod, 5, execr, bttr monitor_workspace cur abs 5
-			bind = $mainMod, 6, execr, bttr monitor_workspace cur abs 6
-			bind = $mainMod, 7, execr, bttr monitor_workspace cur abs 7
-			bind = $mainMod, 8, execr, bttr monitor_workspace cur abs 8
-			bind = $mainMod, 9, execr, bttr monitor_workspace cur abs 9
-			bind = $mainMod, 0, execr, bttr monitor_workspace cur abs 10
-
-			# Move active window to a workspace with mainMod + SHIFT + [0-9]
-			bind = $mainMod SHIFT, 1, execr, bttr move_to_workspace cur cur abs 1
-			bind = $mainMod SHIFT, 2, execr, bttr move_to_workspace cur cur abs 2
-			bind = $mainMod SHIFT, 3, execr, bttr move_to_workspace cur cur abs 3
-			bind = $mainMod SHIFT, 4, execr, bttr move_to_workspace cur cur abs 4
-			bind = $mainMod SHIFT, 5, execr, bttr move_to_workspace cur cur abs 5
-			bind = $mainMod SHIFT, 6, execr, bttr move_to_workspace cur cur abs 6
-			bind = $mainMod SHIFT, 7, execr, bttr move_to_workspace cur cur abs 7
-			bind = $mainMod SHIFT, 8, execr, bttr move_to_workspace cur cur abs 8
-			bind = $mainMod SHIFT, 9, execr, bttr move_to_workspace cur cur abs 9
-			bind = $mainMod SHIFT, 0, execr, bttr move_to_workspace cur cur abs 10
-
-			# Special workspace
-			bind = $mainMod, T, execr, bttr monitor_workspace all special 1
-			bind = $mainMod, D, execr, bttr monitor_workspace all special 2
 
 			# Scroll through existing workspaces with mainMod + scroll
 			bind = $mainMod, mouse_down, workspace, e+1

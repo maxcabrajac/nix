@@ -12,4 +12,8 @@
 			hp = 8;
 		};
 	};
+
+	global.keybinds = [
+		{ mods = "M"; key = "space"; cmd = "menu_run"; }
+	];
 }

@@ -10,7 +10,7 @@ let
 		args = [ cmd ];
 	};
 
-	keybinds = config.hypr.keybinds ++ (map global_to_hypr config.global.keybinds);
+	keybinds = config.programs.hypr.keybinds ++ (map global_to_hypr config.global.keybinds);
 
 	modMap = {
 		"M" = "SUPER";
@@ -32,7 +32,7 @@ let
 
 	processed = pipe keybinds [ (map process_bind) lib.zipAttrs ];
 in {
-	options.hypr.keybinds = with lib; with types; let
+	options.programs.hypr.keybinds = with lib; with types; let
 		keybind = submodule {
 			options = {
 				mods = mkOption {
