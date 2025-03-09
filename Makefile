@@ -1,11 +1,20 @@
-.PHONY: update
+.PHONY: update switch switch-traced
 
-CORES = $(shell nproc --all)
 USER = $(shell whoami)
 HOST = $(shell uname -n)
+IS_HM_INSTALLED = $(shell which home-manager 2>&1 > /dev/null; echo $$?)
+ifeq ($(IS_HM_INSTALLED),0)
+	HM_CMD = home-manager
+endif
+HM_CMD ?= nix run .\#home-manager --
+HM = USER=$(USER) HOST=$(HOST) $(HM_CMD)
 
 switch:
-	USER=$(USER) HOST=$(HOST) nix run .#home-manager -- switch -b bak --flake .#main --impure --cores $(CORES)
+	$(HM) switch -b bak --flake .#main --impure
+
+switch-traced:
+	$(HM) switch -b bak --flake .#main --impure --show-trace
+
 
 update:
 	nix flake update
