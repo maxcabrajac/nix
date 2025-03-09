@@ -1,6 +1,11 @@
 {
 	description = "Max's HM config";
 
+	nixConfig = {
+		extra-substituters = ["https://hyprland.cachix.org"];
+		extra-trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+	};
+
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
 
@@ -18,14 +23,13 @@
 			url = "github:maxcabrajac/bttr_dispatchers";
 			inputs.hyprland.follows = "hyprland";
 		};
+		nix-index = {
+			url = "github:nix-community/nix-index-database";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
-	nixConfig = {
-		extra-substituters = ["https://hyprland.cachix.org"];
-		extra-trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-	};
-
-	outputs = inp@{ nixpkgs, home-manager, hyprland, nixgl, eww, ... }:
+	outputs = inp@{ nixpkgs, home-manager, ... }:
 		let
 			lib = nixpkgs.lib;
 			system = builtins.currentSystem;
@@ -34,7 +38,7 @@
 				config.allowUnfree = true;
 				overlays = [
 					inp.nixgl.overlay
-					(_:_: hyprland.packages.${system})
+					(_:_: inp.hyprland.packages.${system})
 					(_:_: inp.eww.packages.${system})
 					(_:_: { hypr_plugs = [
 						inp.bttr_dispatchers.packages.${system}.bttr_dispatchers
@@ -54,6 +58,7 @@
 						inherit maxLib helpers;
 					};
 					modules = [
+						inp.nix-index.hmModules.nix-index
 						./home.nix
 						./progs
 					];

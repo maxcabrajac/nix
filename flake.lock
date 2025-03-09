@@ -422,6 +422,26 @@
         "type": "github"
       }
     },
+    "nix-index": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1741490098,
+        "narHash": "sha256-/tjVMbMzxJXrJaEk9N5esnbLebIZrkS1fbDJce/RiQg=",
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "rev": "296a2c992a28b37427d062ade6e20d467e479e3f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "type": "github"
+      }
+    },
     "nixgl": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -532,6 +552,7 @@
         "eww": "eww",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
+        "nix-index": "nix-index",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs_4"
       }
