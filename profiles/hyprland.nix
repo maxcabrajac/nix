@@ -7,6 +7,7 @@ in {
 		bemenu = enable;
 		hypr = enable;
 		zathura = enable;
+		dmenu_scripts = enable;
 	};
 
 	home = {

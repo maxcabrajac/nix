@@ -106,9 +106,9 @@
 			if wrapIsRequired || spec.package == null then
 				pipe [
 					(optionalString (spec.runtimeInputs != [] || spec.inheritPath != true)
-						''export PATH="${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"''
+						"export PATH=${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"
 					)
-					(lib.mapAttrsToList (name: val: "export ${name}=${builtins.toString val}") spec.env)
+					(lib.mapAttrsToList (name: val: "export ${name}=${lib.escapeShellArg val}") spec.env)
 					spec.text
 				] [
 					lib.flatten

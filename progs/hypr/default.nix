@@ -154,7 +154,6 @@ in {
 
 			# Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
 			bind = $mainMod, Return, exec, kitty
-			bind = $mainMod, O, exec, menu_search
 
 			# Media
 			bind = ,XF86AudioNext, execr, mediaManager next
