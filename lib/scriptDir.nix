@@ -96,7 +96,7 @@
 			};
 			wrapRequiredSpec = {
 				runtimeInputs = [];
-				inheritPath = true;
+				inheritPath = false;
 				env = {};
 			};
 			spec = deepMerge [defaultSpec wrapRequiredSpec receivedSpec];

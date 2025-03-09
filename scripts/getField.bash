@@ -1,4 +1,3 @@
-#??inheritPath = false
 #??[runtimeInputs]
 #??pkgs = ["gawk"]
 
