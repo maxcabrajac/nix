@@ -40,6 +40,7 @@
 					inp.nixgl.overlay
 					(_:_: inp.hyprland.packages.${system})
 					(_:_: inp.eww.packages.${system})
+					(_:_: { inherit (home-manager.packages.${system}) home-manager; })
 					(_:_: { hypr_plugs = [
 						inp.bttr_dispatchers.packages.${system}.bttr_dispatchers
 					]; })
