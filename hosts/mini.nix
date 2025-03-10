@@ -1,4 +1,4 @@
-{ pkgs, maxLib, ... } @ inputs: {
+{ pkgs, lib, helpers, ... }: {
 	imports = [
 		../profiles/hyprland.nix
 		../profiles/terminal.nix
@@ -6,7 +6,10 @@
 	];
 
 	home = {
-		packages = (maxLib.scriptDir inputs ../scripts).all;
+		packages = lib.flatten [
+			pkgs.nixd
+			helpers.all
+		];
 	};
 
 	# nix-based pam.so doesn't seem to work on arch
