@@ -1,16 +1,9 @@
-{ lib, config, ... }:
+{ lib, config, maxLib, ... }:
 let
 	inherit (builtins) map;
-	inherit (lib) pipe;
+	inherit (lib) pipe concatStringsSep;
+	inherit (maxLib) checkCollisions;
 	fpipe = lib.flip pipe;
-
-	global_to_hypr = { mods, key, repeat, description, cmd }: {
-		inherit mods key description repeat;
-		dispatcher = "execr";
-		args = [ cmd ];
-	};
-
-	keybinds = config.programs.hypr.keybinds ++ (map global_to_hypr config.global.keybinds);
 
 	modMap = {
 		"M" = "SUPER";
@@ -20,24 +13,33 @@ let
 	};
 	flagIf = b: flag: if b then flag else "";
 	process_bind = { mods, key, repeat, description, dispatcher, args }: let
-		modMask = pipe mods [ (map (m: modMap.${m})) (lib.concatStringsSep " ") ];
+		modMask = pipe mods [ (map (m: modMap.${m})) (concatStringsSep " ") ];
 	in
 		lib.listToAttrs [
 			{
 				# d = description (even if empty)
 				name = "bind" + "d" + flagIf repeat "e";
-				value = lib.concatStringsSep ", " ([ modMask key description dispatcher ] ++ args);
+				value = concatStringsSep ", " ([ modMask key description dispatcher ] ++ args);
 			}
 		];
 
-	processed = pipe keybinds [ (map process_bind) lib.zipAttrs ];
+	processed = pipe config.programs.hypr.keybinds [
+		(map process_bind)
+		lib.zipAttrs
+	];
 in {
 	options.programs.hypr.keybinds = with lib; with types; let
 		keybind = submodule {
 			options = {
 				mods = mkOption {
-					type = types.strMatching "(M|S|C|A)*";
-					apply = fpipe [ lib.stringToCharacters lib.unique ];
+					type = types.either
+						(strMatching "(M|S|C|A)*")
+						(types.listOf (types.enum ["M" "S" "C" "A"]));
+					apply = fpipe [
+						(v: if isString v then lib.stringToCharacters v else v)
+						lib.unique
+						naturalSort
+					];
 				};
 				key = mkOption { type = str; };
 				dispatcher = mkOption { type = str; };
@@ -59,7 +61,20 @@ in {
 		mkOption {
 			default = [ ];
 			type = listOf keybind;
+			apply = checkCollisions "hypr.keybinds" ({ mods, key, ... }: "${concatStrings mods}-${key}");
 		};
 
-	config.wayland.windowManager.hyprland.settings = processed;
+
+	config = {
+		programs.hypr.keybinds = let
+			global_to_hypr = { mods, key, repeat, description, cmd }: {
+				inherit key mods description repeat;
+				dispatcher = "execr";
+				args = [ cmd ];
+			};
+		in
+			map global_to_hypr config.global.keybinds;
+
+		wayland.windowManager.hyprland.settings = processed;
+	};
 }

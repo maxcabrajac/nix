@@ -1,13 +1,20 @@
-{ lib, pkgs, config, ... }: let
-	fpipe = lib.flip lib.pipe;
+{ lib, pkgs, config, maxLib, ... }: with lib; let
+	fpipe = flip pipe;
+	inherit (maxLib) checkCollisions;
 in {
-	options.global = with lib; with types; {
+	options.global = with types; {
 		keybinds = let
 			keybind = submodule {
 				options = {
 					mods = mkOption {
-						type = types.strMatching "(M|S|C|A)*";
-						apply = fpipe [ lib.stringToCharacters lib.unique ];
+						type = types.either
+							(strMatching "(M|S|C|A)*")
+							(types.listOf (types.enum ["M" "S" "C" "A"]));
+						apply = fpipe [
+							(v: if isString v then lib.stringToCharacters v else v)
+							lib.unique
+							naturalSort
+						];
 					};
 					key = mkOption { type = str; };
 					cmd = mkOption { type = str; };
@@ -25,6 +32,7 @@ in {
 			mkOption {
 				type = listOf keybind;
 				default = [];
+				apply = checkCollisions "global.keybinds" ({mods, key, ...}: "${concatStrings mods}-${key}");
 			};
 
 		web = let
@@ -32,7 +40,7 @@ in {
 			site = submodule ({config, ...}: {
 				options = {
 					name = mkOption { type = str; };
-					alias = mkOption { type = str; default = config.name; };
+					alias = mkOption { type = str; default = toLower config.name; };
 					bookmark = mkOption { type = str; };
 					search_engine = mkOption {
 						type = nullOr search_engine;
@@ -44,6 +52,7 @@ in {
 			sites = mkOption {
 				type = listOf site;
 				default = [];
+				apply = checkCollisions "global.web.sites" (x: x.alias);
 			};
 
 			default_search_engine = mkOption {
