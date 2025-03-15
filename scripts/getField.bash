@@ -1,5 +1,6 @@
 #??[runtimeInputs]
 #??pkgs = ["gawk"]
+#??END
 
 DELIM=' '
 
