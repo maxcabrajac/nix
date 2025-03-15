@@ -51,6 +51,7 @@
 				lib = lib // home-manager.lib;
 			};
 			helpers = maxLib.scriptDir { inherit pkgs; } ./scripts;
+			forAllSystems = lib.genAttrs lib.systems.flakeExposed;
 		in {
 			homeConfigurations = {
 				main = home-manager.lib.homeManagerConfiguration {
@@ -66,7 +67,10 @@
 				};
 			};
 
-			inherit home-manager;
-			inherit (home-manager) packages;
+			packages = forAllSystems (system: let
+				getPacks = repo: repo.packages.${system};
+			in {
+				inherit (getPacks home-manager) home-manager;
+			});
 		};
 }
