@@ -5,6 +5,7 @@ in {
 
 	programs = {
 		lf = enable;
+		abcd = enable;
 	};
 
 	home = {
