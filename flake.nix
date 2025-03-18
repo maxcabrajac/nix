@@ -63,6 +63,7 @@
 						inp.nix-index.hmModules.nix-index
 						./home.nix
 						./progs
+						./global
 					];
 				};
 			};
