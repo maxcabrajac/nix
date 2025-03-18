@@ -13,7 +13,7 @@
 			default_engine = config.global.web.default_search_engine;
 		};
 	};
-in with maxLib.makeScript spec { inherit pkgs helpers; } ./scripts/search.bash;
-mkIf cfg.enable {
-	global.keybinds = [ { mods = "M"; key = "O"; cmd = "$BROWSER $(${getExe search})"; } ];
+	script = maxLib.makeScriptInject spec { inherit pkgs helpers; } ./scripts/search.bash;
+in mkIf cfg.enable {
+	global.keybinds = [ { mods = "M"; key = "O"; cmd = with script; "$BROWSER $(${getExe search})"; } ];
 }

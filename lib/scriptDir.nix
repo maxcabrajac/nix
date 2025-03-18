@@ -132,7 +132,7 @@
 
 in rec {
 
-	makeScript = default_spec: dep_repos: fpipe [
+	makeScriptInject = default_spec: dep_repos: fpipe [
 		readScript
 		(processDescription dep_repos)
 		(spec: {
@@ -140,10 +140,12 @@ in rec {
 		})
 	];
 
+	makeScript = makeScriptInject {};
+
 	scriptDirInject = default_spec: dep_repos: dir: let
 		repo = lib.fixedPoints.fix (self: pipe dir [
 			readDir
-			(map (makeScript default_spec (dep_repos // { inherit self; })))
+			(map (makeScriptInject default_spec (dep_repos // { inherit self; })))
 			(lib.lists.foldr (a: b: a // b) {})
 		]);
 	in
