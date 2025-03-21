@@ -2,17 +2,20 @@
 	enable = { enable = true; };
 	disable = { enable = false; };
 in {
+	options.profile.hyprland = lib.mkEnableOption "Hyprland Profile";
 
-	programs = {
-		bemenu = enable;
-		hypr = enable;
-		zathura = enable;
-		dmenu_scripts = enable;
-	};
+	config = lib.mkIf config.profile.hyprland {
+		programs = {
+			bemenu = enable;
+			hypr = enable;
+			zathura = enable;
+			dmenu_scripts = enable;
+		};
 
-	home = {
-		packages = with pkgs; [
-			eww
-		];
+		home = {
+			packages = with pkgs; [
+				eww
+			];
+		};
 	};
 }

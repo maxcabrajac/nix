@@ -64,6 +64,7 @@
 						./home.nix
 						./progs
 						./global
+						./profiles
 					];
 				};
 			};

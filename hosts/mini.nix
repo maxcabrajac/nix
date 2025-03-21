@@ -1,9 +1,9 @@
 { pkgs, lib, helpers, ... }: {
-	imports = [
-		../profiles/hyprland.nix
-		../profiles/terminal.nix
-		../profiles/fonts.nix
-	];
+	profile = {
+		hyprland = true;
+		terminal = true;
+		fonts = true;
+	};
 
 	home = {
 		packages = lib.flatten [

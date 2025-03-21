@@ -1,6 +1,6 @@
 {...}: {
-	imports = [
-		../profiles/terminal.nix
-		../profiles/fonts.nix
-	];
+	profile = {
+		terminal = true;
+		fonts = true;
+	};
 }
