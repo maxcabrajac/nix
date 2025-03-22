@@ -1,6 +1,6 @@
 { lib, config, pkgs, ...}: let
 	cfg = config.programs.fish;
-	var = "kept_dir";
+	file = "/tmp/fish_kept_dir";
 in {
 	programs.fish = {
 		# functions.keep_dir = {
@@ -10,28 +10,11 @@ in {
 		# The above doesn't work, falling back to inlineing
 		shellInit = /*fish*/''
 			function keep_dir --on-event fish_prompt
-				set -U ${var} "$PWD"
+				echo ''$PWD > ${file}
 			end
 		'';
 
-		shellAliases.cdd = /*fish*/''set -q ${var} && test -d "''$${var}" && builtin cd "''$${var}"'';
+		shellAliases.cdd = /*fish*/''test -f "${file}" && builtin cd (cat ${file})'';
 		interactiveShellInit = "cdd";
-	};
-
-	systemd.user.services = lib.mkIf cfg.enable {
-		clean-kept-dir = {
-			Unit = {
-				Description = "Clear fish kept_dir on log out";
-			};
-
-			Service = {
-				RemainAfterExit = true;
-				ExecStop = "${lib.getExe cfg.package} -c 'set -e -U ${var}'";
-			};
-
-			Install = {
-				WantedBy = ["default.target"];
-			};
-		};
 	};
 }
