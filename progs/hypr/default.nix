@@ -2,7 +2,7 @@
 with lib;
 let
 	cfg = config.programs.hypr;
-	scripts = maxLib.scriptDir { inherit pkgs; } ./scripts;
+	scripts = pkgs.scriptDir { inherit pkgs; } ./scripts;
 	enable = { enable = true; };
 in {
 

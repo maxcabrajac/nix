@@ -1,6 +1,5 @@
-{ lib, pkgs, ... } @ input: let
-	inherit (import ./readDir.nix input) readDir;
-	inherit (import ./util.nix input) deepMerge;
+{ lib, maxLib , ... } @ input: let
+	inherit (maxLib) deepMerge readDir;
 
 	inherit (builtins) map filter;
 	inherit (lib.trivial) flip pipe;
@@ -86,70 +85,71 @@
 			(inheritDescription "inheritPath")
 		]);
 
-	handlers = with pkgs.writers; {
-		sh = receivedSpec: with lib.strings; let
-			defaultSpec = {
-				name = null;
-				text = null;
-				package = null;
-				useBash = false;
-			};
-			wrapRequiredSpec = {
-				runtimeInputs = [];
-				inheritPath = false;
-				env = {};
-			};
-			spec = deepMerge [defaultSpec wrapRequiredSpec receivedSpec];
-			wrapIsRequired = (builtins.intersectAttrs wrapRequiredSpec spec) != wrapRequiredSpec;
-			wrapper = if spec.useBash then writeBashBin else writeDashBin;
-		in
-			if wrapIsRequired || spec.package == null then
-				pipe [
-					(optionalString (spec.runtimeInputs != [] || spec.inheritPath != true)
-						"export PATH=${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"
-					)
-					(lib.mapAttrsToList (name: val: "export ${name}=${lib.escapeShellArg val}") spec.env)
+in {
+
+	packages = { pkgs, ... }: let
+		handlers = with pkgs.writers; {
+			sh = receivedSpec: with lib.strings; let
+				defaultSpec = {
+					name = null;
+					text = null;
+					package = null;
+					useBash = false;
+				};
+				wrapRequiredSpec = {
+					runtimeInputs = [];
+					inheritPath = false;
+					env = {};
+				};
+				spec = deepMerge [defaultSpec wrapRequiredSpec receivedSpec];
+				wrapIsRequired = (builtins.intersectAttrs wrapRequiredSpec spec) != wrapRequiredSpec;
+				wrapper = if spec.useBash then writeBashBin else writeDashBin;
+			in
+				if wrapIsRequired || spec.package == null then
+					pipe [
+						(optionalString (spec.runtimeInputs != [] || spec.inheritPath != true)
+							"export PATH=${makeBinPath spec.runtimeInputs}${optionalString spec.inheritPath ":$PATH"}"
+						)
+						(lib.mapAttrsToList (name: val: "export ${name}=${lib.escapeShellArg val}") spec.env)
+						spec.text
+					] [
+						lib.flatten
+						(filter (line: line != ""))
+						(concatStringsSep "\n")
+						(wrapper spec.name)
+					]
+				else
+					spec.package;
+			bash = spec: handlers.sh (spec // { useBash = true; });
+			py = spec: handlers.from_package spec
+				(writePython3Bin
+					spec.name
+					# TODO: add support for python libs
+					{ libraries = []; doCheck = false; }
 					spec.text
-				] [
-					lib.flatten
-					(filter (line: line != ""))
-					(concatStringsSep "\n")
-					(wrapper spec.name)
-				]
-			else
-				spec.package;
-		bash = spec: handlers.sh (spec // { useBash = true; });
-		py = spec: handlers.from_package spec
-			(writePython3Bin
-				spec.name
-				# TODO: add support for python libs
-				{ libraries = []; doCheck = false; }
-				spec.text
-		);
-		from_package = spec: package:
-			handlers.sh (spec // { inherit package; text = ''exec ${lib.getExe package} "$@"''; });
+			);
+			from_package = spec: package:
+				handlers.sh (spec // { inherit package; text = ''exec ${lib.getExe package} "$@"''; });
+		};
+	in rec {
+		makeScriptInject = default_spec: dep_repos: fpipe [
+			readScript
+			(processDescription dep_repos)
+			(spec: {
+				${spec.name} = handlers.${spec.extension} (deepMerge [default_spec spec]);
+			})
+		];
+
+		scriptDirInject = default_spec: dep_repos: dir: let
+			repo = lib.fixedPoints.fix (self: pipe dir [
+				readDir
+				(map (makeScriptInject default_spec (dep_repos // { inherit self; })))
+				(lib.lists.foldr (a: b: a // b) {})
+			]);
+		in
+			repo // { all = lib.attrsets.attrValues repo; };
+
+		makeScript = makeScriptInject {};
+		scriptDir = scriptDirInject {};
 	};
-
-in rec {
-
-	makeScriptInject = default_spec: dep_repos: fpipe [
-		readScript
-		(processDescription dep_repos)
-		(spec: {
-			${spec.name} = handlers.${spec.extension} (deepMerge [default_spec spec]);
-		})
-	];
-
-	makeScript = makeScriptInject {};
-
-	scriptDirInject = default_spec: dep_repos: dir: let
-		repo = lib.fixedPoints.fix (self: pipe dir [
-			readDir
-			(map (makeScriptInject default_spec (dep_repos // { inherit self; })))
-			(lib.lists.foldr (a: b: a // b) {})
-		]);
-	in
-		repo // { all = lib.attrsets.attrValues repo; };
-
-	scriptDir = scriptDirInject {};
 }

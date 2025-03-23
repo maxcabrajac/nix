@@ -2,8 +2,7 @@
 # The variables $engines and $default_engine are injected into this script by nix
 #
 #??[runtimeInputs]
-#??pkgs = [ "jq", "gnused", "coreutils" ]
-#??helpers = [ "getField" ]
+#??pkgs = [ "jq", "gnused", "coreutils", "getField" ]
 #??END
 
 # enable extended globing (better builtin "regex")

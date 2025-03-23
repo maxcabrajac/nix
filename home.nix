@@ -7,7 +7,10 @@ in {
 	];
 
 	home = {
-		packages = [ pkgs.home-manager ];
+		packages = [
+			pkgs.home-manager
+			pkgs.getField
+		];
 
 		inherit username;
 		homeDirectory = "/home/${username}";

@@ -1,4 +1,4 @@
-{ pkgs, lib, maxLib, config, ... }: with lib; {
+{ lib, ... }: with lib; {
 	imports = [
 		./search.nix
 	];

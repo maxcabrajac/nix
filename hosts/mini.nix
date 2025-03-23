@@ -8,7 +8,7 @@
 	home = {
 		packages = lib.flatten [
 			pkgs.nixd
-			helpers.all
+			# helpers.all
 		];
 	};
 

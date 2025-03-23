@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: rec {
+{ lib, ... }: rec {
 	readDir = dir:
 		lib.attrsets.mapAttrsToList
 			(file: _: lib.path.append dir file)

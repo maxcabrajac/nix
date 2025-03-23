@@ -29,38 +29,47 @@
 		};
 	};
 
-	outputs = inp@{ nixpkgs, home-manager, ... }:
+	outputs = inputs@{ self, nixpkgs, home-manager, ... }:
 		let
+			inherit (self) outputs;
 			lib = nixpkgs.lib;
 			system = builtins.currentSystem;
-			pkgs = import nixpkgs {
-				inherit system;
-				config.allowUnfree = true;
-				overlays = [
-					inp.nixgl.overlay
-					(_:_: inp.hyprland.packages.${system})
-					(_:_: inp.eww.packages.${system})
-					(_:_: { inherit (home-manager.packages.${system}) home-manager; })
-					(_:_: { hypr_plugs = [
-						inp.bttr_dispatchers.packages.${system}.bttr_dispatchers
-					]; })
-				];
-			};
 			maxLib = import ./lib {
 				inherit pkgs;
 				lib = lib // home-manager.lib;
 			};
-			helpers = maxLib.scriptDir { inherit pkgs; } ./scripts;
+			packages_dir = import ./packages { inherit lib maxLib; };
+			pkgs = import nixpkgs {
+				inherit system;
+				config.allowUnfree = true;
+				inherit (outputs) overlays;
+			};
+			# helpers = maxLib.scriptDir { inherit pkgs; } ./scripts;
 			forAllSystems = lib.genAttrs lib.systems.flakeExposed;
 		in {
+			overlays = [
+				inputs.nixgl.overlay
+				packages_dir.overlay
+				(_:_: inputs.hyprland.packages.${system})
+				(_:_: inputs.eww.packages.${system})
+				(_:_: { inherit (home-manager.packages.${system}) home-manager; })
+				(_:_: { hypr_plugs = [
+					inputs.bttr_dispatchers.packages.${system}.bttr_dispatchers
+				]; })
+			];
+
+			nixosConfiguration.main = lib.nixosSystem {
+
+			};
 			homeConfigurations = {
 				main = home-manager.lib.homeManagerConfiguration {
 					inherit pkgs;
 					extraSpecialArgs = {
-						inherit maxLib helpers;
+						inherit maxLib;
 					};
 					modules = [
-						inp.nix-index.hmModules.nix-index
+						inputs.nix-index.hmModules.nix-index
+						packages_dir.homeManagerModule
 						./home.nix
 						./progs
 						./global
