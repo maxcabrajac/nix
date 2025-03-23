@@ -144,10 +144,10 @@ in {
 			repo = lib.fixedPoints.fix (self: pipe dir [
 				readDir
 				(map (makeScriptInject default_spec (dep_repos // { inherit self; })))
-				(lib.lists.foldr (a: b: a // b) {})
+				lib.mergeAttrsList
 			]);
 		in
-			repo // { all = lib.attrsets.attrValues repo; };
+			repo;
 
 		makeScript = makeScriptInject {};
 		scriptDir = scriptDirInject {};
