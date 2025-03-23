@@ -1,12 +1,12 @@
 {lib, config, pkgs, ...}: let
 	cfg = config.programs.abcd;
-	inherit (pkgs.makeScript { inherit pkgs; } ./abcd.sh) abcd;
+	package = pkgs.makeScript { inherit pkgs; } ./abcd.sh;
 in {
 	options.programs.abcd = {
 		enable = lib.mkEnableOption "abcd";
 	};
 
 	config = lib.mkIf cfg.enable {
-		home.packages = [ abcd ];
+		home.packages = [ package ];
 	};
 }

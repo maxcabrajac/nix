@@ -3,7 +3,6 @@ with lib;
 let
 	cfg = config.programs.hypr;
 	scripts = pkgs.scriptDir { inherit pkgs; } ./scripts;
-	enable = { enable = true; };
 in {
 
 	imports = [
@@ -21,7 +20,7 @@ in {
 		home.packages = with pkgs; [
 			kitty
 			dunst
-		] ++ scripts.all;
+		] ++ lib.attrValues scripts;
 
 		programs.hypr.keybinds = let
 			bind = mods: key: dispatcher: { inherit mods key dispatcher; };

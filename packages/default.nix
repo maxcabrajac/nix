@@ -3,14 +3,11 @@
 	modules = pipe (maxLib.nonDefaultNix ./.) [
 		(map (p: import p inputs))
 	];
-in rec {
-	packages = pkgs: lib.pipe modules [
-		(map (p: p.packages { inherit pkgs; }))
-		lib.mergeAttrsList
-		(lib.traceVal)
+in {
+	overlay = lib.pipe modules [
+		(map (p: final: prev: p.packages prev))
+		lib.composeManyExtensions
 	];
-
-	overlay = final: prev: packages final;
 
 	homeManagerModule = {...}: {
 		imports = pipe modules [

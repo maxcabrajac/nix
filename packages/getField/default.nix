@@ -1,3 +1,6 @@
-{...}: {
-	packages = {pkgs, ...}: { inherit (pkgs.makeScript { inherit pkgs; } ./scripts/getField.bash) getField;};
+{ lib, maxLib, ...}: let
+	inherit (lib.fixedPoints) fix;
+	inherit (maxLib) mapDir;
+in {
+	packages = {pkgs, ...}: fix (self: mapDir (pkgs.makeScript { inherit self pkgs; }) ./scripts);
 }

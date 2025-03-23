@@ -1,6 +1,5 @@
 { lib, maxLib , ... } @ input: let
-	inherit (maxLib) deepMerge readDir;
-
+	inherit (maxLib) deepMerge readDir' fileParts mapDir;
 	inherit (builtins) map filter;
 	inherit (lib.trivial) flip pipe;
 	fpipe = flip pipe;
@@ -18,18 +17,6 @@
 			else
 				[ (path ++ [ toString obj ]) ];
 	in flattenPathsImpl [];
-
-	getFileName = builtins.baseNameOf;
-	getFileParts = file: let
-			parts = pipe file [
-				getFileName
-				(lib.strings.splitString ".")
-			];
-			name = pipe parts [ lib.lists.init (lib.strings.concatStringsSep ".") ];
-			extension = lib.lists.last parts;
-		in {
-			inherit name extension;
-		};
 
 	commentStr = {
 		sh = "#";
@@ -52,8 +39,8 @@
 
 	readScript =
 		file: let
-			fileParts = getFileParts file;
-			ext = fileParts.extension;
+			fParts = fileParts file;
+			ext = fParts.extension;
 			text = builtins.readFile file;
 		in pipe text [
 			(lib.strings.splitString "\n")
@@ -64,7 +51,7 @@
 			(lib.strings.concatStringsSep "\n")
 			builtins.fromTOML
 			(desc: {
-				inherit (fileParts) name extension;
+				inherit (fParts) name extension;
 				inherit desc text;
 			})
 		];
@@ -135,19 +122,14 @@ in {
 		makeScriptInject = default_spec: dep_repos: fpipe [
 			readScript
 			(processDescription dep_repos)
-			(spec: {
-				${spec.name} = handlers.${spec.extension} (deepMerge [default_spec spec]);
-			})
+			(spec: handlers.${spec.extension} (deepMerge [default_spec spec]))
 		];
 
-		scriptDirInject = default_spec: dep_repos: dir: let
-			repo = lib.fixedPoints.fix (self: pipe dir [
-				readDir
-				(map (makeScriptInject default_spec (dep_repos // { inherit self; })))
-				lib.mergeAttrsList
-			]);
-		in
-			repo;
+		scriptDirInject = default_spec: dep_repos: dir:
+			lib.fixedPoints.fix (self: mapDir
+				(makeScriptInject default_spec (dep_repos // { inherit self; }))
+				dir
+			);
 
 		makeScript = makeScriptInject {};
 		scriptDir = scriptDirInject {};

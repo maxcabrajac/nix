@@ -15,5 +15,5 @@
 	};
 	script = pkgs.makeScriptInject spec { inherit pkgs; } ./scripts/search.bash;
 in mkIf cfg.enable {
-	global.keybinds = [ { mods = "M"; key = "O"; cmd = with script; "$BROWSER $(${getExe search})"; } ];
+	global.keybinds = [ { mods = "M"; key = "O"; cmd = "$BROWSER $(${getExe script})"; } ];
 }
