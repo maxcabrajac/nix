@@ -75,6 +75,7 @@ in {
 
 				exec-once = [
 					"dunst"
+					"${lib.getExe scripts.bttr} monitor_workspace all abs 1"
 				];
 
 				env = [
