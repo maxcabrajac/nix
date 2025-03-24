@@ -74,7 +74,7 @@
 
 in {
 
-	packages = { pkgs, ... }: let
+	packages = pkgs: let
 		handlers = with pkgs.writers; {
 			sh = receivedSpec: with lib.strings; let
 				defaultSpec = {

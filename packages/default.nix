@@ -5,7 +5,7 @@
 	];
 in {
 	overlay = lib.pipe modules [
-		(map (p: final: prev: p.packages prev))
+		(map (p: final: prev: p.packages final))
 		lib.composeManyExtensions
 	];
 
