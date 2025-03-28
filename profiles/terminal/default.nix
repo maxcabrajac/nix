@@ -1,6 +1,5 @@
 { pkgs, lib, config, maxLib, ... }: let
 	enable = { enable = true; };
-	disable = { enable = false; };
 in {
 	imports = maxLib.nonDefaultNix ./.;
 
