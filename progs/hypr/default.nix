@@ -10,6 +10,7 @@ in {
 		./keybind_manager.nix
 		./no_gaps_on_maximize.nix
 		./wrapper.nix
+		./event_handler.nix
 	];
 
 	options = {
