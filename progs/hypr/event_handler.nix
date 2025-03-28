@@ -1,15 +1,34 @@
 { lib, config, pkgs, ...}: {
 	options.programs.hypr = {
-		onEvent = lib.mkOption {
-			type = with lib.types; attrsOf (listOf str);
+		onEvent = let
+			handler = with lib.types; submodule {
+				options = {
+					cmd = lib.mkOption {
+						type = str;
+					};
+					args = lib.mkOption {
+						type = bool;
+						default = false;
+					};
+				};
+			};
+
+			buildFromString = value:
+				if builtins.isString value then
+					{ cmd = value; args = false; }
+				else
+					value;
+		in lib.mkOption {
+			type = with lib.types; attrsOf (listOf (either str handler));
 			default = {};
+			apply = lib.mapAttrs (_name: values: map buildFromString values);
 		};
 	};
 
 	config = let
 		inherit (lib) pipe concatStringsSep attrsToList concatLines;
-		processEvent = args: event: handlers: pipe handlers [
-			(map (h: "${h} ${args}"))
+		processEvent = args_to_use: event: handlers: pipe handlers [
+			(map ({cmd, args}: "${cmd} ${if args then args_to_use else ""}"))
 			(concatStringsSep ";")
 			(h: "${event}) ${h};;")
 		];
