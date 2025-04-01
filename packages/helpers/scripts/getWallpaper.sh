@@ -2,8 +2,13 @@
 #??pkgs = [ "coreutils" ]
 #??END
 
-if [ -z "$WALLPAPER_DIR" -o ! -d "$WALLPAPER_DIR" ]; then
+if [ -z "$WALLPAPER_DIR" ]; then
 	printf 'Please set $WALLPAPER_DIR\n'
+	exit 1
+fi
+
+if ! [ -d "$WALLPAPER_DIR" ]; then
+	printf '$WALLPAPER_DIR is not a directory\n'
 	exit 1
 fi
 

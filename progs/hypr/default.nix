@@ -1,8 +1,9 @@
-{ pkgs, lib, config, maxLib, ... }:
+{ pkgs, lib, config, ... }:
 with lib;
 let
 	cfg = config.programs.hypr;
-	scripts = pkgs.scriptDir { inherit pkgs; } ./scripts;
+	getWallpaper = config.programs.getWallpaper.configured_pkg;
+	scripts = pkgs.scriptDir { inherit pkgs; configured = { inherit getWallpaper; }; } ./scripts;
 in {
 
 	imports = [
@@ -77,6 +78,7 @@ in {
 				exec-once = [
 					"dunst"
 					"${lib.getExe scripts.bttr} monitor_workspace all abs 1"
+					"${lib.getExe scripts.hyprSetWallpaper}"
 				];
 
 				env = [
@@ -127,7 +129,7 @@ in {
 			exec-once = eventHandler
 
 			# Execute your favorite apps at launch
-			exec-once = $XDG_CONFIG_HOME/eww/run.sh & setWallpaper &
+			exec-once = $XDG_CONFIG_HOME/eww/run.sh &
 			exec-once = youtube-music & sleep 1; telegram-desktop &
 
 			# Source a file (multi-file configs)
@@ -185,6 +187,15 @@ in {
 			bind = $mainMod ALT, F3, exec, printScr full
 			'';
 		};
+
+		services.hyprpaper = {
+			enable = true;
+			settings.ipc = "on";
+		};
+
+		programs.hypr.onEvent.monitoradded = [
+			"${lib.getExe scripts.hyprSetWallpaper}"
+		];
 	};
 
 }
