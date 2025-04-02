@@ -9,13 +9,17 @@ in {
 	imports = [
 		./idlelock.nix
 		./keybind_manager.nix
+		./keybinds.nix
 		./no_gaps_on_maximize.nix
 		./wrapper.nix
 		./event_handler.nix
 	];
 
-	options = {
-		programs.hypr.enable = mkEnableOption "hypr";
+	options.programs.hypr = {
+		enable = mkEnableOption "hypr";
+		bttr = mkOption {
+			type = types.path;
+		};
 	};
 
 	config = mkIf cfg.enable {
@@ -24,46 +28,7 @@ in {
 			dunst
 		] ++ lib.attrValues scripts;
 
-		programs.hypr.keybinds = let
-			bind = mods: key: dispatcher: { inherit mods key dispatcher; };
-		in
-			lib.flatten [
-				(bind "M" "M" "killactive")
-				(bind "MS" "Q" "exit")
-				(bind "M" "F" "togglefloating")
-				(bind "M" "S" "pin")
-				{ mods = "M"; key = "Z"; dispatcher = "fullscreen"; args = [ "1" ]; }
-				{ mods = "MA"; key = "Z"; dispatcher = "fullscreen"; args = [ "0" ]; }
-				(pipe {H = "l"; N = "d"; E = "u"; i = "r"; } [
-					lib.attrsToList
-					(map ({name, value}: {
-						mods = "M";
-						key = name;
-						dispatcher = "movefocus";
-						args = [value];
-					}))
-				])
-				(let
-					bttrbind = mods: key: cmd: {
-						inherit mods key;
-						dispatcher = "execr";
-						args = [ "${lib.getExe scripts.bttr} ${cmd}" ];
-					};
-				in [
-					(bttrbind "M" "U" "monitor_workspace cur rel -1")
-					(bttrbind "M" "Y" "monitor_workspace cur rel +1")
-					(bttrbind "MA" "U" "monitor_workspace cur rel_empty -1")
-					(bttrbind "MA" "Y" "monitor_workspace cur rel_empty +1")
-					(map (ii: let i = builtins.toString ii; in [
-						(bttrbind "M" "${i}" "monitor_workspace cur abs ${i}")
-						(bttrbind "MS" "${i}" "move_to_workspace cur abs ${i}")
-					]) (genList (x: x + 1) 9))
-					(flip imap1 ["T" "D"] (
-						ii: let i = toString ii; in key:
-							bttrbind "M" key "monitor_workspace all special ${i}"
-					))
-				])
-			];
+		programs.hypr.bttr = lib.getExe scripts.bttr;
 
 		wayland.windowManager.hyprland = {
 			enable = true;
@@ -77,7 +42,7 @@ in {
 
 				exec-once = [
 					"dunst"
-					"${lib.getExe scripts.bttr} monitor_workspace all abs 1"
+					"${cfg.bttr} monitor_workspace all abs 1"
 					"${lib.getExe scripts.hyprSetWallpaper}"
 				];
 
