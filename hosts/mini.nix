@@ -3,6 +3,7 @@
 		hyprland = true;
 		terminal = true;
 		fonts = true;
+		social = true;
 	};
 
 	home = {
