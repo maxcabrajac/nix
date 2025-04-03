@@ -7,12 +7,13 @@ let
 in {
 
 	imports = [
+		./event_handler.nix
 		./idlelock.nix
 		./keybind_manager.nix
 		./keybinds.nix
 		./no_gaps_on_maximize.nix
+		./window_rules.nix
 		./wrapper.nix
-		./event_handler.nix
 	];
 
 	options.programs.hypr = {

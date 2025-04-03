@@ -4,7 +4,7 @@
 			handler = with lib.types; submodule {
 				options = {
 					cmd = lib.mkOption {
-						type = str;
+						type = either str path;
 					};
 					args = lib.mkOption {
 						type = bool;
