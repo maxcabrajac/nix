@@ -57,7 +57,7 @@
 		home.packages = [ eventHandler ];
 
 		wayland.windowManager.hyprland.settings = {
-			exec-once = [ eventHandler ];
+			exec-once = [ (lib.getExe eventHandler) ];
 		};
 	};
 }
