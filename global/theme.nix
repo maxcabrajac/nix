@@ -1,7 +1,7 @@
-{ lib, ... }: {
+{ lib, maxLib, pkgs, config, ... }: {
 	options.global.color = {
 		scheme = lib.mkOption {
-			type = with lib.types; attrsOf (attrsOf (strMatching "#[0-9A-F]{6}"));
+			type = with lib.types; attrsOf (attrsOf maxLib.types.color);
 		};
 	};
 
