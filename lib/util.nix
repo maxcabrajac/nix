@@ -22,4 +22,12 @@
 		collision_count = length (attrNames collisions);
 	in
 		throwIf (collision_count > 0) "[${tag}] Collisions were detected on: ${prettyString collisions}" x;
+
+	leftPad = char: len: str: let
+		curLen = builtins.stringLength str;
+		padLen = lib.max 0 (len - curLen);
+		padChars = lib.genList (_: char) padLen;
+		pad = lib.concatStrings padChars;
+	in
+		pad + str;
 }

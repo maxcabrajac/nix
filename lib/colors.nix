@@ -1,4 +1,4 @@
-{ lib, ... }: let
+{ lib, maxLib, ... }: let
 	inherit (lib) pipe flip fix imap0 fold;
 	fpipe = flip pipe;
 in rec {
@@ -83,6 +83,9 @@ in rec {
 				hex = lib.mkOption {
 					type = str;
 				};
+				hhex = lib.mkOption {
+					type = str;
+				};
 				r-float = lib.mkOption {
 					type = float;
 				};
@@ -94,14 +97,17 @@ in rec {
 				};
 			};
 
-			config = {
-				r-hex = intToHex config.r;
-				g-hex = intToHex config.g;
-				b-hex = intToHex config.b;
-				r-float = config.r / 255.0;
-				b-float = config.b / 255.0;
-				g-float = config.g / 255.0;
-				hex = "${config.r-hex}${config.g-hex}${config.b-hex}";
+			config = let
+				intToColorPart = i: maxLib.leftPad "0" 2 (intToHex i);
+			in with config; {
+				r-hex = intToColorPart r;
+				g-hex = intToColorPart g;
+				b-hex = intToColorPart b;
+				hex = "${r-hex}${g-hex}${b-hex}";
+				hhex = "#${hex}";
+				r-float = r / 255.0;
+				b-float = b / 255.0;
+				g-float = g / 255.0;
 			};
 		}));
 }
