@@ -1,4 +1,12 @@
-{ ... }: {
+{ config, ... }: let
+	maps = {
+		main = main: {
+			fg = main.fg.hhex;
+			bg = main.bg.hhex;
+		};
+	};
+	theme = config.global.color.themer maps;
+in {
 	programs.zathura = {
 		mappings = {
 			"n" = "scroll down";
@@ -15,8 +23,9 @@
 
 		options = {
 			recolor = true;
-			recolor-lightcolor = "#0f1419";
-			recolor-darkcolor = "#ffffff";
+			recolor-lightcolor = theme.bg;
+			recolor-darkcolor = theme.fg;
+			recolor-keephue = true;
 			adjust-open = "width";
 			guioptions = "";
 		};
