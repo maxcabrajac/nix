@@ -1,4 +1,6 @@
-{ lib, ... }: {
+{ lib, config, ... }: let
+	cfg = config.programs.eww;
+in {
 	options.programs.eww = {
 		widgets = lib.mkOption {
 			type = with lib.types; let
@@ -11,6 +13,7 @@
 						type = str;
 					};
 
+					# not yet used
 					use = lib.mkOption {
 						type = listOf str;
 					};
@@ -18,17 +21,19 @@
 			in attrsOf widget;
 		};
 
-		windows = lib.mkOption {
+		window = lib.mkOption {
 			type = with lib.types; let
 				window = submodule {
 					params = lib.mkOption {
 						type = attrsOf str;
 					};
-					def = lib.mkOption {
+
+					widget = lib.mkOption {
 						type = str;
 					};
-					uses = lib.mkOption {
-						type = listOf str;
+
+					args = lib.mkOption {
+						type = str;
 					};
 				};
 			in attrsOf window;
@@ -40,65 +45,24 @@
 		};
 	};
 
-	config.programs.eww = {
-		rawYuck = lib.optional true /*yuck*/ ''
+	config = {
+		programs.eww = {
+			rawYuck = ["oi"];
+			window.bar = {
+				params = {
+					windowtype = "dock";
+					geometry = /*yuck*/''(geometry
+						:x "0%"
+						:y "0%"
+						:width "99%"
+						:height "10px"
+						:anchor "top center"
+					)'';
+					exclusive = "true";
+				};
+			};
+		};
 
-			;;;
-			;;; Helpers
-			;;;
-
-			(defvar module_spacing 5)
-			(include "lib.yuck")
-			(include "globals.yuck")
-			(include "./modules")
-
-			;;;
-			;;; Layout
-			;;;
-
-			(defwidget tray []
-				(box
-					:class "tray"
-					:space-evenly false
-					:halign "end"
-					:spacing {module_spacing}
-					(volume)
-					(wifi)
-					(cpu)
-					(battery :battery "BAT0")
-					(dnd)
-					(systray
-						:spacing 5
-						:icon-size 20
-						:prepend-new false
-					)
-				)
-			)
-
-			(defwidget bar [monitor]
-				(centerbox
-					:orientation "h"
-					(workspaces :monitor {monitor})
-					(clock)
-					(tray)
-   			)
-			)
-
-			(defwindow bar [screen]
-				:windowtype "dock"
-				:geometry (geometry
-					:x "0%"
-					:y "0%"
-					:width "99%"
-					:height "10px"
-					:anchor "top center"
-				)
-				:reserve (struts :side "top" :distance "4%")
-				:exclusive true
-				(bar :monitor {screen})
-			)
-
-		'';
-
+		dbg.eww = cfg.rawYuck;
 	};
 }

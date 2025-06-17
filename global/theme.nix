@@ -11,6 +11,10 @@ in {
 			type = with lib.types; listOf str;
 		};
 
+		maps = lib.mkOption {
+			type = with lib.types; attrsOf (attrsOf (functionTo anything));
+		};
+
 		themer = lib.mkOption {
 			type = with lib.types; anything;
 		};
@@ -50,12 +54,13 @@ in {
 
 		scheme_queue = [ "main" "ayu" ];
 
-		themer = maps: lib.pipe cfg.scheme_queue [
+		themer = (lib.flip lib.mapAttrs) cfg.maps (_: maps: lib.pipe cfg.scheme_queue [
 			(map (scheme: map (m: m cfg.scheme.${scheme}) (lib.catAttrs scheme [maps])))
 			lib.flatten
 			(v: lib.throwIf (v == []) "Cannot find theme for an app. scheme_queue must contain at least one of: ${lib.attrNames maps}" v)
 			lib.head
-		];
+		]);
+
 	};
 }
 

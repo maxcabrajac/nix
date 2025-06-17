@@ -1,12 +1,12 @@
 { config, ... }: let
-	maps = {
+	theme = config.global.color.themer.zathura;
+in {
+	global.color.maps.zathura = {
 		main = main: {
 			fg = main.fg.hhex;
 			bg = main.bg.hhex;
 		};
 	};
-	theme = config.global.color.themer maps;
-in {
 	programs.zathura = {
 		mappings = {
 			"n" = "scroll down";

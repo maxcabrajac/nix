@@ -1,6 +1,8 @@
 { lib, config, ... }: let
 	cfg = config.programs.bemenu;
-	maps = {
+	theme = config.global.color.themer.bemenu;
+in lib.mkIf cfg.enable {
+	global.color.maps.bemenu = {
 		main = main: let color = builtins.elemAt main.color 0; in {
 			tb = color.hhex;
 			tf = main.bg.hhex;
@@ -10,8 +12,6 @@
 			hf = main.bg.hhex;
 		};
 	};
-	theme = config.global.color.themer maps;
-in lib.mkIf cfg.enable {
 	programs.bemenu = {
 		settings = {
 			line-height = 20;
