@@ -22,6 +22,7 @@ in {
 			lsa = "ls -a";
 			mv = "mv -i";
 			rm = "rm -d";
+			nn = "jj";
 		};
 
 		home.shellAbbrs = {
