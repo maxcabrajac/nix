@@ -21,13 +21,16 @@ in {
 		bttr = mkOption {
 			type = types.path;
 		};
+		modules = mkOption {
+			type = type.listOf types.package;
+		};
 	};
 
 	config = mkIf cfg.enable {
 		home.packages = with pkgs; [
 			kitty
 			dunst
-		] ++ lib.attrValues scripts;
+		] ++ cfg.modules ++ lib.attrValues scripts;
 
 		programs.hypr.bttr = lib.getExe scripts.bttr;
 

@@ -54,7 +54,7 @@
 			done < <(${socat} -U - UNIX-CONNECT:''$HYPRLAND_SOCK)
 		'';
 	in {
-		home.packages = [ eventHandler ];
+		programs.hypr.modules = [ eventHandler ];
 
 		wayland.windowManager.hyprland.settings = {
 			exec-once = [ (lib.getExe eventHandler) ];
