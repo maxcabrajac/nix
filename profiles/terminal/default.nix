@@ -30,6 +30,7 @@ in {
 			ad = "mkcd";
 			e = "editor";
 			z = "zathura";
+			k = "kubectl";
 		};
 
 		home = {
