@@ -10,6 +10,7 @@ in {
 			lf = enable;
 			abcd = enable;
 			fish = enable;
+			jujutsu = enable;
 		};
 
 		home.shellAliases = {
