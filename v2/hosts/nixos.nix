@@ -61,6 +61,8 @@
 			];
 		};
 
+		profiles.users.max = [ "pimba" ];
+
 		# programs.firefox.enable = true;
 
 		# List packages installed in system profile.
