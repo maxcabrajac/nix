@@ -35,22 +35,27 @@
 
 			inherit (lib)
 				filter
+				flatten
+				fold
 				listToAttrs
 				map
 				mapAttrs'
 				mergeAttrs
-				fold
 			;
+
+			commonModules = flatten [
+				(util.readDir ./common)
+			];
 		in rec {
 			inherit hosts;
 
 			nixosConfigurations =
 				hosts
-				|> map ({ host, module, ... }: {
-					name = host;
+				|> map (host: {
+					name = host.host;
 					value = lib.nixosSystem {
-						modules = [
-							module
+						modules = commonModules ++ [
+							host.module
 							home-manager.nixosModules.home-manager
 						];
 					};
