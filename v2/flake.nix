@@ -46,6 +46,7 @@
 			commonModules = flatten [
 				(util.readDir ./common)
 				(util.readDir ./global)
+				(util.readDir ./profiles)
 			];
 		in rec {
 			inherit hosts;

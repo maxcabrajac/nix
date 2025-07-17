@@ -1,8 +1,8 @@
 { lib, util, config, ... }: let
 	inherit (lib)
+		map
 		mkOption
 		types
-		map
 	;
 
 	cfg = config.profiles;
@@ -18,10 +18,14 @@ in {
 			type = with types; attrsOf <| listOf str;
 			description = "List of activated profiles for each user";
 		};
+
+		forEachUser = mkOption {
+			type = with types; functionTo <| functionTo anything;
+		};
 	};
 
-	config = {
-		profiles.users_by_profile =
+	config.profiles = rec {
+		users_by_profile =
 			cfg.users
 			|> lib.mapAttrs (user: map (profile: { inherit user profile; }))
 			|> lib.attrValues
@@ -29,5 +33,9 @@ in {
 			|> lib.groupBy ({profile, ...}: profile)
 			|>	lib.mapAttrs (_: map ({ user, ... }: user))
 		;
+
+		forEachUser = profileName: profileAttrs: {
+			users = lib.genAttrs users_by_profile.${profileName} (_: profileAttrs);
+		};
 	};
 }

@@ -61,7 +61,7 @@
 			];
 		};
 
-		profiles.users.max = [ "pimba" ];
+		profiles.users.max = [ "lf" ];
 
 		# programs.firefox.enable = true;
 
