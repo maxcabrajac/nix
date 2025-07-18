@@ -51,6 +51,14 @@
 		in rec {
 			inherit hosts;
 
+			packages = forEachSystem (pkgs:
+				lib.fix (self:
+					util.readDir ./pkgs
+					|>	map (file: import file { pkgs = pkgs // self; inherit lib util; })
+					|> fold mergeAttrs {}
+				)
+			);
+
 			nixosConfigurations =
 				hosts
 				|> map (host: {
