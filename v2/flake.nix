@@ -30,7 +30,8 @@
 				util.readDir ./hosts
 				|> map (file: import file // {
 					host = (util.fileParts file).name;
-				});
+				})
+			;
 
 			inherit (lib)
 				filter
@@ -74,7 +75,8 @@
 						];
 					};
 				})
-				|> listToAttrs;
+				|> listToAttrs
+			;
 
 			homeConfigurations =
 				hosts
@@ -87,6 +89,7 @@
 						value = config.home;
 					})
 				)
-				|> fold mergeAttrs {};
+				|> fold mergeAttrs {}
+			;
 		};
 }
