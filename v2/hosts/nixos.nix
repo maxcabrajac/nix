@@ -80,6 +80,7 @@
 			telegram-desktop
 			vivaldi
 			xwayland-satellite
+			waybar
 		];
 
 		programs.niri.enable = true;
