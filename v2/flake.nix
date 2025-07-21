@@ -22,7 +22,6 @@
 				import nixpkgs {
 					inherit system;
 					config.allowUnfree = true;
-					overlays = outputs.overlays;
 				}
 			);
 			forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
@@ -44,23 +43,25 @@
 			;
 
 			commonModules = flatten [
-				{ nixpkgs.overlays = outputs.overlays; }
+				{ nixpkgs.overlays = outputs.overlays |> lib.attrValues; }
 				(util.readDir ./common)
 				(util.readDir ./global)
 				(util.readDir ./profiles)
 			];
 		in rec {
 			packages = forEachSystem (pkgs:
-				lib.fix (self:
-					util.readDir ./pkgs
-					|>	map (file: import file { pkgs = pkgs // self; inherit lib util; })
-					|> fold mergeAttrs {}
-				)
+				pkgs
+				|> lib.flip outputs.overlays.self
+				|> lib.fix
 			);
 
-			overlays = [
-				(final: _: outputs.packages.${final.system})
-			];
+			overlays = {
+				self = (final: pkgs:
+					util.readDir ./pkgs
+					|>	map (file: import file { pkgs = final; inherit lib util; })
+					|> fold mergeAttrs {}
+				);
+			};
 
 			nixosConfigurations =
 				hosts
