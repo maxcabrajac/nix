@@ -44,7 +44,14 @@
 			;
 
 			commonModules = flatten [
-				{ nixpkgs.overlays = outputs.overlays |> lib.attrValues; }
+				home-manager.nixosModules.home-manager
+				{
+					nixpkgs.overlays = outputs.overlays |> lib.attrValues;
+					home-manager = {
+						useGlobalPkgs = true;
+						useUserPackages = true;
+					};
+				}
 				(util.readDir ./common)
 				(util.readDir ./global)
 				(util.readDir ./profiles)
@@ -71,7 +78,6 @@
 					value = lib.nixosSystem {
 						modules = commonModules ++ [
 							host.module
-							home-manager.nixosModules.home-manager
 						];
 					};
 				})
