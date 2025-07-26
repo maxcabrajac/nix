@@ -52,18 +52,9 @@
 		# services.libinput.enable = true;
 
 		# Define a user account. Don't forget to set a password with ‘passwd’.
-		users.users.max = {
-			isNormalUser = true;
+		users.humans.max = {
 			extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-			packages = with pkgs; [
-				tree
-				neovim
-			];
 		};
-
-		profiles.users.max = [ "lf" ];
-
-		# programs.firefox.enable = true;
 
 		# List packages installed in system profile.
 		# You can use https://search.nixos.org/ to find more packages (and options).
@@ -81,6 +72,7 @@
 			vivaldi
 			xwayland-satellite
 			waybar
+			neovim
 		];
 
 		programs.niri.enable = true;

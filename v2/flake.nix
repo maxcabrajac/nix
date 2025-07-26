@@ -14,9 +14,11 @@
 		let
 			inherit (self) outputs;
 			lib = nixpkgs.lib // home-manager.lib;
+
 			util = import ./util {
 				inherit lib;
 			};
+
 			pkgsFor = lib.genAttrs (import systems) (
 				system:
 				import nixpkgs {
@@ -49,12 +51,10 @@
 					nixpkgs.overlays = outputs.overlays |> lib.attrValues;
 					home-manager = {
 						useGlobalPkgs = true;
-						useUserPackages = true;
 					};
 				}
 				(util.readDir ./common)
-				(util.readDir ./global)
-				(util.readDir ./profiles)
+				./modules
 			];
 		in rec {
 			packages = forEachSystem (pkgs:
@@ -75,8 +75,13 @@
 				hosts
 				|> map (host: {
 					name = host.host;
-					value = lib.nixosSystem {
+					value = lib.nixosSystem rec {
+						specialArgs = {
+							inherit util;
+						};
 						modules = commonModules ++ [
+							# Also forward args to home-manager modules
+							{ home-manager.extraSpecialArgs = specialArgs; }
 							host.module
 						];
 					};

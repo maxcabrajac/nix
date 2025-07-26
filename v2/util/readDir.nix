@@ -1,5 +1,11 @@
 { lib, ... }: let
-	inherit (lib) flip pipe;
+	inherit (lib)
+		concatStringsSep
+		drop
+		flip
+		pipe
+		take
+	;
 	fpipe = flip pipe;
 in rec {
 	fileName = builtins.baseNameOf;
@@ -8,8 +14,8 @@ in rec {
 				fileName
 				(lib.strings.splitString ".")
 			];
-			name = pipe parts [ lib.lists.init (lib.strings.concatStringsSep ".") ];
-			extension = lib.lists.last parts;
+			name = parts |> take 1 |> concatStringsSep ".";
+			extension = parts |> drop 1 |> concatStringsSep ".";
 		in {
 			inherit name extension;
 		};
