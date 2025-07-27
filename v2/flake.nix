@@ -30,8 +30,9 @@
 
 			hosts =
 				util.readDir ./hosts
-				|> map (file: import file // {
+				|> map (file: {
 					host = (util.fileParts file).name;
+					module = import file;
 				})
 			;
 
@@ -91,7 +92,6 @@
 
 			homeConfigurations =
 				hosts
-				|> filter ({ isNixOs, ... }: !isNixOs)
 				|> map ({ host, ... }: let
 					userConfigs = nixosConfigurations.${host}.config.home-manager.users;
 				in
