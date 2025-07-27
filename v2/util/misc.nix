@@ -30,4 +30,10 @@
 		pad = lib.concatStrings padChars;
 	in
 		pad + str;
+
+	safeGetAttrFromPath = path: default: attr:
+		if lib.hasAttrByPath path attr
+		then lib.getAttrFromPath path attr
+		else default
+	;
 }

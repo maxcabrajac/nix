@@ -12,7 +12,7 @@ in {
 						if isString mods then lib.stringToCharacters mods else mods
 						|> naturalSort
 						|> lib.unique
-					];
+					;
 				};
 				key = mkOption { type = str; };
 				cmd = mkOption { type = str; };
