@@ -3,13 +3,13 @@
 	theme = config.color.themer.bemenu;
 in {
 	color.maps.bemenu = {
-		main = main: let color = builtins.elemAt main.color 0; in {
+		default = scheme: let color = builtins.elemAt scheme.colors 0; in {
 			tb = color.hhex;
-			tf = main.bg.hhex;
-			fb = main.bg.hhex;
+			tf = scheme.bg.hhex;
+			fb = scheme.bg.hhex;
 			ff = color.hhex;
 			hb = color.hhex;
-			hf = main.bg.hhex;
+			hf = scheme.bg.hhex;
 		};
 	};
 
