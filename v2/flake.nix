@@ -58,6 +58,8 @@
 			{ home-manager.sharedModules = self.hmModules; }
 		];
 	in rec {
+		inherit util;
+
 		packageBundles =
 			util.readDir' ./pkgs
 			|>	map ({ name, file, ... }: {

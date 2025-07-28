@@ -1,7 +1,8 @@
 { lib, util, ... } @ input: let
 	inherit (util) deepMerge readDir' fileParts mapDir;
 	inherit (builtins) map filter;
-	inherit (lib.trivial) flip;
+	inherit (lib.trivial) flip pipe;
+	fpipe = flip pipe;
 
 	flattenPaths = let
 		flattenPathsImpl = path: obj:
@@ -64,14 +65,12 @@
 	# TODO: improve this
 	inheritDescription = attr: _: lib.attrsets.filterAttrs (name: _: name == attr);
 
-	processDescription = dep_repos: desc:
-		desc
-		|> map (f: spec: spec // (f dep_repos spec.desc)) [
+	processDescription = dep_repos: fpipe <| map (f: spec: spec // (f dep_repos spec.desc)) [
 			buildRuntimeInputs
 			(inheritDescription "inheritPath")
 		];
 in {
-	packages = { pkgs }: let
+	packages = { pkgs, ... }: let
 		handlers = with pkgs.writers; {
 			sh = receivedSpec: with lib.strings; let
 				defaultSpec = {

@@ -1,20 +1,13 @@
 { lib, util, ... }: with lib; let
-	inherit (util) checkCollisions;
+	inherit (util)
+		checkCollisions
+	;
+	inherit (util.types.web)
+		site
+		search_engine
+	;
 in {
-	options.web = with types; let
-		search_engine = strMatching ".*%%.*";
-		site = submodule ({config, ...}: {
-			options = {
-				name = mkOption { type = str; };
-				alias = mkOption { type = str; default = toLower config.name; };
-				bookmark = mkOption { type = str; };
-				search_engine = mkOption {
-					type = nullOr search_engine;
-					default = null;
-				};
-			};
-		});
-	in {
+	options.web = with types; {
 		sites = mkOption {
 			type = listOf site;
 			default = [];
