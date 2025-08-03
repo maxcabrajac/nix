@@ -5,6 +5,6 @@
 	};
 
 	home.shellAliases = {
-
+		editor = "nvim";
 	};
 }
