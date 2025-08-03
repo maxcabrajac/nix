@@ -1,3 +1,0 @@
-{ maxLib, ... }: {
-	imports = maxLib.nonDefaultNix ./.;
-}

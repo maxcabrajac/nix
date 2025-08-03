@@ -1,87 +1,139 @@
 {
-	description = "Max's HM config";
-
-	nixConfig = {
-		extra-substituters = ["https://hyprland.cachix.org"];
-		extra-trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-	};
+	description = "Nix Config";
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
-
+		systems.url = "github:nix-systems/default-linux";
 		home-manager = {
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-
-		hyprland.url = "github:hyprwm/Hyprland";
-		# nixgl.url = "github:nix-community/nixGL";
-		# This is a in-progress PR
-		nixgl.url = "github:bb010g/nixGL";
-		eww.url = "github:maxcabrajac/eww/include_dir";
-		bttr_dispatchers = {
-			url = "github:maxcabrajac/bttr_dispatchers";
-			inputs.hyprland.follows = "hyprland";
-		};
-		nix-index = {
-			url = "github:nix-community/nix-index-database";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
 	};
 
-	outputs = inputs@{ self, nixpkgs, home-manager, ... }:
-		let
-			inherit (self) outputs;
-			lib = nixpkgs.lib;
-			system = builtins.currentSystem;
-			maxLib = import ./lib {
-				inherit pkgs;
-				lib = lib // home-manager.lib;
-			};
-			packages_dir = import ./packages { inherit lib maxLib; };
-			pkgs = import nixpkgs {
+	outputs = inputs@{ self, nixpkgs, home-manager, systems, ... }: let
+		inherit (self) outputs;
+		lib = nixpkgs.lib // home-manager.lib;
+
+		util = import ./util {
+			inherit lib;
+		};
+
+		pkgsFor = lib.genAttrs (import systems) (
+			system:
+			import nixpkgs {
 				inherit system;
 				config.allowUnfree = true;
-				inherit (outputs) overlays;
-			};
-			# helpers = maxLib.scriptDir { inherit pkgs; } ./scripts;
-			forAllSystems = lib.genAttrs lib.systems.flakeExposed;
-		in {
-			overlays = [
-				inputs.nixgl.overlay
-				packages_dir.overlay
-				(_:_: inputs.hyprland.packages.${system})
-				(_:_: inputs.eww.packages.${system})
-				(_:_: { inherit (home-manager.packages.${system}) home-manager; })
-				(_:_: { hypr_plugs = [
-					inputs.bttr_dispatchers.packages.${system}.bttr_dispatchers
-				]; })
-			];
+			}
+		);
+		forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
 
-			nixosConfiguration.main = lib.nixosSystem {
+		hosts =
+			util.readDir ./hosts
+			|> map (file: {
+				host = (util.fileParts file).name;
+				module = import file;
+			})
+		;
 
-			};
-			homeConfigurations = {
-				main = home-manager.lib.homeManagerConfiguration {
-					inherit pkgs;
-					extraSpecialArgs = {
-						inherit maxLib;
+		inherit (lib)
+			attrValues
+			filter
+			flatten
+			fold
+			listToAttrs
+			map
+			mapAttrs'
+			mergeAttrs
+		;
+
+		commonModules = flatten [
+			{
+				nixpkgs.overlays = outputs.overlays |> lib.attrValues;
+				home-manager = {
+					useGlobalPkgs = true;
+				};
+			}
+			(util.readDir ./common)
+			self.nixosModules
+			{ home-manager.sharedModules = self.hmModules; }
+		];
+	in rec {
+		inherit util;
+
+		packageBundles =
+			util.readDir' ./pkgs
+			|>	map ({ name, file, ... }: {
+				inherit name;
+				value = import file { inherit lib util; };
+			})
+			|> listToAttrs
+		;
+
+		overlays = {
+			self = (final: pkgs:
+				packageBundles
+				|> attrValues
+				|>	map (bundle: bundle.packages { pkgs = final; })
+				|> fold mergeAttrs {}
+			);
+		};
+
+		packages = forEachSystem (pkgs:
+			pkgs
+			|> lib.flip outputs.overlays.self
+			|> lib.fix
+		);
+
+		nixosModules = flatten [
+			home-manager.nixosModules.home-manager
+			(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["nixosModule"] {}))
+			(util.readDir ./modules/nixos)
+		];
+
+		hmModules = flatten [
+			(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["hmModule"] {}))
+			(util.readDir ./modules/hm)
+		];
+
+		nixosConfigurations =
+			hosts
+			|> map (host: {
+				name = host.host;
+				value = lib.nixosSystem rec {
+					specialArgs = {
+						inherit util;
 					};
-					modules = [
-						inputs.nix-index.hmModules.nix-index
-						packages_dir.homeManagerModule
-						./home.nix
-						./progs
-						./global
-						./profiles
+					modules = flatten [
+						{
+							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
+							home-manager = {
+								# Also forward args to home-manager modules
+								extraSpecialArgs = specialArgs;
+								sharedModules = hmModules;
+								useGlobalPkgs = true;
+								useUserPackages = true;
+							};
+						}
+						(util.readDir ./common)
+						nixosModules
+						host.module
 					];
 				};
-			};
+			})
+			|> listToAttrs
+		;
 
-			packages = forAllSystems (system: let
-				getPacks = repo: repo.packages.${system};
-			in {
-				inherit (getPacks home-manager) home-manager;
-			});
-		};
+		homeConfigurations =
+			hosts
+			|> map ({ host, ... }: let
+				userConfigs = nixosConfigurations.${host}.config.home-manager.users;
+			in
+				userConfigs |> mapAttrs' (username: config: {
+					name = "${username}@${host}";
+					value = config.home;
+				})
+			)
+			|> fold mergeAttrs {}
+		;
+	};
 }
