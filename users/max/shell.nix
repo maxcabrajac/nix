@@ -2,6 +2,7 @@
 	home.shellAbbrs = {
 		af = "touch";
 		e = "editor";
+		nn = "jj";
 	};
 
 	home.shellAliases = {
