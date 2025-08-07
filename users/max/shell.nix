@@ -47,4 +47,14 @@
 			};
 		};
 	};
+
+	programs.eza = {
+		enable = true;
+		extraOptions = [
+			"--group-directories-first"
+		];
+
+		# TODO: Theme this?
+		# theme = {};
+	};
 }
