@@ -7,6 +7,7 @@
 
 	home.shellAliases = {
 		editor = "nvim";
+		rr = "lfcd";
 	};
 
 	programs.starship = {
