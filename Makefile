@@ -4,7 +4,7 @@ switch:
 update:
 	nix flake update
 	make switch
-	git commit flake.lock -m "Upgrade $$(date +%d-%m-%Y)"
+	# TODO: Commit files using either git or jj dynamically
 .PHONY: update
 
 clean:
