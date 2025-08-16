@@ -8,6 +8,7 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		niri-flake.url = "github:sodiboo/niri-flake";
 	};
 
 	outputs = inputs@{ self, nixpkgs, home-manager, systems, ... }: let
@@ -101,7 +102,7 @@
 				name = host.host;
 				value = lib.nixosSystem rec {
 					specialArgs = {
-						inherit util;
+						inherit util inputs;
 					};
 					modules = flatten [
 						{
