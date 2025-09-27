@@ -20,21 +20,33 @@ in rec {
 			inherit name extension;
 		};
 
-	readDir = dir: pipe dir [
-		builtins.readDir
-		(lib.mapAttrsToList (name: _: lib.path.append dir name))
-	];
+	readDirOpt = { recursive? false } @ opt: originalDir: let
+		a = 1;
+		readDirImpl = self: dir:
+			dir
+			|> builtins.readDir
+			|> lib.mapAttrsToList (name: type: {
+				inherit type name;
+				path = lib.path.append dir name;
+				parts = fileParts name;
+			})
+			|> map ({ type, path, ... } @ file:
+				if recursive && type == "directory" then
+					self path
+				else
+					file
+			)
+			|> lib.flatten
+		;
+	in
+		lib.fix (readDirImpl) originalDir
+	;
 
-	readDir' = fpipe [
-		readDir
-		(map (file: { inherit file; } // (fileParts file)))
-	];
+	readDir = readDirOpt {};
 
-	mapDir = f: fpipe [
-		readDir'
-		(map ({file, name, ...}: { ${name} = f file; }))
-		lib.mergeAttrsList
-	];
-
-	nonDefaultNix = dir: lib.lists.remove (dir + "/default.nix") (readDir dir);
+	nonDefaultNix = dir:
+		dir
+		|> readDirOpt { recursive = false; }
+		|> map (f: f.path)
+		|> lib.lists.remove (dir + "/default.nix");
 }

@@ -7,10 +7,18 @@
 		mkOption
 	;
 
-	homes = util.readDir' ../../users
-		|> map ({ name, file, ... }: {
+	homes = util.readDir ../../users
+		|> map ({ name, path, ... }: let
+			homeRoot = path;
+		in {
 			inherit name;
-			value = { imports = util.readDir file; };
+			value = {
+				imports =
+					homeRoot
+					|> util.readDirOpt { recursive = true; }
+					|> map (f: f.path)
+				;
+			};
 		})
 		|> listToAttrs
 	;

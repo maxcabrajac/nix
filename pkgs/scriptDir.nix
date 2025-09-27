@@ -1,5 +1,5 @@
 { lib, util, ... } @ input: let
-	inherit (util) deepMerge readDir' fileParts mapDir;
+	inherit (util) deepMerge fileParts mapDir;
 	inherit (builtins) map filter;
 	inherit (lib.trivial) flip pipe;
 	fpipe = flip pipe;
@@ -124,11 +124,17 @@ in {
 			|> (spec: handlers.${spec.extension} (deepMerge [default_spec spec]))
 		;
 
-		scriptDirInject = default_spec: dep_repos: dir:
-			lib.fixedPoints.fix (self: mapDir
-				(makeScriptInject default_spec (dep_repos // { inherit self; }))
-				dir
-			);
+		scriptDirInject = default_spec: dep_repos: dir: let
+			scripts = util.readDir dir;
+		in
+			lib.fixedPoints.fix (self: let
+				selfMakeScript = makeScriptInject default_spec (dep_repos // { inherit self; });
+			in
+				scripts
+				|> map ({ path, parts, ... }: { ${parts.name} = selfMakeScript path; })
+				|> lib.mergeAttrsList
+			)
+		;
 
 		makeScript = makeScriptInject {};
 		scriptDir = scriptDirInject {};
