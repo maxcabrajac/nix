@@ -8,7 +8,10 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		niri-flake.url = "github:sodiboo/niri-flake";
+
+		# Waiting on https://github.com/sodiboo/niri-flake/pull/1336 to be merged
+		# niri-flake.url = "github:sodiboo/niri-flake";
+		niri-flake.url = "github:maxcabrajac/niri-flake";
 	};
 
 	outputs = inputs@{ self, nixpkgs, home-manager, systems, ... }: let

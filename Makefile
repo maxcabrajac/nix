@@ -1,6 +1,9 @@
 switch:
 	sudo nixos-rebuild --flake . switch
 
+build:
+	nixos-rebuild --flake . build
+
 update:
 	nix flake update
 	make switch
