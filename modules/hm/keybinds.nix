@@ -1,34 +1,47 @@
-{ lib, util, ... }: with lib; let
-	inherit (util) checkCollisions;
+{ lib, util, config, ... }: with lib; let
+	inherit (util.types) into apply;
 in {
 	options.global.keybinds = with types; let
-		keybind = submodule {
+		keybind = submodule ({ config, ... }: {
 			options = {
 				mods = mkOption {
-					type = types.either
-						(strMatching "(M|S|C|A)*")
-						(types.listOf (types.enum ["M" "S" "C" "A"]));
-					apply = mods:
-						if isString mods then lib.stringToCharacters mods else mods
-						|> naturalSort
-						|> lib.unique
+					type = strMatching "(M|S|C|A)*"
+						|> into (listOf (enum ["M" "S" "C" "A"])) lib.stringToCharacters
+						|> apply naturalSort
+						|> apply lib.unique
 					;
 				};
 				key = mkOption { type = str; };
-				cmd = mkOption { type = str; };
+
+				pkg = mkOption {
+					type = package;
+				};
+
+				cmd = mkOption {
+					type =
+						str
+						|> into (listOf str) (lib.splitString " ")
+					;
+					default = lib.getExe config.pkg;
+				};
+
 				repeat = mkOption {
 					type = bool;
 					default = false;
 				};
+
 				description = mkOption {
 					type = str;
 					default = "";
 				};
 			};
-		};
+		});
 	in mkOption {
 		type = listOf keybind;
 		default = [];
-		apply = checkCollisions "keybinds" ({mods, key, ...}: "${concatStrings mods}-${key}");
 	};
+
+	config.assertions = [
+		(util.assertions.noCollisions "global.keybinds" ({mods, key, ...}: "${lib.concatStrings mods}-${key}") config.global.keybinds)
+	];
 }

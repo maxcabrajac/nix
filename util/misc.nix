@@ -36,4 +36,25 @@
 		then lib.getAttrFromPath path attr
 		else default
 	;
+
+	types = {
+		# simpler version of coercedTo
+      into = finalT: func: initialT: lib.types.coercedTo initialT func finalT;
+
+		apply = f: t: t // {
+			merge = loc: values: f (t.merge loc values);
+		};
+	};
+
+	assertions.noCollisions = tag: keyFunction: values: let
+		inherit (builtins) length groupBy;
+		inherit (lib) filterAttrs;
+		collisions = values
+			|> groupBy keyFunction
+			|> filterAttrs (name: value: length value > 1)
+		;
+	in {
+		assertion = (collisions == {});
+		message = "[${tag}] Detected collisions: ${prettyString collisions}";
+	};
 }
