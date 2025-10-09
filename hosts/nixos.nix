@@ -62,13 +62,11 @@
 		wget
 		kitty
 		fuzzel
-		firefox
 		git
 		jujutsu
 		gcc
 		discord
 		telegram-desktop
-		vivaldi
 		xwayland-satellite
 		waybar
 		neovim

@@ -1,4 +1,4 @@
-{ lib, util, ... }: with lib; let
+{ lib, util, pkgs, config, ... }: with lib; let
 	inherit (util)
 		checkCollisions
 	;
@@ -6,8 +6,15 @@
 		site
 		search_engine
 	;
+
+	cfg = config.web;
 in {
 	options.web = with types; {
+		browser = mkOption {
+			type = package;
+			default = pkgs.firefox;
+		};
+
 		sites = mkOption {
 			type = listOf site;
 			default = [];
@@ -24,5 +31,9 @@ in {
 					throwIf (isNull se.search_engine)
 						"web.default_search_engine.search_engine is null/not set" se.search_engine;
 		};
+	};
+
+	config = {
+		home.packages = [ cfg.browser ];
 	};
 }

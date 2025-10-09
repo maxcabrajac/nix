@@ -1,5 +1,8 @@
 { pkgs, ... }: {
-	web.sites = [
-		{ name = "Hanabi"; alias = "h"; bookmark = "hanab.live"; }
-	];
+	web = {
+		browser = pkgs.vivaldi;
+		sites = [
+			{ name = "Hanabi"; alias = "h"; bookmark = "hanab.live"; }
+		];
+	};
 }
