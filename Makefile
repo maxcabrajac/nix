@@ -1,6 +1,9 @@
 switch:
 	sudo nixos-rebuild --flake . switch
 
+switch-traced:
+	sudo nixos-rebuild --flake . --show-trace  switch
+
 build:
 	nixos-rebuild --flake . build
 
