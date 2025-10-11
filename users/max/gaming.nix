@@ -5,6 +5,6 @@
 	];
 
 	global.keybinds = [
-		{ mods = "M"; key = "G"; pkg = pkgs.heroic; }
+		# { mods = "M"; key = "G"; pkg = pkgs.heroic; }
 	];
 }

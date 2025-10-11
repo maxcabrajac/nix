@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ config, lib, ... }: {
 	programs.niri = {
 		enable = true;
 		settings = {
@@ -37,6 +37,7 @@
 						y = 450;
 					};
 				};
+				"DP-1" = {};
 			};
 
 			layout = let
@@ -71,9 +72,6 @@
 
 			prefer-no-csd = true;
 			binds = with config.lib.niri.actions; {
-				"Mod+Return".action = spawn "kitty";
-				"Mod+Space".action = spawn "fuzzel";
-
 				"XF86AudioRaiseVolume" = {
 					action = spawn [ "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.025+" ];
 					allow-when-locked = true;
@@ -94,6 +92,9 @@
 					allow-when-locked = true;
 				};
 
+				"Mod+Return".action = spawn "kitty";
+				"Mod+Space".action = spawn "fuzzel";
+
 				"Mod+M".action = close-window;
 
 				"Mod+H".action = focus-column-left;
@@ -108,36 +109,22 @@
 				"Mod+Ctrl+Alt+H".action = move-column-left;
 				"Mod+Ctrl+Alt+I".action = move-column-right;
 
-				"Mod+J".action = focus-monitor-left;
-				"Mod+L".action = focus-workspace-down;
-				"Mod+U".action = focus-workspace-up;
-				"Mod+Y".action = focus-monitor-right;
-
-				"Mod+Alt+J".action = move-column-to-monitor-left;
-				"Mod+Alt+L".action = move-column-to-workspace-down;
-				"Mod+Alt+U".action = move-column-to-workspace-up;
-				"Mod+Alt+Y".action = move-column-to-monitor-right;
-
-				"Mod+Z".action = maximize-column;
-				"Mod+X".action = toggle-column-tabbed-display;
-				"Mod+Alt+Z".action = fullscreen-window;
-
-				"Mod+C".action = center-column;
-				"Mod+Ctrl+C".action = center-visible-columns;
-
 				"Mod+Shift+H".action = set-column-width "-5%";
 				"Mod+Shift+N".action = set-window-height "+5%";
 				"Mod+Shift+E".action = set-window-height "-5%";
 				"Mod+Shift+I".action = set-column-width "+5%";
 
-				"Mod+F".action = toggle-window-floating;
-				"Mod+Shift+F".action = switch-focus-between-floating-and-tiling;
+				"Mod+J".action = focus-monitor-left;
+				"Mod+Y".action = focus-monitor-right;
+				"Mod+Alt+J".action = move-column-to-monitor-left;
+				"Mod+Alt+Y".action = move-column-to-monitor-right;
 
-				"Print".action = screenshot;
+				"Mod+Z".action = maximize-column;
+				"Mod+Alt+Z".action = fullscreen-window;
+				"Mod+X".action = toggle-column-tabbed-display;
 
-				"Mod+Shift+Q".action = quit;
-
-				"Mod+Shift+P".action = power-off-monitors;
+				"Mod+V".action = toggle-window-floating;
+				"Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
 			};
 		};
 	};
