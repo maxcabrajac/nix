@@ -8,6 +8,7 @@ in {
 
 	global.keybinds = [
 		{
+			description = "Start browsing with dmenu_search";
 			mods = "M";
 			key = "O";
 			sh = let
