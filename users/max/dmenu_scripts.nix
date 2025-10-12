@@ -20,8 +20,8 @@ in {
 					if [ -n "$link" ]; then
 						exec ${browser} $link
 					fi
-				''
-			;
+					''
+				;
 		}
 	];
 }
