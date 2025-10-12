@@ -8,7 +8,17 @@
 
 	formatBind = mods: key: lib.concatStringsSep "+" ((map (m: modTable.${m}) mods) ++ [key]);
 
-	intoNiriKeybind = {mods, key, cmd, ...}: { name = formatBind mods key; value = { action = spawn cmd; }; };
+	intoNiriKeybind = {mods, key, cmd, description, ...}: {
+		name = formatBind mods key;
+		value = {
+			action = spawn cmd;
+			hotkey-overlay =
+				if description != ""
+				then { title = description; }
+				else { hidden = true; }
+			;
+		};
+	};
 in {
 	programs.niri.settings.binds = config.global.keybinds
 		|> map intoNiriKeybind
