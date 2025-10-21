@@ -51,7 +51,7 @@
 
 	# Define a user account. Don't forget to set a password with ‘passwd’.
 	users.humans.max = {
-		extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+		extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
 	};
 
 	# List packages installed in system profile.
@@ -147,5 +147,10 @@
   	  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   	  dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   	  localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+	};
+
+	virtualisation.docker = {
+		enable = true;
+		storageDriver = "btrfs";
 	};
 }
