@@ -1,18 +1,16 @@
 switch:
-	sudo nixos-rebuild --flake . switch
-
-switch-traced:
-	sudo nixos-rebuild --flake . --show-trace  switch
+	nh os switch . -a
 
 build:
-	nixos-rebuild --flake . build
+	nh os build . -Q
+
+build-traced:
+	nh os build . -Q --show-trace
 
 update:
 	nix flake update
 	make switch
-	# TODO: Commit files using either git or jj dynamically
 .PHONY: update
 
 clean:
-	nix-collect-garbage
 .PHONY: clean

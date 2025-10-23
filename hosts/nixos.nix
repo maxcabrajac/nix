@@ -70,6 +70,7 @@
 		xwayland-satellite
 		waybar
 		neovim
+		nh
 	];
 
 	programs.niri.enable = true;
