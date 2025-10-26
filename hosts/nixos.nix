@@ -3,6 +3,9 @@
 	boot.loader.systemd-boot.enable = true;
 	boot.loader.efi.canTouchEfiVariables = true;
 
+	# clean /tmp
+	boot.tmp.cleanOnBoot = true;
+
 	# Use latest kernel.
 	boot.kernelPackages = pkgs.linuxPackages_latest;
 
