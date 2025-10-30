@@ -11,7 +11,9 @@
 
 		# Waiting on https://github.com/sodiboo/niri-flake/pull/1336 to be merged
 		# niri-flake.url = "github:sodiboo/niri-flake";
-		niri-flake.url = "github:maxcabrajac/niri-flake";
+	 	niri-flake.url = "github:maxcabrajac/niri-flake";
+
+	 	max-nvim.url = "github:maxcabrajac/nvf-configs";
 	};
 
 	outputs = inputs@{ self, nixpkgs, home-manager, systems, ... }: let
@@ -69,7 +71,7 @@
 			{ home-manager.sharedModules = self.hmModules; }
 		];
 	in rec {
-		inherit util;
+		inherit util inputs;
 
 		packageBundles =
 			util.readDir ./pkgs

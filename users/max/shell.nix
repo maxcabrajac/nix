@@ -1,12 +1,10 @@
 { pkgs, lib, ... }: {
 	home.shellAbbrs = {
 		af = "touch";
-		e = "editor";
 		nn = "jj";
 	};
 
 	home.shellAliases = {
-		editor = "nvim";
 		rr = "lfcd";
 	};
 
