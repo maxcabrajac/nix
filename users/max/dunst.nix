@@ -1,5 +1,5 @@
-{ ... }: {
+{ config, ... }: {
 	services.dunst = {
-		enable = true;
+		enable = config.profiles.gui;
 	};
 }

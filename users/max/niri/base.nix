@@ -1,6 +1,6 @@
 { config, lib, ... }: {
 	programs.niri = {
-		enable = true;
+		enable = config.profiles.gui;
 		settings = {
 			input = {
 				mouse = {

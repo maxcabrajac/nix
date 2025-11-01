@@ -56,6 +56,12 @@
 	users.humans.max = {
 		extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
 	};
+	home-manager.users.max = {
+		profiles = {
+			gui = true;
+			games = true;
+		};
+	};
 
 	# List packages installed in system profile.
 	# You can use https://search.nixos.org/ to find more packages (and options).

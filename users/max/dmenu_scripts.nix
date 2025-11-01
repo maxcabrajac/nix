@@ -2,7 +2,7 @@
 	cfg = config.programs.dmenu_scripts;
 in {
 	programs.dmenu_scripts = {
-		enable = true;
+		enable = config.profiles.gui;
 		dmenu = pkgs.writers.writeDashBin "dmenu" "exec ${lib.getExe pkgs.fuzzel} --dmenu";
 	};
 
