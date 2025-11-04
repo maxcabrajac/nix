@@ -95,6 +95,7 @@
 			pkgs
 			|> lib.flip outputs.overlays.self
 			|> lib.fix
+			|> (x: x // { nixpkgs = pkgs; })
 		);
 
 		nixosModules = flatten [
