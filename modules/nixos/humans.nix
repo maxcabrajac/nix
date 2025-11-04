@@ -25,20 +25,24 @@
 
 	contains = elem: list: builtins.any (e: e == elem) list;
 
-	humans = config.users.humans;
+	humans = config.humans;
 
 	defaultHumanConfig = {
 		isNormalUser = true;
 		isSystemUser = false;
 	};
 in {
-	options.users.humans = mkOption {
-		type = with lib.types; attrsOf raw;
-		default = {};
+	options = {
+		humans = mkOption {
+			type = with lib.types; attrsOf raw;
+			default = {};
+		};
 	};
 
 	config = {
 		users.users = humans |> mapAttrs (_: opts: opts // defaultHumanConfig);
 		home-manager.users = homes |> filterAttrs (user: _: humans |> attrNames |> contains user);
+
+		lib.humans.hmConfigs = humans |> attrNames |> map (name: config.home-manager.users.${name});
 	};
 }

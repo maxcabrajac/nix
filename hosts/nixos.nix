@@ -45,7 +45,7 @@
 	services.automatic-timezoned.enable = true;
 
 	# Define a user account. Don't forget to set a password with ‘passwd’.
-	users.humans.max = {
+	humans.max = {
 		extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
 	};
 	home-manager.users.max = {
@@ -68,13 +68,10 @@
 		gcc
 		discord
 		telegram-desktop
-		xwayland-satellite
 		waybar
 		neovim
 		nh
 	];
-
-	programs.niri.enable = true;
 
 	system.stateVersion = "25.05"; # Did you read the comment?
 
