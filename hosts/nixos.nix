@@ -24,11 +24,13 @@
 
 	# gnome
 	services.xserver = {
-		enable = true;
 		videoDrivers = [ "nvidia" ];
 	};
 
-	services.displayManager.sddm.enable = true;
+	services.displayManager.sddm = {
+		enable = true;
+		wayland.enable = true;
+	};
 
 
 	# Enable the X11 windowing system.
