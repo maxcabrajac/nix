@@ -1,4 +1,4 @@
-{ config, lib, ... }: {
+{ config, lib, pkgs, ... }: {
 	programs.niri = {
 		enable = config.profiles.gui;
 		settings = {
@@ -93,7 +93,6 @@
 				};
 
 				"Mod+Return".action = spawn "kitty";
-				"Mod+Space".action = spawn "fuzzel";
 
 				"Mod+M".action = close-window;
 
@@ -128,4 +127,8 @@
 			};
 		};
 	};
+
+	global.keybinds = [
+		{ mods = "M"; key = "Space"; pkg = pkgs.fuzzel; }
+	];
 }
