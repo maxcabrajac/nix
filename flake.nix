@@ -83,19 +83,20 @@
 		;
 
 		overlays = {
-			self = (final: pkgs:
-				packageBundles
-				|> attrValues
-				|>	map (bundle: bundle.packages { pkgs = final; })
-				|> fold mergeAttrs {}
-			);
+			self = (_: pkgs: packages.${pkgs.stdenv.hostPlatform.system} or {});
 		};
 
-		packages = forEachSystem (pkgs:
-			pkgs
-			|> lib.flip outputs.overlays.self
-			|> lib.fix
-			|> (x: x // { nixpkgs = pkgs; })
+		packages = forEachSystem (pkgs: let
+			final = pkgs // self;
+			callPackage = lib.callPackageWith final;
+			self = packageBundles
+				|> attrValues
+				|> map (bundle: bundle.packages or {})
+				|> fold mergeAttrs {}
+				|> lib.mapAttrs (_: drv: callPackage drv {})
+			;
+		in
+			self
 		);
 
 		nixosModules = flatten [
@@ -118,7 +119,7 @@
 						inherit util inputs;
 					};
 					modules = flatten [
-						{
+						({ config, ... }: {
 							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
 							home-manager = {
 								# Also forward args to home-manager modules
@@ -127,7 +128,7 @@
 								useGlobalPkgs = true;
 								useUserPackages = true;
 							};
-						}
+						})
 						(allNixFiles ./common)
 						nixosModules
 						host.module
