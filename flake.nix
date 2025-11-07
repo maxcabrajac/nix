@@ -58,18 +58,6 @@
 			mapAttrs'
 			mergeAttrs
 		;
-
-		commonModules = flatten [
-			{
-				nixpkgs.overlays = outputs.overlays |> lib.attrValues;
-				home-manager = {
-					useGlobalPkgs = true;
-				};
-			}
-			(allNixFiles ./common)
-			self.nixosModules
-			{ home-manager.sharedModules = self.hmModules; }
-		];
 	in rec {
 		inherit util inputs;
 
@@ -119,7 +107,7 @@
 						inherit util inputs;
 					};
 					modules = flatten [
-						({ config, ... }: {
+						{
 							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
 							home-manager = {
 								# Also forward args to home-manager modules
@@ -128,7 +116,7 @@
 								useGlobalPkgs = true;
 								useUserPackages = true;
 							};
-						})
+						}
 						(allNixFiles ./common)
 						nixosModules
 						host.module
