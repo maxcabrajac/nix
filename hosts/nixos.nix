@@ -21,7 +21,7 @@
 	services.xserver.videoDrivers = ["nvidia"];
 
 	hardware.nvidia = {
-		open = false;
+		open = true;
 		# Enable the Nvidia settings menu,
 		# accessible via `nvidia-settings`.
 		nvidiaSettings = true;
