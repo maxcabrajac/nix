@@ -82,11 +82,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1762487579,
-        "narHash": "sha256-Mnt71FGmMYhvSxzLG10T4dVvRdk28gN+p+o9UDr13rI=",
+        "lastModified": 1762611942,
+        "narHash": "sha256-CR3hfPJGlNxu4BTRkKqafjEFR0noerkEMgXe+JoRS1o=",
         "owner": "maxcabrajac",
         "repo": "nvf-configs",
-        "rev": "dbcf04a00ed6746faf50debb95c76b6fe41e880e",
+        "rev": "503c818018dc10c3a4e2e54f46bd0edcf879f86f",
         "type": "github"
       },
       "original": {
