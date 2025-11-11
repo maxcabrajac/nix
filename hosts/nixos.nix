@@ -72,6 +72,8 @@
 		neovim
 		nh
 		jq
+		nix-output-monitor
+		nix-tree
 	];
 
 	system.stateVersion = "25.05"; # Did you read the comment?
