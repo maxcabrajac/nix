@@ -11,9 +11,15 @@
 
 		# Waiting on https://github.com/sodiboo/niri-flake/pull/1336 to be merged
 		# niri-flake.url = "github:sodiboo/niri-flake";
-		niri-flake.url = "github:maxcabrajac/niri-flake";
+		niri-flake = {
+			url = "github:maxcabrajac/niri-flake";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 
-		max-nvim.url = "github:maxcabrajac/nvf-configs";
+		max-nvim = {
+			url = "github:maxcabrajac/nvf-configs";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		mabar = {
 			url = "github:maxcabrajac/mabar";
 			inputs.nixpkgs.follows = "nixpkgs";
