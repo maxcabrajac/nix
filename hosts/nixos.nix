@@ -68,7 +68,6 @@
 		gcc
 		discord
 		telegram-desktop
-		waybar
 		neovim
 		nh
 		jq

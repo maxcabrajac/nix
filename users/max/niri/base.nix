@@ -66,10 +66,6 @@
 				"ELECTRON_OZONE_HINT" = "wayland";
 			};
 
-			spawn-at-startup = [
-				{ argv = [ "waybar" ]; }
-			];
-
 			prefer-no-csd = true;
 			binds = with config.lib.niri.actions; {
 				"XF86AudioRaiseVolume" = {
