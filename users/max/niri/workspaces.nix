@@ -64,8 +64,8 @@ in {
 
 		mabar.wmInterface.workspaces = let
 			# compact jq
-			jq = "${bins.jq} -c";
-			niriMsg = "${niri} msg -j";
+			jq = "jq -c";
+			niriMsg = "niri msg -j";
 			newlySelectedWorkspaceId = /* bash */ "${niriMsg} event-stream | ${jq} -r --unbuffered '.WorkspaceActivated // empty | .id'";
 			setMonitorData = /* bash */ ''
 				monitorData=$(${niriMsg} workspaces | ${jq} --arg monitor "$monitor" '
@@ -75,7 +75,7 @@ in {
 							name: .name // empty | sub("\($monitor)_"; ""),
 							value: {
 								id: .id,
-								focused: .is_focused,
+								focused: .is_active,
 								empty: .active_window_id == null
 							}
 						}
@@ -94,9 +94,13 @@ in {
 					fi
 				done
 			'';
-		in ''
+		in /* bash */ ''
+			export PATH=${pkgs.coreutils}/bin:${pkgs.jq}/bin:${pkgs.niri}/bin
+
 			monitor=$1
-			${setMonitorData}
+			while [ -z "$monitorData" ] || $(echo $monitorData | ${jq} 'any(.focused) | not'); do
+				${setMonitorData}
+			done
 			${printLayout}
 			${newlySelectedWorkspaceId} | ${eventProcessor}
 		'';
