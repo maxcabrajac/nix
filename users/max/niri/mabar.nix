@@ -26,9 +26,10 @@ in {
 		;
 	};
 
-	config.home.packages = [ cfg.overrides.wmInterface cfg.finalPackage ];
-	config.programs.niri = {
-		mabar = {
+	config = {
+		home.packages = [ cfg.overrides.wmInterface cfg.finalPackage ];
+
+		programs.niri.mabar = {
 			overrides.wmInterface = let
 				funcs = cfg.wmInterface
 					|> lib.mapAttrs (name: body: ''
@@ -50,8 +51,21 @@ in {
 			finalPackage = (cfg.package.override cfg.overrides);
 		};
 
-		settings.spawn-at-startup = [
-			{ argv = [ (lib.getExe cfg.finalPackage) ]; }
-		];
+		systemd.user.services.mabar = {
+			Unit = {
+				Description = "My graphical app";
+				After = [ "graphical-session.target" ];
+				PartOf = [ "graphical-session.target" ];
+			};
+
+			Service = {
+				ExecStart = lib.getExe cfg.finalPackage;
+				Restart = "on-failure";
+			};
+
+			Install = {
+				WantedBy = [ "graphical-session.target" ];
+			};
+		};
 	};
 }
