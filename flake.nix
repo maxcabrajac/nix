@@ -20,10 +20,16 @@
 			url = "github:maxcabrajac/nvf-configs";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+
 		mabar = {
 			url = "github:maxcabrajac/mabar";
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.systems.follows = "systems";
+		};
+
+		xdp-git = {
+			url = "github:maxcabrajac/xdg-desktop-portal/pr";
+			flake = false;
 		};
 	};
 
@@ -76,13 +82,14 @@
 			util.readDir ./pkgs
 			|>	map ({ name, path, ... }: {
 				inherit name;
-				value = import path { inherit lib util; };
+				value = import path { inherit lib util inputs; };
 			})
 			|> listToAttrs
 		;
 
 		overlays = {
 			self = (_: pkgs: packages.${pkgs.stdenv.hostPlatform.system} or {});
+			xdp = (_: pkgs: { xdg-desktop-portal = pkgs.xdg-desktop-portal-git or pkgs.xdg-desktop-portal; } );
 		};
 
 		packages = forEachSystem (pkgs: let

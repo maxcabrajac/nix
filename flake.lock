@@ -307,7 +307,8 @@
         "max-nvim": "max-nvim",
         "niri-flake": "niri-flake",
         "nixpkgs": "nixpkgs",
-        "systems": "systems_2"
+        "systems": "systems_2",
+        "xdp-git": "xdp-git"
       }
     },
     "systems": {
@@ -337,6 +338,23 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default-linux",
+        "type": "github"
+      }
+    },
+    "xdp-git": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763692253,
+        "narHash": "sha256-ZJKloF7B/37UuUNncF/zbh0dwaXYy7MCuXFfEPOkU8Q=",
+        "owner": "maxcabrajac",
+        "repo": "xdg-desktop-portal",
+        "rev": "1e7976ea8e4570c931048068d469f8961894c614",
+        "type": "github"
+      },
+      "original": {
+        "owner": "maxcabrajac",
+        "ref": "pr",
+        "repo": "xdg-desktop-portal",
         "type": "github"
       }
     },
