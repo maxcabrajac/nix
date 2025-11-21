@@ -7,7 +7,7 @@
 
 	home.packages = lib.optional config.programs.niri.enable pkgs.nautilus;
 
-	# xdg.portal.config.niri = {
-	# 	"org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
-	# };
+	xdg.portal.config.niri = {
+		"org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+	};
 }
