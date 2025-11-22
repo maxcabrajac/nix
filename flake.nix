@@ -102,7 +102,7 @@
 				|> lib.mapAttrs (_: drv: callPackage drv {})
 			;
 		in
-			self
+			self // { inherit pkgs; }
 		);
 
 		nixosModules = flatten [
