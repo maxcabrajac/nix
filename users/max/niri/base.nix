@@ -1,4 +1,5 @@
 { config, lib, pkgs, ... }: {
+	programs.lf.useAsXdgPortalOn.niri = true;
 	programs.niri = {
 		enable = config.profiles.gui;
 		settings = {
