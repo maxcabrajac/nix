@@ -4,13 +4,11 @@
 	] (name: lib.mkEnableOption name);
 
 	config = {
-		global.keybinds = [
-			{
-				mods = "M";
-				key = "Return";
+		global.keybinds = {
+			M-Return = {
 				pkg = config.terminal.package;
 				description = "Open a new terminal (${config.terminal.package.name})";
-			}
-		];
+			};
+		};
 	};
 }

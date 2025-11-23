@@ -4,10 +4,6 @@
 		gamescope
 	];
 
-	global.keybinds = [
-		# { mods = "M"; key = "G"; pkg = pkgs.heroic; }
-	];
-
 	web.sites = [
 		{
 			alias = "h";

@@ -123,7 +123,7 @@
 		};
 	};
 
-	global.keybinds = [
-		{ mods = "M"; key = "Space"; pkg = pkgs.fuzzel; }
-	];
+	global.keybinds = {
+		M-Space.pkg = pkgs.fuzzel;
+	};
 }

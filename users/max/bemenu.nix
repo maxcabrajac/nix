@@ -21,10 +21,4 @@ in {
 			hp = 8;
 		} // theme;
 	};
-
-	# programs.dmenu_scripts.dmenu = cfg.package;
-
-	# global.keybinds = [
-	# 	{ mods = "M"; key = "space"; cmd = "menu_run"; }
-	# ];
 }

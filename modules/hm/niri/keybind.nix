@@ -13,14 +13,14 @@
 		value = {
 			action = spawn cmd;
 			hotkey-overlay =
-				if description != ""
-				then { title = description; }
-				else { hidden = true; }
+				if isNull description
+				then { hidden = true; }
+				else { title = description; }
 			;
 		};
 	};
 in {
-	programs.niri.settings.binds = config.global.keybinds
+	programs.niri.settings.binds = config.global.finalKeybinds
 		|> map intoNiriKeybind
 		|> lib.listToAttrs
 	;

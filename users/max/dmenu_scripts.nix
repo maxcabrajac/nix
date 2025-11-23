@@ -6,22 +6,20 @@ in {
 		dmenu = pkgs.writers.writeDashBin "dmenu" "exec ${lib.getExe pkgs.fuzzel} --dmenu";
 	};
 
-	global.keybinds = [
-		{
+	global.keybinds = {
+		M-O = {
 			description = "Start browsing with dmenu_search";
-			mods = "M";
-			key = "O";
 			sh = let
 				dmenu_search = lib.getExe cfg.search.package;
 				browser = lib.getExe config.web.browser;
 			in
-				/* sh */''
+				/* sh */ ''
 					link=$(${dmenu_search})
 					if [ -n "$link" ]; then
 						exec ${browser} $link
 					fi
-					''
+				''
 				;
-		}
-	];
+		};
+	};
 }
