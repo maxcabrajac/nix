@@ -9,9 +9,13 @@ in {
 	};
 
 	config = lib.mkIf cfg.enable {
-		programs.fish.shellAliases.lfcd = "cd (${cfg.package} -print-last-dir)";
-		programs.bash.shellAliases.lfcd = "cd $(${cfg.package} -print-last-dir)";
-		programs.zsh.shellAliases.lfcd = "cd $(${cfg.package} -print-last-dir)";
+		programs = let
+			lf = lib.getExe cfg.package;
+		in {
+			fish.shellAliases.lfcd = "cd (${lf} -print-last-dir)";
+			bash.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
+			zsh.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
+		};
 
 		xdg.portal.termfilechooser = cfg.useAsXdgPortalOn |> lib.mapAttrs (_: enable: lib.mkIf enable {
 			cmd = "lf-wrapper.sh";
