@@ -1,5 +1,4 @@
 { config, lib, pkgs, ... }: {
-	programs.lf.useAsXdgPortalOn.niri = true;
 	programs.niri = {
 		enable = config.profiles.gui;
 		settings = {
@@ -126,4 +125,7 @@
 	global.keybinds = {
 		M-Space.pkg = pkgs.fuzzel;
 	};
+
+	programs.lf.useAsXdgPortalOn.niri = true;
+	services.playerctld.enable = true;
 }
