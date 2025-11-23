@@ -89,8 +89,6 @@
 					allow-when-locked = true;
 				};
 
-				"Mod+Return".action = spawn "kitty";
-
 				"Mod+M".action = close-window;
 
 				"Mod+H".action = focus-column-left;
