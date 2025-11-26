@@ -18,9 +18,21 @@ in {
 		};
 
 		wmInterface = let
-			funcs = [ "workspaces" ];
-			funcOption = _: lib.mkOption {
-				type = str;
+			funcs = [
+				"workspaces"
+				"windows"
+			];
+			funcOption = _: {
+				init = lib.mkOption {
+					type = str;
+					default = "";
+				};
+				on = lib.mkOption {
+					type = listOf str;
+				};
+				run = lib.mkOption {
+					type = str;
+				};
 			};
 		in
 			lib.genAttrs funcs funcOption
@@ -34,17 +46,73 @@ in {
 		];
 
 		programs.niri.mabar = {
+			wmInterface = let
+				jq = "jq -c";
+				niriMsg = "niri msg -j";
+			in {
+				windows = {
+					init = "monitor=$1";
+					on = [ "WindowFocusChanged" ];
+					run = /* bash */ ''
+						workspace=$(${niriMsg} workspaces | ${jq} --arg monitor "$monitor" '
+							.[] | select(.output == $monitor and .is_active).id
+						')
+						echo $workspace
+						if [ -z "$workspace" ]; then
+							echo "[]"
+							return
+						fi
+						${niriMsg} windows | ${jq} --arg workspace "$workspace" '
+							map(select(.workspace_id == ($workspace | tonumber) and .is_floating == false)
+								| {
+									class: .app_id,
+									focused: .is_focused,
+									pos: .layout.pos_in_scrolling_layout
+								}
+							) | group_by(.pos[0])
+							| sort_by(.[0].pos[0])
+							| map(
+								sort_by(.pos[1])
+								| map(del(.pos))
+							)
+						'
+					'';
+				};
+			};
+
 			overrides.wmInterface = let
+				buildFunc = name: { init, on, run }: let
+					onEvent = ''niri msg -j event-stream | jq -c -r --unbuffered '${on |> map (x: ".${x} // ") |> lib.concatStrings} empty' '';
+				in /* bash */ ''
+					${name}() {
+
+						${init}
+
+						onEvent() {
+							${run}
+						}
+
+						onEvent
+						${onEvent} | while read -r event; do
+							onEvent
+						done
+					}
+				'';
 				funcs = cfg.wmInterface
-					|> lib.mapAttrs (name: body: ''
-							${name}() {
-								${body}
-							}
-						'')
+					|> lib.mapAttrs buildFunc
 					|> lib.attrValues
 					|> lib.concatLines
 				;
+
+				bins = with pkgs; [
+					coreutils
+					jq
+					niri
+				];
+
 				mainBody = ''
+					export PATH=${lib.makeBinPath bins}
+
 					${funcs}
 					"$@"
 				'';

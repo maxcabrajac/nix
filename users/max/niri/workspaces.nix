@@ -63,46 +63,36 @@ in {
 		};
 
 		mabar.wmInterface.workspaces = let
-			# compact jq
 			jq = "jq -c";
 			niriMsg = "niri msg -j";
-			newlySelectedWorkspaceId = /* bash */ "${niriMsg} event-stream | ${jq} -r --unbuffered '.WorkspaceActivated // empty | .id'";
-			setMonitorData = /* bash */ ''
-				monitorData=$(${niriMsg} workspaces | ${jq} --arg monitor "$monitor" '
-					map(
-						select(.output == $monitor)
-						| {
-							name: .name // empty | sub("\($monitor)_"; ""),
-							value: {
-								id: .id,
-								focused: .is_active,
-								empty: .active_window_id == null
+		in {
+			init = /* bash */ ''
+				monitor=$1
+				refreshMonitorData() {
+					monitorData=$(${niriMsg} workspaces | ${jq} --arg monitor "$monitor" '
+						map(
+							select(.output == $monitor)
+							| {
+								name: .name // empty | sub("\($monitor)_"; ""),
+								value: {
+									id: .id,
+									focused: .is_active,
+									empty: .active_window_id == null
+								}
 							}
-						}
-					) | from_entries
-				')
-			'';
-			printLayout = /* bash */ ''
-				echo '${builtins.toJSON keysLayout}' | ${jq} --argjson mData "$monitorData" 'map(map($mData.[.]))'
-			'';
-			eventProcessor = /* bash */ ''\
-				while read -r selectedId; do
-					${setMonitorData}
+						) | from_entries
+					')
+				}
 
-					if $(echo $monitorData | ${jq} --argjson id "$selectedId" 'to_entries | map(.value.id) | contains([$id])'); then
-						${printLayout}
-					fi
+				while [ -z "$monitorData" ] || $(echo $monitorData | ${jq} 'any(.focused) | not'); do
+					refreshMonitorData
 				done
 			'';
-		in /* bash */ ''
-			export PATH=${pkgs.coreutils}/bin:${pkgs.jq}/bin:${pkgs.niri}/bin
-
-			monitor=$1
-			while [ -z "$monitorData" ] || $(echo $monitorData | ${jq} 'any(.focused) | not'); do
-				${setMonitorData}
-			done
-			${printLayout}
-			${newlySelectedWorkspaceId} | ${eventProcessor}
-		'';
+			on = [ "WorkspaceActivated" ];
+			run = /* bash */ ''
+				refreshMonitorData
+				echo '${builtins.toJSON keysLayout}' | ${jq} --argjson mData "$monitorData" 'map(map($mData.[.]))'
+			'';
+		};
 	};
 }
