@@ -132,7 +132,6 @@
 								extraSpecialArgs = specialArgs;
 								sharedModules = hmModules;
 								useGlobalPkgs = true;
-								useUserPackages = true;
 							};
 						}
 						(allNixFiles ./common)
@@ -151,7 +150,7 @@
 			in
 				userConfigs |> mapAttrs' (username: config: {
 					name = "${username}@${host}";
-					value = config.home;
+					value = { inherit config; };
 				})
 			)
 			|> fold mergeAttrs {}

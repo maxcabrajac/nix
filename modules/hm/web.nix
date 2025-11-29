@@ -34,6 +34,6 @@ in {
 	};
 
 	config = {
-		home.packages = [ cfg.browser ];
+		home.packages = lib.mkIf config.profiles.gui [ cfg.browser ];
 	};
 }

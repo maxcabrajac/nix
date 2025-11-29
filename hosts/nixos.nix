@@ -46,15 +46,17 @@
 
 	# Define a user account. Don't forget to set a password with ‘passwd’.
 	humans.max = {
-		extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
-	};
-	home-manager.users.max = {
-		profiles = {
-			gui = true;
-			games = true;
+		os = {
+			extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
 		};
-		programs.fish.enable = true;
-		home.stateVersion = "25.05"; # Did you read the comment?
+		hm.extraConfigs = {
+			profiles = {
+				gui = true;
+				games = true;
+			};
+			programs.fish.enable = true;
+			home.stateVersion = "25.05"; # Did you read the comment?
+		};
 	};
 
 	# List packages installed in system profile.

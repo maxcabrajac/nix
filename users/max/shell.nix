@@ -2,11 +2,18 @@
 	home.shellAbbrs = {
 		af = "touch";
 		nn = "jj";
+		k = "kubectl";
 	};
 
 	home.shellAliases = {
 		rr = "lfcd";
 	};
+
+	home.packages = with pkgs; [
+		nh
+		nom
+		jujutsu
+	];
 
 	programs.starship = {
 		enable = true;

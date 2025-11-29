@@ -1,6 +1,7 @@
 { inputs, lib, config, pkgs, ... }: let
 	mabar = inputs.mabar.packages.${pkgs.stdenv.hostPlatform.system}.mabar;
 	cfg = config.programs.niri.mabar;
+	ifNiri = lib.mkIf config.programs.niri.enable;
 in {
 	options.programs.niri.mabar = with lib.types; {
 		package = lib.mkOption {
@@ -27,7 +28,10 @@ in {
 	};
 
 	config = {
-		home.packages = [ cfg.overrides.wmInterface cfg.finalPackage ];
+		home.packages = ifNiri [
+			cfg.overrides.wmInterface
+			cfg.finalPackage
+		];
 
 		programs.niri.mabar = {
 			overrides.wmInterface = let
@@ -51,7 +55,7 @@ in {
 			finalPackage = (cfg.package.override cfg.overrides);
 		};
 
-		systemd.user.services.mabar = {
+		systemd.user.services.mabar = ifNiri {
 			Unit = {
 				Description = "My graphical app";
 				After = [ "graphical-session.target" ];

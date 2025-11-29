@@ -9,6 +9,9 @@ build:
 build-traced:
 	nh os build -o $(NIX_OUT) . --show-trace
 
+hm-switch:
+	nh home switch . -a
+
 update:
 	nix flake update
 	make switch

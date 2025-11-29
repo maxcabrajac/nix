@@ -26,22 +26,52 @@
 	contains = elem: list: builtins.any (e: e == elem) list;
 
 	humans = config.humans;
-
-	defaultHumanConfig = {
-		isNormalUser = true;
-		isSystemUser = false;
-	};
 in {
 	options = {
 		humans = mkOption {
-			type = with lib.types; attrsOf raw;
+			type = with lib.types; attrsOf (submodule {
+				options = {
+					os = mkOption {
+						type = raw;
+						default = {};
+					};
+
+					hm = {
+						enable = mkOption {
+							type = bool;
+							default = true;
+						};
+
+						from = mkOption {
+							type = nullOr str;
+							default = null;
+						};
+
+						extraConfigs = mkOption {
+							type = raw;
+							default = {};
+						};
+					};
+				};
+			});
 			default = {};
 		};
 	};
 
 	config = {
-		users.users = humans |> mapAttrs (_: opts: opts // defaultHumanConfig);
-		home-manager.users = homes |> filterAttrs (user: _: humans |> attrNames |> contains user);
+		users.users = humans |> mapAttrs (_: h: {
+			isNormalUser = true;
+			isSystemUser = false;
+		} // h.os);
+
+		home-manager.users = humans
+			|> filterAttrs (_: h: h.hm.enable)
+			|> mapAttrs (name: h: {
+				imports = [
+					h.hm.extraConfigs
+					homes.${if isNull h.hm.from then name else h.hm.from}
+				];
+			});
 
 		lib.humans.hmConfigs = humans |> attrNames |> map (name: config.home-manager.users.${name});
 	};

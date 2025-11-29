@@ -13,6 +13,6 @@ in {
 
 	config = {
 		terminal.bin = lib.getExe cfg.package;
-		home.packages = [ cfg.package ];
+		home.packages = lib.mkIf config.profiles.gui [ cfg.package ];
 	};
 }

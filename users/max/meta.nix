@@ -1,6 +1,5 @@
 { lib, config, ... }: {
 	options.profiles = lib.genAttrs [
-		"gui"
 		"games"
 	] (name: lib.mkEnableOption name);
 
