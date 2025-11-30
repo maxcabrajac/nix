@@ -1,7 +1,6 @@
 { pkgs, lib, ... }: {
 	home.shellAbbrs = {
 		af = "touch";
-		nn = "jj";
 		k = "kubectl";
 	};
 
@@ -14,7 +13,6 @@
 	home.packages = with pkgs; [
 		nh
 		nom
-		jujutsu
 	];
 
 	programs.starship = {
