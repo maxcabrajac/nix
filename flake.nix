@@ -134,7 +134,6 @@
 								useGlobalPkgs = true;
 							};
 						}
-						(allNixFiles ./common)
 						nixosModules
 						host.module
 					];
