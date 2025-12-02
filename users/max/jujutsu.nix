@@ -8,8 +8,8 @@ in {
 			git = {
 				push-new-bookmarks = true;
 			};
-			tempates = {
-				git_push_bookmark = ''"maxcabrajac" ++ change_id.short()'';
+			templates = {
+				git_push_bookmark = ''"maxcabrajac-" ++ change_id.short()'';
 			};
 		};
 	};
