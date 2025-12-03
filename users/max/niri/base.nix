@@ -1,4 +1,6 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }: let
+	cfg = config.programs.niri;
+in {
 	programs.niri = {
 		enable = config.profiles.gui;
 		settings = {
@@ -126,6 +128,6 @@
 		M-Space.pkg = pkgs.fuzzel;
 	};
 
-	programs.lf.useAsXdgPortalOn.niri = true;
-	services.playerctld.enable = true;
+	programs.lf.useAsXdgPortalOn.niri = cfg.enable;
+	services.playerctld.enable = cfg.enable;
 }
