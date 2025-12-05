@@ -21,10 +21,10 @@
 	services.xserver.videoDrivers = ["nvidia"];
 
 	hardware.nvidia = {
-		open = true;
+		open = false;
 		# Enable the Nvidia settings menu,
 		# accessible via `nvidia-settings`.
-		nvidiaSettings = true;
+		nvidiaSettings = false;
 	};
 
 	console = {
