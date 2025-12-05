@@ -52,12 +52,15 @@ in {
 			in {
 				windows = {
 					init = "monitor=$1";
-					on = [ "WindowFocusChanged" ];
+					on = [
+						"WindowFocusChanged"
+						"WindowOpenedOrChanged"
+						"WindowLayoutsChanged"
+					];
 					run = /* bash */ ''
 						workspace=$(${niriMsg} workspaces | ${jq} --arg monitor "$monitor" '
 							.[] | select(.output == $monitor and .is_active).id
 						')
-						echo $workspace
 						if [ -z "$workspace" ]; then
 							echo "[]"
 							return
@@ -67,13 +70,9 @@ in {
 								| {
 									class: .app_id,
 									focused: .is_focused,
-									pos: .layout.pos_in_scrolling_layout
+									x: .layout.pos_in_scrolling_layout[0] - 1,
+									y: .layout.pos_in_scrolling_layout[1] - 1,
 								}
-							) | group_by(.pos[0])
-							| sort_by(.[0].pos[0])
-							| map(
-								sort_by(.pos[1])
-								| map(del(.pos))
 							)
 						'
 					'';
@@ -82,7 +81,7 @@ in {
 
 			overrides.wmInterface = let
 				buildFunc = name: { init, on, run }: let
-					onEvent = ''niri msg -j event-stream | jq -c -r --unbuffered '${on |> map (x: ".${x} // ") |> lib.concatStrings} empty' '';
+					onEvent = ''niri msg -j event-stream | jq -c -r --unbuffered 'select(${on |> map (x: ".${x} // ") |> lib.concatStrings} empty) | keys | .[]' '';
 				in /* bash */ ''
 					${name}() {
 
@@ -94,6 +93,7 @@ in {
 
 						onEvent
 						${onEvent} | while read -r event; do
+							echo "Received event: $event" >&2
 							onEvent
 						done
 					}

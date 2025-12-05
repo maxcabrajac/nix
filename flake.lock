@@ -127,11 +127,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1764117104,
-        "narHash": "sha256-pT1L8R0ytEur9A9pbqa2pXxjo41ISfs6ikpBCfptQ74=",
+        "lastModified": 1764977855,
+        "narHash": "sha256-yLvJrPlda3Oz1s0NJFAfeKf1jvwlbGq63HXvJZL47vg=",
         "owner": "maxcabrajac",
         "repo": "mabar",
-        "rev": "a35c4846311135b935c3c5d9edb1fb2926f2aa06",
+        "rev": "9f405ee2be314e41a97bb0c0db1c250ec10ebd08",
         "type": "github"
       },
       "original": {
