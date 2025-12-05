@@ -69,7 +69,7 @@
 			attrValues
 			filter
 			flatten
-			fold
+			foldr
 			listToAttrs
 			map
 			mapAttrs'
@@ -98,7 +98,7 @@
 			self = packageBundles
 				|> attrValues
 				|> map (bundle: bundle.packages or {})
-				|> fold mergeAttrs {}
+				|> foldr mergeAttrs {}
 				|> lib.mapAttrs (_: drv: callPackage drv {})
 			;
 		in
@@ -152,7 +152,7 @@
 					value = { inherit config; };
 				})
 			)
-			|> fold mergeAttrs {}
+			|> foldr mergeAttrs {}
 		;
 	};
 }

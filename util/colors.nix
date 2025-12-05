@@ -1,5 +1,5 @@
 { lib, util, ... }: let
-	inherit (lib) pipe flip fix imap0 fold;
+	inherit (lib) pipe flip fix imap0 foldr;
 	fpipe = flip pipe;
 in rec {
 	# WHY THE FUCK DOESN'T NIX HAVE A MODULO OPERATOR
@@ -37,7 +37,7 @@ in rec {
 		))
 		reverseList
 		(imap0 (index: value: value * (pow 16 index)))
-		(fold (a: b: a + b) 0)
+		(foldr (a: b: a + b) 0)
 	];
 
 	intToHex = fix (self: n: let

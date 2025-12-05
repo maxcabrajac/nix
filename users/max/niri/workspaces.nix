@@ -55,7 +55,7 @@ in {
 					"Mod+${key}" = focus key;
 					"Mod+Alt+${key}" = move key;
 				})
-				|> lib.fold (x: y: x // y) {}
+				|> lib.foldr (x: y: x // y) {}
 			;
 
 			# Aesthetic changes

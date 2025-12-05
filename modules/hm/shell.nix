@@ -8,7 +8,7 @@
 
 	config = let
 		abbrs = config.home.shellAbbrs;
-	in lib.fold lib.recursiveUpdate {} <| [{
+	in lib.foldr lib.recursiveUpdate {} <| [{
 		programs.fish.shellAbbrs = abbrs;
 	}] ++ (
 		[
