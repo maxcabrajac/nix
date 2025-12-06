@@ -12,7 +12,7 @@
 
 	home.packages = with pkgs; [
 		nh
-		nom
+		nix-output-monitor
 	];
 
 	programs.starship = {
