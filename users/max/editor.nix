@@ -1,5 +1,5 @@
 { inputs, pkgs, lib, ... }: let
-	editor = inputs.max-nvim.packages.${pkgs.system}.editor;
+	editor = inputs.max-nvim.packages.${pkgs.stdenv.hostPlatform.system}.editor;
 in {
 	home = {
 		sessionVariables = {
