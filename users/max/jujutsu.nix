@@ -5,9 +5,6 @@ in {
 		enable = true;
 		settings = {
 			ui.default-command = "log";
-			git = {
-				push-new-bookmarks = true;
-			};
 			templates = {
 				git_push_bookmark = ''"maxcabrajac-" ++ change_id.short()'';
 			};
