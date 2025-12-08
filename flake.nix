@@ -38,7 +38,7 @@
 		lib = nixpkgs.lib // home-manager.lib;
 
 		util = import ./util {
-			inherit lib;
+			inherit lib inputs;
 		};
 
 		pkgsFor = lib.genAttrs (import systems) (

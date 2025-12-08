@@ -11,13 +11,10 @@
 			{
 				enable = mkEnableOption "dmenu_scripts";
 
-				dmenu = mkPackageOption null "dmenu" {
-					nullable = false; default = pkgs.dmenu;
-				};
+				dmenu = mkPackageOption pkgs "dmenu" {};
 
-				metaPackage = mkOption {
+				metaPackage = mkPackageOption pkgs "dmenu_scripts" {} // {
 					type = raw;
-					default = pkgs.dmenu_scripts;
 				};
 			}
 			# Common Options

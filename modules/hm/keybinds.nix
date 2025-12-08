@@ -28,6 +28,7 @@ in {
 				pkg = mkOption {
 					type = package;
 					default = pkgs.writeShellScriptBin "${config.finalCombo}-keybind-script" config.sh;
+					defaultText = "keybind.sh as a script";
 				};
 
 				cmd = mkOption {
@@ -36,6 +37,7 @@ in {
 						|> into (listOf str) (splitString " ")
 					;
 					default = getExe config.pkg;
+					defaultText = lib.literalExpression "lib.getExe keybind.pkg";
 				};
 
 				repeat = mkOption {

@@ -15,6 +15,7 @@
 		nix-output-monitor
 	];
 
+	programs.nix-search.pkg.enable = true;
 	programs.starship = {
 		enable = true;
 

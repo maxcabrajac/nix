@@ -3,6 +3,7 @@
 		mkOption
 		toLower
 		types
+		literalExpression
 	;
 in {
 	types.web = with types; rec {
@@ -15,6 +16,7 @@ in {
 				alias = mkOption {
 					type = str;
 					default = toLower config.name;
+					defaultText = literalExpression "lib.toLower config.name";
 				};
 				bookmark = mkOption {
 					type = str;

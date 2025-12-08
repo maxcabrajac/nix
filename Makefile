@@ -1,5 +1,8 @@
 NIX_OUT=/tmp/nix-build-output
 
+search-option:
+	nix run ".#homeConfigurations.${USER}@${shell hostname}.config.programs.nix-search.opt.package"
+
 switch:
 	nh os switch . -a
 
