@@ -123,11 +123,4 @@ in {
 			};
 		};
 	};
-
-	global.keybinds = {
-		M-Space.pkg = pkgs.fuzzel;
-	};
-
-	programs.lf.useAsXdgPortalOn.niri = cfg.enable;
-	services.playerctld.enable = cfg.enable;
 }
