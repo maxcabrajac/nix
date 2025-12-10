@@ -4,4 +4,5 @@
 	};
 	programs.lf.useAsXdgPortalOn.niri = true;
 	services.playerctld.enable = true;
+	services.wlsunset.enable = true;
 }
