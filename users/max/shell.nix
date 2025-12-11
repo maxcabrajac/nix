@@ -5,7 +5,6 @@
 	};
 
 	home.shellAliases = {
-		rr = "lfcd";
 		sdn = "shutdown now";
 		rbt = "reboot";
 	};

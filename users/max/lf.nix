@@ -1,4 +1,4 @@
-{ ... }: {
+{
 	programs.lf = {
 		enable = true;
 
@@ -43,5 +43,8 @@
 			zc = "push :zip-compress<space>";
 			ze = ":zip-extract; reload";
 		};
+
+		lfcd = true;
 	};
+	home.shellAliases.rr = "lfcd";
 }

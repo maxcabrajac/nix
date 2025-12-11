@@ -6,12 +6,14 @@ in {
 			type = with lib.types; attrsOf bool;
 			default = {};
 		};
+
+		lfcd = lib.mkEnableOption "lfcd";
 	};
 
 	config = lib.mkIf cfg.enable {
 		programs = let
 			lf = lib.getExe cfg.package;
-		in {
+		in lib.mkIf cfg.lfcd {
 			fish.shellAliases.lfcd = "cd (${lf} -print-last-dir)";
 			bash.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
 			zsh.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
