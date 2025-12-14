@@ -9,7 +9,7 @@
 			}
 			{
 				alias = "y";
-				name = "Home Assistant";
+				name = "YouTube";
 				bookmark = "youtube.com";
 				search_engine = "youtube.com/results?search_query=%%";
 			}
