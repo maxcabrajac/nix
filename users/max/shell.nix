@@ -12,6 +12,7 @@
 	home.packages = with pkgs; [
 		nh
 		nix-output-monitor
+		fzf
 	];
 
 	programs.nix-search.pkg.enable = true;
