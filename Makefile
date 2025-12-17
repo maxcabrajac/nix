@@ -1,7 +1,11 @@
 NIX_OUT=/tmp/nix-build-output
+HOME_CONFIG:=.\#homeConfigurations."${USER}@${shell hostname}".config
 
 search-option:
-	nix run '.#homeConfigurations."${USER}@${shell hostname}".config.programs.nix-search.opt.package'
+	nix run '$(HOME_CONFIG).programs.nix-search.opt.package'
+
+hm-news:
+	nix run '$(HOME_CONFIG).news.view'
 
 switch:
 	nh os switch . -a
