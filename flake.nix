@@ -29,6 +29,14 @@
 			url = "github:maxcabrajac/xdg-desktop-portal/pr";
 			flake = false;
 		};
+
+		# elephant.url = "github:abenz1267/elephant";
+		elephant.url = "github:abenz1267/elephant";
+
+		walker = {
+  	  	  url = "github:abenz1267/walker";
+  	  	  inputs.elephant.follows = "elephant";
+		};
 	};
 
 	outputs = inputs@{ self, nixpkgs, home-manager, systems, ... }: let
