@@ -7,6 +7,9 @@ search-option:
 hm-news:
 	nix run '$(HOME_CONFIG).news.view'
 
+test:
+	nh os test .
+
 switch:
 	nh os switch . -a
 
