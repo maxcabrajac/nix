@@ -2,7 +2,7 @@
 	cfg = config.programs.dmenu_scripts;
 in {
 	programs.dmenu_scripts = {
-		enable = config.profiles.gui;
+		enable = false;
 		dmenu = pkgs.writers.writeDashBin "dmenu" "exec ${lib.getExe pkgs.fuzzel} --dmenu";
 	};
 
@@ -14,11 +14,6 @@ in {
 				browser = lib.getExe config.web.browser;
 			in
 				/* sh */ ''
-
-
-
-
-
 					link=$(${dmenu_search})
 					if [ -n "$link" ]; then
 						exec ${browser} $link

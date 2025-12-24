@@ -34,6 +34,16 @@
 
 		# this is HUGE
 		wallpkgs.url = "github:NotAShelf/wallpkgs";
+
+		elephant = {
+			url = "github:maxcabrajac/elephant/websearch";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+		walker = {
+			url = "github:abenz1267/walker";
+			inputs.elephant.follows = "elephant";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs = inputs@{ flake-parts, self, nixpkgs, home-manager, ... }: let

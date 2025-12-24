@@ -6,11 +6,6 @@
 
 	web.sites = [
 		{
-			alias = "h";
-			name = "Hanabi";
-			bookmark = "hanab.live";
-		}
-		{
 			alias = "lv";
 			name = "H-group Conventions";
 			bookmark = "hanabi.github.io/learning-path#level-summary";
