@@ -13,6 +13,8 @@
 		nh
 		nix-output-monitor
 		fzf
+		zip
+		unzip
 	];
 
 	programs.nix-search.pkg.enable = true;

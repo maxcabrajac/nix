@@ -1,4 +1,6 @@
-{
+{ pkgs, lib, ...}: let
+	bins = lib.mapAttrs (_: p: lib.getExe p) pkgs;
+in {
 	programs.lf = {
 		enable = true;
 
@@ -14,10 +16,10 @@
 			mkdir = ''%mkdir -p "$@"'';
 			touch = ''%touch "$@"'';
 
-			tar-compress = "%{{ realpath --relative-to=$PWD $fx | xargs tar czf $@.tar.gz }}";
-			tar-extract = "%tar xzf $f";
-			zip-compress = "%{{ realpath --relative-to=$PWD $fx | xargs zip -r $@.zip }}";
-			zip-extract = "%unzip $f";
+			tar-compress = "%{{ realpath --relative-to=$PWD $fx | xargs ${bins.gnutar} czf $@.tar.gz }}";
+			tar-extract = ''%${bins.gnutar} xzf "$f"'';
+			zip-compress = "%{{ realpath --relative-to=$PWD $fx | xargs ${bins.zip} -r $@.zip }}";
+			zip-extract = ''%${bins.unzip} "$f"'';
 		};
 
 		keybindings = {
