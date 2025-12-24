@@ -9,10 +9,8 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
-		# Waiting on https://github.com/sodiboo/niri-flake/pull/1336 to be merged
-		# niri-flake.url = "github:sodiboo/niri-flake";
 		niri-flake = {
-			url = "github:maxcabrajac/niri-flake";
+			url = "github:sodiboo/niri-flake";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
