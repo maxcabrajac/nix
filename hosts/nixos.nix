@@ -44,7 +44,11 @@
 	# Define a user account. Don't forget to set a password with ‘passwd’.
 	humans.max = {
 		os = {
-			extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+			extraGroups = [
+				"wheel"
+				"docker"
+				"dialout"
+			];
 		};
 		hm.extraConfigs = {
 			profiles = {
