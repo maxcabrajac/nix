@@ -3,7 +3,9 @@
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
+		flake-parts.url = "github:hercules-ci/flake-parts";
 		systems.url = "github:nix-systems/default-linux";
+
 		home-manager = {
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -34,14 +36,22 @@
 		wallpkgs.url = "github:NotAShelf/wallpkgs";
 	};
 
-	outputs = inputs@{ self, nixpkgs, home-manager, systems, ... }: let
-		inherit (self) outputs;
+	outputs = inputs@{ flake-parts, self, nixpkgs, home-manager, systems, ... }: let
 		lib = nixpkgs.lib // home-manager.lib;
-
 		util = import ./util {
 			inherit lib inputs;
 		};
 
+		# move to util
+		allNixFiles = dir:
+			dir
+			|> util.readDirOpt { recursive = true; }
+			|> filter (f: f.parts.extension == "nix")
+			|> map (f: f.path)
+		;
+
+
+		inherit (self) outputs;
 		pkgsFor = lib.genAttrs (import systems) (
 			system:
 			import nixpkgs {
@@ -50,13 +60,6 @@
 			}
 		);
 		forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
-
-		allNixFiles = dir:
-			dir
-			|> util.readDirOpt { recursive = true; }
-			|> filter (f: f.parts.extension == "nix")
-			|> map (f: f.path)
-		;
 
 		hosts =
 			util.readDir ./hosts
@@ -76,84 +79,88 @@
 			mapAttrs'
 			mergeAttrs
 		;
-	in rec {
-		inherit util inputs;
+	in
+		flake-parts.lib.mkFlake { inherit inputs; } (top@{ ... }: {
+			systems = import inputs.systems;
+			flake = rec {
+				inherit util inputs;
 
-		packageBundles =
-			util.readDir ./pkgs
-			|>	map ({ name, path, ... }: {
-				inherit name;
-				value = import path { inherit lib util inputs; };
-			})
-			|> listToAttrs
-		;
+				packageBundles =
+					util.readDir ./pkgs
+					|>	map ({ name, path, ... }: {
+						inherit name;
+						value = import path { inherit lib util inputs; };
+					})
+					|> listToAttrs
+				;
 
-		overlays = {
-			self = (_: pkgs: packages.${pkgs.stdenv.hostPlatform.system} or {});
-			xdp = (_: pkgs: { xdg-desktop-portal = pkgs.xdg-desktop-portal-git or pkgs.xdg-desktop-portal; } );
-		};
-
-		packages = forEachSystem (pkgs: let
-			final = pkgs // self;
-			callPackage = lib.callPackageWith final;
-			self = packageBundles
-				|> attrValues
-				|> map (bundle: bundle.packages or {})
-				|> foldr mergeAttrs {}
-				|> lib.mapAttrs (_: drv: callPackage drv {})
-			;
-		in
-			self // { inherit pkgs; }
-		);
-
-		nixosModules = flatten [
-			home-manager.nixosModules.home-manager
-			(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["nixosModule"] {}))
-			(allNixFiles ./modules/nixos)
-		];
-
-		hmModules = flatten [
-			(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["hmModule"] {}))
-			(allNixFiles ./modules/hm)
-		];
-
-		nixosConfigurations =
-			hosts
-			|> map (host: {
-				name = host.host;
-				value = lib.nixosSystem rec {
-					specialArgs = {
-						inherit util inputs;
-					};
-					modules = flatten [
-						{
-							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
-							home-manager = {
-								# Also forward args to home-manager modules
-								extraSpecialArgs = specialArgs;
-								sharedModules = hmModules;
-								useGlobalPkgs = true;
-							};
-						}
-						nixosModules
-						host.module
-					];
+				overlays = {
+					self = (_: pkgs: packages.${pkgs.stdenv.hostPlatform.system} or {});
+					xdp = (_: pkgs: { xdg-desktop-portal = pkgs.xdg-desktop-portal-git or pkgs.xdg-desktop-portal; } );
 				};
-			})
-			|> listToAttrs
-		;
 
-		homeConfigurations =
-			hosts
-			|> map ({ host, ... }: let
-				userConfigs = nixosConfigurations.${host}.config.home-manager.users;
-			in
-				userConfigs |> mapAttrs' (username: config: {
-					name = "${username}@${host}";
-					value = { inherit config; };
-				})
-			)
-			|> foldr mergeAttrs {}
-		;
-	};
+				packages = forEachSystem (pkgs: let
+					final = pkgs // self;
+					callPackage = lib.callPackageWith final;
+					self = packageBundles
+						|> attrValues
+						|> map (bundle: bundle.packages or {})
+						|> foldr mergeAttrs {}
+						|> lib.mapAttrs (_: drv: callPackage drv {})
+					;
+				in
+					self // { inherit pkgs; }
+				);
+
+				nixosModules = flatten [
+					home-manager.nixosModules.home-manager
+					(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["nixosModule"] {}))
+					(allNixFiles ./modules/nixos)
+				];
+
+				hmModules = flatten [
+					(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["hmModule"] {}))
+					(allNixFiles ./modules/hm)
+				];
+
+				nixosConfigurations =
+					hosts
+					|> map (host: {
+						name = host.host;
+						value = lib.nixosSystem rec {
+							specialArgs = {
+								inherit util inputs;
+							};
+							modules = flatten [
+								{
+									nixpkgs.overlays = outputs.overlays |> lib.attrValues;
+									home-manager = {
+										# Also forward args to home-manager modules
+										extraSpecialArgs = specialArgs;
+										sharedModules = hmModules;
+										useGlobalPkgs = true;
+									};
+								}
+								nixosModules
+								host.module
+							];
+						};
+					})
+					|> listToAttrs
+				;
+
+				homeConfigurations =
+					hosts
+					|> map ({ host, ... }: let
+						userConfigs = nixosConfigurations.${host}.config.home-manager.users;
+					in
+						userConfigs |> mapAttrs' (username: config: {
+							name = "${username}@${host}";
+							value = { inherit config; };
+						})
+					)
+					|> foldr mergeAttrs {}
+				;
+			};
+	});
 }
