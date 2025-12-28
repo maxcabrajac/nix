@@ -80,7 +80,15 @@
 			mergeAttrs
 		;
 	in
-		flake-parts.lib.mkFlake { inherit inputs; } (top@{ ... }: {
+		flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, ... }: {
+			imports = allNixFiles ./flake;
+
+			_module.args = {
+				inherit util;
+			};
+
+			dirs.hosts = ./hosts;
+
 			systems = import inputs.systems;
 			flake = rec {
 				inherit util inputs;
@@ -112,47 +120,31 @@
 					self // { inherit pkgs; }
 				);
 
-				nixosModules = flatten [
-					home-manager.nixosModules.home-manager
-					(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["nixosModule"] {}))
-					(allNixFiles ./modules/nixos)
-				];
-
-				hmModules = flatten [
-					(packageBundles |> attrValues |> map (util.safeGetAttrFromPath ["hmModule"] {}))
-					(allNixFiles ./modules/hm)
-				];
-
-				nixosConfigurations =
-					hosts
-					|> map (host: {
-						name = host.host;
-						value = lib.nixosSystem rec {
-							specialArgs = {
-								inherit util inputs;
+				nixosModules = lib.mergeAttrsList [
+					{ inherit (home-manager.nixosModules) home-manager; }
+					(packageBundles |> lib.mapAttrs (_: util.safeGetAttrFromPath ["nixosModule"] {}))
+					{ local = { imports = allNixFiles ./modules/nixos; }; }
+					{ hm-inject = {
+							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
+							home-manager = {
+								# Also forward args to home-manager modules
+								extraSpecialArgs = { inherit util inputs; };
+								sharedModules = hmModules |> lib.attrValues;
+								useGlobalPkgs = true;
 							};
-							modules = flatten [
-								{
-									nixpkgs.overlays = outputs.overlays |> lib.attrValues;
-									home-manager = {
-										# Also forward args to home-manager modules
-										extraSpecialArgs = specialArgs;
-										sharedModules = hmModules;
-										useGlobalPkgs = true;
-									};
-								}
-								nixosModules
-								host.module
-							];
 						};
-					})
-					|> listToAttrs
-				;
+					}
+				];
+
+				hmModules = lib.mergeAttrsList [
+					(packageBundles |> lib.mapAttrs (_: util.safeGetAttrFromPath ["hmModule"] {}))
+					{ local = { imports = allNixFiles ./modules/hm; }; }
+				];
 
 				homeConfigurations =
 					hosts
 					|> map ({ host, ... }: let
-						userConfigs = nixosConfigurations.${host}.config.home-manager.users;
+						userConfigs = config.nixosConfigurations.${host}.config.home-manager.users;
 					in
 						userConfigs |> mapAttrs' (username: config: {
 							name = "${username}@${host}";
