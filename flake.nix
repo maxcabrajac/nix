@@ -29,6 +29,9 @@
 			url = "github:maxcabrajac/xdg-desktop-portal/pr";
 			flake = false;
 		};
+
+		# this is HUGE
+		wallpkgs.url = "github:NotAShelf/wallpkgs";
 	};
 
 	outputs = inputs@{ self, nixpkgs, home-manager, systems, ... }: let

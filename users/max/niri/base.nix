@@ -45,7 +45,7 @@ in {
 			layout = let
 				prop = x: { proportion = x; };
 			in {
-				gaps = 5;
+				gaps = 10;
 				center-focused-column = "on-overflow";
 
 				preset-column-widths = map prop [
