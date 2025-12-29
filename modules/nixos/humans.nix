@@ -8,22 +8,12 @@
 	;
 
 	homes = util.readDir ../../users
-		|> map ({ name, path, ... }: let
-			homeRoot = path;
-		in {
+		|> map ({ name, path, ... }: {
 			inherit name;
-			value = {
-				imports =
-					homeRoot
-					|> util.readDirOpt { recursive = true; }
-					|> map (f: f.path)
-				;
-			};
+			value.imports = util.allNixFiles path;
 		})
 		|> listToAttrs
 	;
-
-	contains = elem: list: builtins.any (e: e == elem) list;
 
 	humans = config.humans;
 in {

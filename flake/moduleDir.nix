@@ -7,17 +7,16 @@
 
 	config.flake = let
 		getModulesFrom = subdir:
-			config.dirs.modules + "/${subdir}"
-			|> util.readDirOpt { recursive = true; }
-			|> lib.filter (f: f.parts.extension == "nix")
-			|> map (f: {
-				name = lib.removePrefix "${toString config.dirs.modules}/" (toString f.path);
-				value = f.path;
+			util.allNixFiles (config.dirs.modules + "/${subdir}")
+			|> map (path: {
+				name = lib.removePrefix "${toString config.dirs.modules}/" (toString path);
+				value = path;
 			})
 			|> lib.listToAttrs
 		;
 	in {
 		nixosModules = getModulesFrom "nixos";
+		# TODO: rename hm
 		homeModules = getModulesFrom "hm";
 	};
 }

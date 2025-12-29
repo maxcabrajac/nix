@@ -49,4 +49,12 @@ in rec {
 		|> readDirOpt { recursive = false; }
 		|> map (f: f.path)
 		|> lib.lists.remove (dir + "/default.nix");
+
+
+	allNixFiles = dir:
+		dir
+		|> readDirOpt { recursive = true; }
+		|> lib.filter (f: f.parts.extension == "nix")
+		|> map (f: f.path)
+	;
 }

@@ -14,6 +14,11 @@ in {
 				browser = lib.getExe config.web.browser;
 			in
 				/* sh */ ''
+
+
+
+
+
 					link=$(${dmenu_search})
 					if [ -n "$link" ]; then
 						exec ${browser} $link

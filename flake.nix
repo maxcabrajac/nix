@@ -41,27 +41,11 @@
 		util = import ./util {
 			inherit lib inputs;
 		};
-
-		# move to util
-		allNixFiles = dir:
-			dir
-			|> util.readDirOpt { recursive = true; }
-			|> filter (f: f.parts.extension == "nix")
-			|> map (f: f.path)
-		;
-
-
-		inherit (self) outputs;
-
-		inherit (lib)
-			filter
-			map
-		;
 	in
 		flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, ... }: {
 			imports = lib.flatten [
 				inputs.home-manager.flakeModules.home-manager
-				(allNixFiles ./flake)
+				(util.allNixFiles ./flake)
 			];
 
 			_module.args = {
