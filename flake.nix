@@ -75,22 +75,14 @@
 			};
 
 			systems = import inputs.systems;
-			flake = rec {
+			flake = {
 				inherit util inputs;
 
-				nixosModules = lib.mergeAttrsList [
-					{ inherit (home-manager.nixosModules) home-manager; }
-					{ hm-inject = {
-							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
-							home-manager = {
-								# Also forward args to home-manager modules
-								extraSpecialArgs = { inherit util inputs; };
-								sharedModules = config.flake.homeModules |> lib.attrValues;
-								useGlobalPkgs = true;
-							};
-						};
-					}
-				];
+				nixosModules = {
+					setOverlays = {
+						nixpkgs.overlays = outputs.overlays |> lib.attrValues;
+					};
+				};
 			};
 	});
 }
