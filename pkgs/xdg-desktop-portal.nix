@@ -1,7 +1,7 @@
 { inputs, lib, ...  }: {
 	packages = {
-		xdg-desktop-portal-git = { xdg-desktop-portal }: let
-			xdp-git = xdg-desktop-portal.overrideAttrs (old: {
+		xdg-desktop-portal = { stdenv }: let
+			xdp-git = inputs.nixpkgs.legacyPackages.${stdenv.hostPlatform.system}.xdg-desktop-portal.overrideAttrs (old: {
 				src = inputs.xdp-git;
 				doCheck = false;
 				patches = let

@@ -110,7 +110,6 @@
 
 				overlays = {
 					self = (_: pkgs: packages.${pkgs.stdenv.hostPlatform.system} or {});
-					xdp = (_: pkgs: { xdg-desktop-portal = pkgs.xdg-desktop-portal-git or pkgs.xdg-desktop-portal; } );
 				};
 
 				packages = forEachSystem (pkgs: let
