@@ -40,8 +40,11 @@ in
 				Install = {
 					WantedBy = baseService;
 				};
-				Timer = {
-					OnUnitActiveSec = "15min";
+				Timer = let
+					period = "15min";
+				in {
+					OnBootSec = period;
+					OnUnitActiveSec = period;
 				};
 			};
 		};
