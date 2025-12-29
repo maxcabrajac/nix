@@ -140,19 +140,6 @@
 					(packageBundles |> lib.mapAttrs (_: util.safeGetAttrFromPath ["hmModule"] {}))
 					{ local = { imports = allNixFiles ./modules/hm; }; }
 				];
-
-				homeConfigurations =
-					hosts
-					|> map ({ host, ... }: let
-						userConfigs = config.nixosConfigurations.${host}.config.home-manager.users;
-					in
-						userConfigs |> mapAttrs' (username: config: {
-							name = "${username}@${host}";
-							value = { inherit config; };
-						})
-					)
-					|> foldr mergeAttrs {}
-				;
 			};
 	});
 }
