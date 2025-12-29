@@ -81,13 +81,19 @@
 		;
 	in
 		flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, ... }: {
-			imports = allNixFiles ./flake;
+			imports = lib.flatten [
+				inputs.home-manager.flakeModules.home-manager
+				(allNixFiles ./flake)
+			];
 
 			_module.args = {
 				inherit util;
 			};
 
-			dirs.hosts = ./hosts;
+			dirs = {
+				hosts = ./hosts;
+				modules = ./modules;
+			};
 
 			systems = import inputs.systems;
 			flake = rec {
@@ -123,22 +129,20 @@
 				nixosModules = lib.mergeAttrsList [
 					{ inherit (home-manager.nixosModules) home-manager; }
 					(packageBundles |> lib.mapAttrs (_: util.safeGetAttrFromPath ["nixosModule"] {}))
-					{ local = { imports = allNixFiles ./modules/nixos; }; }
 					{ hm-inject = {
 							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
 							home-manager = {
 								# Also forward args to home-manager modules
 								extraSpecialArgs = { inherit util inputs; };
-								sharedModules = hmModules |> lib.attrValues;
+								sharedModules = config.flake.homeModules |> lib.attrValues;
 								useGlobalPkgs = true;
 							};
 						};
 					}
 				];
 
-				hmModules = lib.mergeAttrsList [
+				homeModules = lib.mergeAttrsList [
 					(packageBundles |> lib.mapAttrs (_: util.safeGetAttrFromPath ["hmModule"] {}))
-					{ local = { imports = allNixFiles ./modules/hm; }; }
 				];
 			};
 	});
