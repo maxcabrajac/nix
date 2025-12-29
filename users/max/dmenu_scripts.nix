@@ -6,7 +6,7 @@ in {
 		dmenu = pkgs.writers.writeDashBin "dmenu" "exec ${lib.getExe pkgs.fuzzel} --dmenu";
 	};
 
-	global.keybinds = {
+	global.keybinds = lib.mkIf cfg.enable {
 		M-O = {
 			description = "Start browsing with dmenu_search";
 			sh = let
