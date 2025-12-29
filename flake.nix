@@ -77,12 +77,6 @@
 			systems = import inputs.systems;
 			flake = {
 				inherit util inputs;
-
-				nixosModules = {
-					setOverlays = {
-						nixpkgs.overlays = outputs.overlays |> lib.attrValues;
-					};
-				};
 			};
 	});
 }
