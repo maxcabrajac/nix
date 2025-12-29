@@ -36,7 +36,7 @@
 		wallpkgs.url = "github:NotAShelf/wallpkgs";
 	};
 
-	outputs = inputs@{ flake-parts, self, nixpkgs, home-manager, systems, ... }: let
+	outputs = inputs@{ flake-parts, self, nixpkgs, home-manager, ... }: let
 		lib = nixpkgs.lib // home-manager.lib;
 		util = import ./util {
 			inherit lib inputs;
@@ -52,32 +52,10 @@
 
 
 		inherit (self) outputs;
-		pkgsFor = lib.genAttrs (import systems) (
-			system:
-			import nixpkgs {
-				inherit system;
-				config.allowUnfree = true;
-			}
-		);
-		forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
-
-		hosts =
-			util.readDir ./hosts
-			|> map ( { parts, path, ... }: {
-				host = parts.name;
-				module = import path;
-			})
-		;
 
 		inherit (lib)
-			attrValues
 			filter
-			flatten
-			foldr
-			listToAttrs
 			map
-			mapAttrs'
-			mergeAttrs
 		;
 	in
 		flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, ... }: {
@@ -93,41 +71,15 @@
 			dirs = {
 				hosts = ./hosts;
 				modules = ./modules;
+				packages = ./pkgs;
 			};
 
 			systems = import inputs.systems;
 			flake = rec {
 				inherit util inputs;
 
-				packageBundles =
-					util.readDir ./pkgs
-					|>	map ({ name, path, ... }: {
-						inherit name;
-						value = import path { inherit lib util inputs; };
-					})
-					|> listToAttrs
-				;
-
-				overlays = {
-					self = (_: pkgs: packages.${pkgs.stdenv.hostPlatform.system} or {});
-				};
-
-				packages = forEachSystem (pkgs: let
-					final = pkgs // self;
-					callPackage = lib.callPackageWith final;
-					self = packageBundles
-						|> attrValues
-						|> map (bundle: bundle.packages or {})
-						|> foldr mergeAttrs {}
-						|> lib.mapAttrs (_: drv: callPackage drv {})
-					;
-				in
-					self // { inherit pkgs; }
-				);
-
 				nixosModules = lib.mergeAttrsList [
 					{ inherit (home-manager.nixosModules) home-manager; }
-					(packageBundles |> lib.mapAttrs (_: util.safeGetAttrFromPath ["nixosModule"] {}))
 					{ hm-inject = {
 							nixpkgs.overlays = outputs.overlays |> lib.attrValues;
 							home-manager = {
@@ -138,10 +90,6 @@
 							};
 						};
 					}
-				];
-
-				homeModules = lib.mergeAttrsList [
-					(packageBundles |> lib.mapAttrs (_: util.safeGetAttrFromPath ["hmModule"] {}))
 				];
 			};
 	});
