@@ -14,7 +14,7 @@ in {
 	};
 
 	programs.bemenu = {
-		enable = config.profiles.gui;
+		enable = false;
 		settings = {
 			line-height = 20;
 			fn = "Fira Code Semi-Bold";
