@@ -21,12 +21,15 @@
 			# WARN: nixpkgs upstream broke tree-sitter
 			# Follow github.com/NotAShelf/nvf/issues/1312
 			# inputs.nixpkgs.follows = "nixpkgs";
+			inputs.flake-parts.follows = "flake-parts";
+			inputs.systems.follows = "systems";
 		};
 
 		mabar = {
 			url = "github:maxcabrajac/mabar";
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.systems.follows = "systems";
+			inputs.flake-parts.follows = "flake-parts";
 		};
 
 		xdp-git = {
@@ -40,11 +43,13 @@
 		elephant = {
 			url = "github:maxcabrajac/elephant/websearch";
 			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.systems.follows = "systems";
 		};
 		walker = {
 			url = "github:abenz1267/walker";
 			inputs.elephant.follows = "elephant";
 			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.systems.follows = "systems";
 		};
 	};
 
