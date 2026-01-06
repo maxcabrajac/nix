@@ -18,9 +18,7 @@
 
 		max-nvim = {
 			url = "github:maxcabrajac/nvf-configs";
-			# WARN: nixpkgs upstream broke tree-sitter
-			# Follow github.com/NotAShelf/nvf/issues/1312
-			# inputs.nixpkgs.follows = "nixpkgs";
+			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.flake-parts.follows = "flake-parts";
 			inputs.systems.follows = "systems";
 		};

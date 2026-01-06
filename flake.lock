@@ -149,8 +149,6 @@
           "flake-parts"
         ],
         "nixpkgs": [
-          "max-nvim",
-          "nvf",
           "nixpkgs"
         ],
         "nvf": "nvf",
