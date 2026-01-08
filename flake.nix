@@ -51,13 +51,13 @@
 		};
 	};
 
-	outputs = inputs@{ flake-parts, self, nixpkgs, home-manager, ... }: let
+	outputs = inputs@{ flake-parts, nixpkgs, home-manager, ... }: let
 		lib = nixpkgs.lib // home-manager.lib;
 		util = import ./util {
 			inherit lib inputs;
 		};
 	in
-		flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, ... }: {
+		flake-parts.lib.mkFlake { inherit inputs; } {
 			imports = lib.flatten [
 				inputs.home-manager.flakeModules.home-manager
 				(util.allNixFiles ./flake)
@@ -77,5 +77,5 @@
 			flake = {
 				inherit util inputs;
 			};
-	});
+	};
 }
