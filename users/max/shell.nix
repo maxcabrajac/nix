@@ -56,9 +56,9 @@
 			};
 
 			custom.jj = let
-				jj = "${lib.getExe pkgs.jujutsu}  --ignore-working-copy";
+				jj = "${lib.getExe pkgs.jujutsu} --ignore-working-copy";
 			in {
-				detect_folders = [".jj"];
+				when = "${jj} workspace root";
 				command = pkgs.writeShellScript "jj-prompt" /* bash */ ''
 					${jj} log -r @ --no-graph --color always --limit 1 --template '
 						separate(" ",
