@@ -24,7 +24,7 @@
 		settings = {
 
 			format = lib.concatLines [
-				"[┌$sudo](bold green) $directory"
+				"[┌$sudo](bold green) $directory$fill\${custom.jj}"
 				"[└$status](bold green)$character"
 			];
 
@@ -53,6 +53,34 @@
 				vimcmd_replace_symbol = "[>](bold purple)";
 				vimcmd_replace_one_symbol = "[|](bold purple)";
 				vimcmd_visual_symbol = "[v](bold yellow)";
+			};
+
+			custom.jj = let
+				jj = "${lib.getExe pkgs.jujutsu}  --ignore-working-copy";
+			in {
+				detect_folders = [".jj"];
+				command = pkgs.writeShellScript "jj-prompt" /* bash */ ''
+					${jj} log -r @ --no-graph --color always --limit 1 --template '
+						separate(" ",
+							change_id.shortest(4),
+							bookmarks,
+							concat(
+								if(conflict, "x"),
+								if(divergent, "??"),
+								if(hidden, "H"),
+							),
+							concat(
+								raw_escape_sequence("\x1b[1;32m") ++ if(diff.stat().total_added() > 0, "+" ++ diff.stat().total_added()),
+								raw_escape_sequence("\x1b[1;31m") ++ if(diff.stat().total_removed() > 0, "-" ++ diff.stat().total_removed()),
+								raw_escape_sequence("\x1b[0m"),
+							),
+							raw_escape_sequence("\x1b[1;32m") ++ coalesce(
+								truncate_end(29, description.first_line(), "…"),
+								"(no description set)",
+							) ++ raw_escape_sequence("\x1b[0m"),
+						)
+					'
+				'';
 			};
 		};
 	};
