@@ -4,7 +4,10 @@
 		|> lib.any (x: x)
 	 ;
 in {
-	programs.niri.enable = niriEnabled;
+	programs.niri = {
+		enable = niriEnabled;
+		useNautilus = false;
+	};
 
 	environment.systemPackages = lib.optional config.programs.niri.enable pkgs.xwayland-satellite;
 }
