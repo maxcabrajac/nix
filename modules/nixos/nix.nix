@@ -1,6 +1,9 @@
 { config, lib, ... }: {
 	nixpkgs.config.allowUnfree = true;
-	nix.settings.experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
+	nix.settings = {
+		experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
+		trusted-users = [ "@wheel" ];
+	};
 
 	programs.nh = {
 		enable = true;
