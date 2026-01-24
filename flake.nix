@@ -51,6 +51,10 @@
 		};
 	};
 
+	nixConfig = {
+		extra-experimental-features = [ "pipe-operators" ];
+	};
+
 	outputs = inputs@{ flake-parts, nixpkgs, home-manager, ... }: let
 		lib = nixpkgs.lib // home-manager.lib;
 		util = import ./util {
