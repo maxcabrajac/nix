@@ -1,11 +1,10 @@
-{ config, lib, pkgs, ... }: let
-	niriEnabled = config.lib.humans.hmConfigs
-		|> map (hm: hm.programs.niri.enable)
-		|> lib.any (x: x)
-	 ;
-in {
+{ config, lib, pkgs, ... }: {
+	hmExport.niriEnabled = {
+		from = [ "programs" "niri" "enable" ];
+	};
+
 	programs.niri = {
-		enable = niriEnabled;
+		enable = config.hmExported.niriEnabled;
 		useNautilus = false;
 	};
 
