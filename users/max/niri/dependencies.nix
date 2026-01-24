@@ -5,6 +5,7 @@
 	};
  	programs.lf.useAsXdgPortalOn.niri = true;
  	programs.walker.enable = true;
+ 	# programs.anyrun.enable = true;
  	services.playerctld.enable = true;
  	services.wlsunset.enable = true;
 	services.swww.enable = true;

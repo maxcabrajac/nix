@@ -49,10 +49,25 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.systems.follows = "systems";
 		};
+		anyrun = {
+			url = "github:anyrun-org/anyrun";
+		};
 	};
 
 	nixConfig = {
-		extra-experimental-features = [ "pipe-operators" ];
+		extra-experimental-features = [
+			"pipe-operators"
+		];
+
+		extra-substituters = [
+			"https://anyrun.cachix.org"
+		];
+		extra-trusted-substituters = [
+			"https://anyrun.cachix.org"
+		];
+		extra-trusted-public-keys = [
+			"anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
+		];
 	};
 
 	outputs = inputs@{ flake-parts, nixpkgs, home-manager, ... }: let
