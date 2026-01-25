@@ -367,6 +367,7 @@
         "niri-flake": "niri-flake",
         "nixpkgs": "nixpkgs_2",
         "systems": "systems",
+        "vicinae-extensions": "vicinae-extensions",
         "walker": "walker",
         "wallpkgs": "wallpkgs",
         "xdp-git": "xdp-git"
@@ -384,6 +385,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default-linux",
+        "type": "github"
+      }
+    },
+    "vicinae-extensions": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769361945,
+        "narHash": "sha256-0NBTfAoUTP3QNT1Rr28CxuzMQXnpPRPR38/k90ZjlxE=",
+        "owner": "vicinaehq",
+        "repo": "extensions",
+        "rev": "b214f40f9e8a392c4ffc3712e426a2bad465c055",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vicinaehq",
+        "repo": "extensions",
         "type": "github"
       }
     },
