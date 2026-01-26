@@ -55,6 +55,8 @@
 				vimcmd_visual_symbol = "[v](bold yellow)";
 			};
 
+			fill.symbol = " ";
+
 			custom.jj = let
 				jj = "${lib.getExe pkgs.jujutsu} --ignore-working-copy";
 			in {
