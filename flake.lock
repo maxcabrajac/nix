@@ -157,11 +157,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768785442,
-        "narHash": "sha256-TliBq7ZGyNtReKh0HCGjLgp01WFm6oBic+NTpLsWClY=",
+        "lastModified": 1769739246,
+        "narHash": "sha256-W6J7LWyD/WwdMDE9dyAbFoJHVVilDS9PkxrWmf2Kc3A=",
         "owner": "maxcabrajac",
         "repo": "nvf-configs",
-        "rev": "86e83b63cff1d66bd96f2972fd1527c5d6d5fac4",
+        "rev": "35979a8cf6125caebfc797b434a23c4cd886956c",
         "type": "github"
       },
       "original": {
