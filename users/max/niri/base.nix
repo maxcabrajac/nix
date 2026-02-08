@@ -120,6 +120,8 @@ in {
 
 				"Mod+V".action.toggle-window-floating = {};
 				"Mod+Shift+V".action.switch-focus-between-floating-and-tiling = {};
+
+				"Mod+F4".action.screenshot = {};
 			};
 		};
 	};
