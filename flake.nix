@@ -31,7 +31,7 @@
 		};
 
 		xdp-git = {
-			url = "github:maxcabrajac/xdg-desktop-portal/pr";
+			url = "github:flatpak/xdg-desktop-portal";
 			flake = false;
 		};
 
