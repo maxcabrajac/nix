@@ -8,7 +8,13 @@ in {
 				mouse = {
 					accel-speed = -0.5;
 				};
-				keyboard.numlock = true;
+				keyboard = {
+					xkb = {
+						layout = "us";
+						variant = "colemak";
+					};
+					numlock = true;
+				};
 
 				warp-mouse-to-focus = {
 					enable = true;
