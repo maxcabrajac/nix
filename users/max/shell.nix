@@ -17,7 +17,7 @@
 		unzip
 	];
 
-	programs.nix-search.pkg.enable = true;
+	programs.nix-search.enable = true;
 	programs.starship = {
 		enable = true;
 
