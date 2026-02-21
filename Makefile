@@ -1,8 +1,4 @@
 NIX_OUT=/tmp/nix-build-output
-HOME_CONFIG:=.\#homeConfigurations."${USER}@${shell hostname}".config
-
-hm-news:
-	nix run '$(HOME_CONFIG).news.view'
 
 test:
 	nh os test .
