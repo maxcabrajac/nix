@@ -11,6 +11,7 @@ in {
 					"**/.git/*"
 					"**/.jj/*"
 					"*.lock"
+					"*.tfstate"
 				] |> map (x: "--glob=!${x}"))
 			];
 		};
