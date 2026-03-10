@@ -6,6 +6,7 @@ in {
 		programs.ripgrep = {
 			enable = true;
 			arguments = lib.flatten [
+				"--smart-case"
 				"--hidden"
 				([
 					"**/.git/*"
