@@ -13,6 +13,11 @@
 				bookmark = "youtube.com";
 				search_engine = "youtube.com/results?search_query=%%";
 			}
+			{
+				alias = "sudoku";
+				name = "Logic Masters";
+				bookmark = "logic-masters.de/Raetselportal";
+			}
 		];
 	};
 }
