@@ -431,17 +431,16 @@
     "xdp-git": {
       "flake": false,
       "locked": {
-        "lastModified": 1773186615,
-        "narHash": "sha256-0nOP9jFyk1D3kyWrB/8bvKUQE6V7IREIirOucW8JHuw=",
+        "lastModified": 1773772333,
+        "narHash": "sha256-T6PLZQdzgHALROvqa0EEaOzURAZPJZEhvecboKr9jvg=",
         "owner": "flatpak",
         "repo": "xdg-desktop-portal",
-        "rev": "af45dc6b0877b6fadd60f3c06e7ac7917c0a7219",
+        "rev": "0a58bcf81debfb5d57f65e30c0f76f2d6f654df9",
         "type": "github"
       },
       "original": {
         "owner": "flatpak",
         "repo": "xdg-desktop-portal",
-        "rev": "af45dc6b0877b6fadd60f3c06e7ac7917c0a7219",
         "type": "github"
       }
     },
