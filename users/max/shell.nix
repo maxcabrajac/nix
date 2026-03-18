@@ -15,6 +15,7 @@
 		fzf
 		zip
 		unzip
+		btop
 	];
 
 	programs.nix-search.enable = true;
