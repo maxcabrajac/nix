@@ -1,6 +1,7 @@
 { lib, config, ... }: {
 	options.profiles = lib.genAttrs [
 		"games"
+		"social"
 	] (name: lib.mkEnableOption name);
 
 	config = {

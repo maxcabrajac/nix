@@ -54,6 +54,7 @@
 			profiles = {
 				gui = true;
 				games = true;
+				social = true;
 			};
 			programs.fish.enable = true;
 			home.stateVersion = "25.05"; # Did you read the comment?
@@ -69,8 +70,6 @@
 		git
 		jujutsu
 		gcc
-		discord
-		telegram-desktop
 		neovim
 		nh
 		jq
