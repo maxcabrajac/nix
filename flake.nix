@@ -31,7 +31,7 @@
 		};
 
 		xdp-git = {
-			url = "github:flatpak/xdg-desktop-portal";
+			url = "github:flatpak/xdg-desktop-portal/355fadffc2e6923dab9ab452e2268d38bcdc184b";
 			flake = false;
 		};
 

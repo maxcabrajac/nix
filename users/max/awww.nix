@@ -1,6 +1,6 @@
 { lib, pkgs, config, inputs, ... }: let
-	cfg = config.services.swww;
-	baseService = ["swww.service"];
+	cfg = config.services.awww;
+	baseService = ["awww.service"];
 	wallpaperDrv = inputs.wallpkgs.wallpapers
 		|> lib.attrsets.collect (x: x ? path)
 		|> map ({ path, ... }: path)
@@ -19,14 +19,14 @@ in
 					Type = "oneshot";
 					ExecStart = pkgs.writeShellScript "wallpaper-loop" /* bash */ ''
 						PATH=${pkgs.coreutils}/bin:${cfg.package}/bin
-						export SWWW_TRANSITION=any
+						export AWWW_TRANSITION=any
 						# this is dumb =P
-						export SWWW_TRANSITOIN_FPS=120
+						export AWWW_TRANSITOIN_FPS=120
 
-						for MONITOR in $(swww query | cut -d: -f2); do
+						for MONITOR in $(awww query | cut -d: -f2); do
 							SELECTED=$(shuf -n 1 ${wallpaperDrv})
 							echo "[$MONITOR] = $SELECTED"
-							swww img --outputs $MONITOR $SELECTED
+							awww img --outputs $MONITOR $SELECTED
 						done
 					'';
 				};

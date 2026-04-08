@@ -6,5 +6,5 @@
  	programs.lf.useAsXdgPortalOn.niri = true;
  	programs.walker.enable = true;
  	services.playerctld.enable = true;
-	services.swww.enable = true;
+	services.awww.enable = true;
 }
