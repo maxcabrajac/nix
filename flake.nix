@@ -31,7 +31,7 @@
 		};
 
 		xdp-git = {
-			url = "github:flatpak/xdg-desktop-portal/355fadffc2e6923dab9ab452e2268d38bcdc184b";
+			url = "github:flatpak/xdg-desktop-portal/1.21.1";
 			flake = false;
 		};
 
@@ -44,7 +44,7 @@
 			inputs.systems.follows = "systems";
 		};
 		walker = {
-			url = "github:abenz1267/walker";
+			url = "github:abenz1267/walker/v2.15.2";
 			inputs.elephant.follows = "elephant";
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.systems.follows = "systems";
