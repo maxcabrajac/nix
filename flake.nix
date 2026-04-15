@@ -49,6 +49,8 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.systems.follows = "systems";
 		};
+
+		cachy-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 	};
 
 	nixConfig = {
@@ -56,13 +58,15 @@
 			"pipe-operators"
 		];
 
-      extra-substituters = [
-      	"https://walker-git.cachix.org"
-      ];
+		extra-substituters = [
+			"https://walker-git.cachix.org"
+			"https://attic.xuyh0120.win/lantian"
+		];
 
-      extra-trusted-public-keys = [
-      	"walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
-      ];
+		extra-trusted-public-keys = [
+			"walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
+			"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+		];
 	};
 
 	outputs = inputs@{ flake-parts, nixpkgs, home-manager, ... }: let

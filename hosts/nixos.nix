@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ inputs, config, lib, pkgs, ... }: {
 	boot = {
 		loader = {
 			systemd-boot.enable = true;
@@ -10,7 +10,14 @@
 	};
 
 	# Use latest kernel.
-	boot.kernelPackages = pkgs.linuxPackages_latest;
+	boot.kernelPackages = inputs.cachy-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest-lto-x86_64-v3;
+
+	specialisation = {
+		base-kernel.configuration = {
+			system.nixos.tags = [ "base-kernel" ];
+			boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+		};
+	};
 
 	# Enable OpenGL
 	hardware.graphics = {
