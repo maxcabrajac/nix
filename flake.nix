@@ -60,12 +60,12 @@
 
 		extra-substituters = [
 			"https://walker-git.cachix.org"
-			"https://attic.xuyh0120.win/lantian"
+			"https://attic.xuyh0120.win/lantian" # cachy-kernel
 		];
 
 		extra-trusted-public-keys = [
 			"walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
-			"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+			"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" # cachy-kernel
 		];
 	};
 
