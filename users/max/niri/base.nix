@@ -26,22 +26,6 @@ in {
 				};
 			};
 
-			outputs = {
-				"HDMI-A-1" = {
-					mode = {
-						height = 1080;
-						width = 1920;
-						refresh = 144.001;
-					};
-
-					position = {
-						x = 0;
-						y = 450;
-					};
-				};
-				"DP-1" = {};
-			};
-
 			layout = let
 				prop = x: { proportion = x; };
 			in {
