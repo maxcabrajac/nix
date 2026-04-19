@@ -68,6 +68,28 @@
 		};
 	};
 
+	monitors = {
+		"HDMI-A-1" = {
+			x = 0;
+			y = 450;
+
+			w = 1920;
+			h = 1080;
+			refresh = 144.001;
+		};
+
+		"DP-1" = {
+			x = 1920;
+			y = 0;
+
+			w = 2560;
+			h = 1440;
+			refresh = 164.833;
+
+			main = true;
+		};
+	};
+
 	# List packages installed in system profile.
 	# You can use https://search.nixos.org/ to find more packages (and options).
 	environment.systemPackages = with pkgs; [
