@@ -38,13 +38,15 @@
 		};
 
 		perSystem = { pkgs, ... }: {
-			packages =
+			packages = let
+				isPack = lib.types.package.check;
+			in
 				lib.fix (final: config.flake.overlays.pkgDir (lib.recursiveUpdate pkgs final) pkgs)
-				|> lib.mapAttrsRecursiveCond (as: !(lib.isDerivation as)) (path: value: {
+				|> lib.mapAttrsToListRecursiveCond (_path: as: !isPack as)  (path: value: lib.optional (isPack value) {
 					name = lib.concatStringsSep "-" path;
 					inherit value;
 				})
-				|> lib.collect (v: v ? "name" && v ? "value" && lib.isDerivation v.value)
+				|> lib.flatten
 				|> lib.listToAttrs
 			;
 		};
