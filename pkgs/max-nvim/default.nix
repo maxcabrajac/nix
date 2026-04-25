@@ -1,8 +1,9 @@
-{ inputs, lib, ...  }: {
+{ inputs, lib, util, ...  }: {
 	packages.max-nvim = { pkgs, ... }: let
 		modulesPerPackage = rec {
 			base = [
 				{ _module.args = { flakeInputs = inputs; };  }
+				{ imports = util.allNixFiles ./modules; }
 				./keybinds.nix
 			];
 

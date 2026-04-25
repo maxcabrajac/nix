@@ -131,6 +131,7 @@
 					scrollDocsUp = "<M-e>";
 					close = "<C-i>";
 				};
+				preselect = false;
 			};
 		};
 
