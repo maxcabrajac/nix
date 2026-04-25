@@ -20,9 +20,11 @@
 		};
 	};
 
+	inherit (config.xdg) cacheHome;
+
 	cfgFor = name: {
 		enable_waiting_message = false;
-		cache_dir = config.xdg.cacheHome + "/nix-search-tv-wrappers/" + name;
+		cache_dir = cacheHome + "/nix-search-tv-wrappers/" + name;
 	};
 
 	backends = cfgs |> lib.mapAttrs (name: base_cfg: let
@@ -67,7 +69,7 @@
 				if config.indirect
 				then writeScript ''
 						PATH=${lib.makeBinPath [ pkgs.coreutils pkgs.hostname pkgs.nix ]}
-						nix run "${inputs.self.outPath}#homeConfigurations.''$(whoami)@''$(hostname).config.${config.optionPath}.package"
+						nix run "${cacheHome}/currentFlake#homeConfigurations.''$(whoami)@''$(hostname).config.${config.optionPath}.package"
 				''
 				else config.package
 			;
@@ -86,6 +88,10 @@ in {
 	];
 
 	config = {
+		xdg.cacheFile.currentFlake = {
+			source = inputs.self.outPath;
+		};
+
 		programs.nix-search = backends |> lib.mapAttrs (name: backend: {
 			enable = lib.mkDefault config.programs.nix-search.enable;
 
