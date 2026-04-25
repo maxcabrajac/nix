@@ -41,7 +41,7 @@ in
 					WantedBy = baseService;
 				};
 				Timer = let
-					period = "15min";
+					period = "1h";
 				in {
 					OnBootSec = period;
 					OnUnitActiveSec = period;
