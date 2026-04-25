@@ -16,13 +16,6 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
-		max-nvim = {
-			url = "github:maxcabrajac/nvf-configs";
-			inputs.nixpkgs.follows = "nixpkgs";
-			inputs.flake-parts.follows = "flake-parts";
-			inputs.systems.follows = "systems";
-		};
-
 		mabar = {
 			url = "github:maxcabrajac/mabar";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -51,6 +44,17 @@
 		};
 
 		cachy-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+
+		nvf = {
+			url = "github:NotAShelf/nvf";
+			inputs = {
+				flake-parts.follows = "flake-parts";
+				systems.follows = "systems";
+			};
+		};
+
+		# max-nvim
+		nvim-ayu = { url = "github:Luxed/ayu-vim"; flake = false; };
 	};
 
 	nixConfig = {

@@ -1,5 +1,5 @@
-{ inputs, pkgs, lib, ... }: let
-	editor = inputs.max-nvim.packages.${pkgs.stdenv.hostPlatform.system}.editor;
+{ pkgs, lib, ... }: let
+	inherit (pkgs.max-nvim) editor;
 	bin = lib.getExe editor;
 in {
 	home = {
