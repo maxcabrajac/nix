@@ -4,7 +4,10 @@ in {
 	programs.jujutsu = {
 		enable = true;
 		settings = {
-			ui.default-command = "log";
+			ui = {
+				default-command = "log";
+				conflict-marker-style = "snapshot";
+			};
 			templates = {
 				git_push_bookmark = ''"maxcabrajac-" ++ change_id.short()'';
 			};
@@ -22,5 +25,6 @@ in {
 			};
 		};
 	};
+
 	home.shellAbbrs.nn = lib.mkIf cfg.enable "jj";
 }
