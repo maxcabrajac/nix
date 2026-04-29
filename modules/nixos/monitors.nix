@@ -26,8 +26,10 @@ in {
  		};
 
 		mainMonitor = lib.mkOption {
-			type = t.str;
-			readOnly = true;
+			type = t.nullOr t.str;
+			# TODO: add this back
+			# readOnly = true;
+			default = null;
 		};
 	};
 
