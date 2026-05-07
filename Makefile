@@ -1,5 +1,8 @@
 NIX_OUT=/tmp/nix-build-output
 
+diff:
+	dix $$(nix-store --query --deriver $$(realpath /run/current-system)) $$(nix eval .#nixosConfigurations.nixos.config.system.build.toplevel.drvPath --raw)
+
 test:
 	nh os test .
 

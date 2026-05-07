@@ -101,6 +101,7 @@
 		gcc
 		neovim
 		nh
+		dix
 		jq
 		nix-output-monitor
 		nix-tree
