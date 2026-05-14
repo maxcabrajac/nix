@@ -71,7 +71,10 @@
 			clang.enable = true;
 			go.enable = true;
 			rust.enable = true;
-			python.enable = true;
+			python = {
+				enable = true;
+				lsp.servers = ["pyrefly"];
+			};
 		};
 
 		visuals = {
