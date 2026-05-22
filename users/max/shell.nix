@@ -1,6 +1,7 @@
 { pkgs, lib, ... }: {
 	home.shellAbbrs = {
 		af = "touch";
+		ad = "mkdir -p";
 		k = "kubectl";
 	};
 
