@@ -39,7 +39,10 @@
 		keyMap = "colemak";
 	};
 
-	services.displayManager.gdm.enable = true;
+	services.displayManager.ly = {
+		enable = true;
+		x11Support = false;
+	};
 
 	services.pipewire = {
 		enable = true;
