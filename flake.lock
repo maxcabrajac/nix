@@ -76,6 +76,22 @@
         "type": "github"
       }
     },
+    "discordPatch": {
+      "locked": {
+        "lastModified": 1781205785,
+        "narHash": "sha256-ZsqGzg2hD8e40wwc1kgJGt2qgI8dsp7uDR9OiTGGPbc=",
+        "owner": "LuckShiba",
+        "repo": "nixpkgs",
+        "rev": "36e2217e8c30e59f1708e44df9bf00c31565e476",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LuckShiba",
+        "ref": "discord-vk",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "elephant": {
       "inputs": {
         "nixpkgs": [
@@ -449,6 +465,7 @@
     "root": {
       "inputs": {
         "cachy-kernel": "cachy-kernel",
+        "discordPatch": "discordPatch",
         "elephant": "elephant",
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
