@@ -106,6 +106,7 @@ in {
 				"Mod+Shift+V".action.switch-focus-between-floating-and-tiling = {};
 
 				"Mod+F4".action.screenshot = {};
+				"Print".action.screenshot-screen = {};
 			};
 		};
 	};
