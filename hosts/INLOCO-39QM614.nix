@@ -3,6 +3,9 @@
 		from = "max";
 		extraConfigs = {
 			programs.fish.enable = true;
+
+			home.shellAliases.ghi = "ggh inloco";
+
 			home.stateVersion = "25.05"; # Did you read the comment?
 		};
 	};
