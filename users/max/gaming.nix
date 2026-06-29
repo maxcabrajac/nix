@@ -2,6 +2,7 @@
 	home.packages = with pkgs; [
 		heroic
 		gamescope
+		prismlauncher
 	];
 
 	web.sites = [
