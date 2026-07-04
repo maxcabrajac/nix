@@ -3,8 +3,6 @@
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
-		# Remove after nixpkgs#530836
-		discordPatch.url = "github:LuckShiba/nixpkgs/discord-vk";
 
 		flake-parts.url = "github:hercules-ci/flake-parts";
 		systems.url = "github:nix-systems/default-linux";
@@ -93,7 +91,6 @@
 			};
 
 			altPkgs = {
-				inherit (inputs) discordPatch;
 			};
 
 			dirs = {

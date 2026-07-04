@@ -1,9 +1,6 @@
-{ pkgs, config, lib, inputs, ... }: lib.mkIf config.profiles.social {
+{ pkgs, config, lib, ... }: lib.mkIf config.profiles.social {
 	programs = {
-		discord = {
-			enable = true;
-			package = pkgs.altPkgs.discordPatch.discord;
-		};
+		discord.enable = true;
 	};
 
 	home.packages = with pkgs; [
