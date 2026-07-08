@@ -48,10 +48,6 @@
 
 		nvf = {
 			url = "github:NotAShelf/nvf";
-			inputs = {
-				flake-parts.follows = "flake-parts";
-				systems.follows = "systems";
-			};
 		};
 
 		# max-nvim
