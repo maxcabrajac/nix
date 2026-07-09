@@ -5,7 +5,7 @@
 			programs.fish.enable = true;
 
 			home.shellAliases.ghi = "ggh inloco";
-
+			home.sessionPath = [ "$HOME/.local/bin" ];
 			home.stateVersion = "25.05"; # Did you read the comment?
 		};
 	};
