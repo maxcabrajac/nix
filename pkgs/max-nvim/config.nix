@@ -68,7 +68,7 @@
 
 			# Languages that are enabled in the maximal configuration.
 			bash.enable = true;
-			clang.enable = true;
+			clang.enable = false;
 			go.enable = true;
 			rust.enable = true;
 			python = {
