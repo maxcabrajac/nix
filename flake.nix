@@ -52,6 +52,11 @@
 
 		# max-nvim
 		nvim-ayu = { url = "github:Luxed/ayu-vim"; flake = false; };
+
+		greenluma = {
+			url = "github:AceSLS/SLSsteam";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	nixConfig = {
