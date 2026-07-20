@@ -5,6 +5,10 @@
 		nixpkgs.url = "nixpkgs/nixos-unstable";
 
 		flake-parts.url = "github:hercules-ci/flake-parts";
+		fp-devshell = {
+			url = "github:numtide/devshell";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		systems.url = "github:nix-systems/default-linux";
 
 		home-manager = {
@@ -83,6 +87,7 @@
 	in
 		flake-parts.lib.mkFlake { inherit inputs; } {
 			imports = lib.flatten [
+				inputs.fp-devshell.flakeModule
 				inputs.home-manager.flakeModules.home-manager
 				(util.allNixFiles ./flake)
 			];
@@ -103,6 +108,28 @@
 			systems = import inputs.systems;
 			flake = {
 				inherit util inputs;
+			};
+
+			perSystem = { pkgs, ... }: let
+				bins = pkgs |> lib.mapAttrs (_: lib.getExe);
+			in {
+				devshells.default = {
+					commands = [
+						# TODO: Move all makefile commands here
+						{
+							name = "switch";
+							command = ''
+								${bins.nh} os switch $PRJ_ROOT -a
+							'';
+						}
+						{
+							name = "update";
+							command = ''
+								nix flake update
+							'';
+						}
+					];
+				};
 			};
 	};
 }
