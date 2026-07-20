@@ -22,34 +22,6 @@
 				hover = "mm";
 				renameSymbol = "<leader>c";
 			};
-
-			servers.nil.init_options.nix.binary = lib.getExe (pkgs.writeCBin "useGlobalFeatureFlagsNix" /* C */''
-				#include <unistd.h>
-				#include <string.h>
-				#include <stdio.h>
-
-				int main(int argc, char** argv) {
-					int writeHead = 0;
-					int readHead = 0;
-					while(readHead < argc) {
-						if (strcmp(argv[readHead], "--experimental-features") == 0) {
-							// skip next arg
-							readHead += 2;
-							continue;
-						}
-						argv[writeHead++] = argv[readHead++];
-					}
-
-					// set program name
-					argv[0] = "nix";
-
-					// null terminate args
-					argv[writeHead] = NULL;
-
-					execv("${lib.getExe pkgs.nix}", argv);
-					perror("Failed to exec");
-				}
-			'');
 		};
 
 		# This section does not include a comprehensive list of available language modules.
@@ -63,6 +35,7 @@
 			nix = {
 				enable = true;
 				extraDiagnostics.types = [ "deadnix" ];
+				lsp.servers = [ "nixd" ];
 			};
 			markdown.enable = true;
 
