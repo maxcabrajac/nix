@@ -115,6 +115,8 @@
 				namedList = attr: lib.attrValues (lib.mapAttrs (name: v: v // { inherit name; }) attr);
 			in {
 				devshells.default = {
+					motd = "$(type -p menu &> /dev/null && echo Use $(tput bold)menu$(tput sgr0) to list useful commands)";
+
 					packages = with pkgs; [
 						nh
 						dix
