@@ -112,6 +112,13 @@
 
 			perSystem = { pkgs, ... }: let
 				bins = lib.mapAttrs (_: lib.getExe) pkgs;
+				# Convert { a.b.c = 1; } into { b = { key = a; c = 1; }; }
+				injectKeys = key: attrs: let
+					setKeyTo = value: attr: attr // { "${key}" = value; };
+					injector = lib.mapAttrs (keyValue: lib.mapAttrs (_: setKeyTo keyValue));
+				in
+					lib.mergeAttrsList (lib.attrValues (injector attrs))
+				;
 				namedList = attr: lib.attrValues (lib.mapAttrs (name: v: v // { inherit name; }) attr);
 			in {
 				devshells.default = {
@@ -121,25 +128,28 @@
 						nh
 						dix
 					];
-					commands = namedList {
-						# NixOs management
-						os-switch.command = "nh os switch . -a";
-						os-test.command = "nh os test .";
-						os-diff.command = /* bash */ ''
-							if ! [ -e /run/current-system ]; then
-								echo "Error: /run/current-system does not exist."
-								exit 1
-							fi
+					commands = namedList (injectKeys "category" {
+						"[OS]" = {
+							os-switch.command = "nh os switch . -a";
+							os-test.command = "nh os test .";
+							os-diff.command = /* bash */ ''
+								if ! [ -e /run/current-system ]; then
+									echo "Error: /run/current-system does not exist."
+									exit 1
+								fi
 
-							current_drv=$(nix-store --query --deriver $(realpath /run/current-system))
-							next_drv=$(nix --no-warn-dirty eval .#nixosConfigurations.$(hostname).config.system.build.toplevel.drvPath --raw)
-							dix $current_drv $next_drv
-						'';
-						# Hm management
-						hm-switch.command = "nh home switch . -a";
-						# General
-						update.command = "nix flake update";
-					};
+								current_drv=$(nix-store --query --deriver $(realpath /run/current-system))
+								next_drv=$(nix --no-warn-dirty eval .#nixosConfigurations.$(hostname).config.system.build.toplevel.drvPath --raw)
+								dix $current_drv $next_drv
+							'';
+						};
+						"[HM]" = {
+							hm-switch.command = "nh home switch . -a";
+						};
+						"[general commands]" = {
+							update.command = "nix flake update";
+						};
+					});
 				};
 			};
 	};
