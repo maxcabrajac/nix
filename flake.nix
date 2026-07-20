@@ -121,9 +121,9 @@
 					];
 					commands = namedList {
 						# NixOs management
-						switch.command = "nh os switch . -a";
-						test.command = "nh os test .";
-						diff.command = /* bash */ ''
+						os-switch.command = "nh os switch . -a";
+						os-test.command = "nh os test .";
+						os-diff.command = /* bash */ ''
 							if ! [ -e /run/current-system ]; then
 								echo "Error: /run/current-system does not exist."
 								exit 1
