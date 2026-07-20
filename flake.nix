@@ -111,24 +111,33 @@
 			};
 
 			perSystem = { pkgs, ... }: let
-				bins = pkgs |> lib.mapAttrs (_: lib.getExe);
+				bins = lib.mapAttrs (_: lib.getExe) pkgs;
+				namedList = attr: lib.attrValues (lib.mapAttrs (name: v: v // { inherit name; }) attr);
 			in {
 				devshells.default = {
-					commands = [
-						# TODO: Move all makefile commands here
-						{
-							name = "switch";
-							command = ''
-								${bins.nh} os switch $PRJ_ROOT -a
-							'';
-						}
-						{
-							name = "update";
-							command = ''
-								nix flake update
-							'';
-						}
+					packages = with pkgs; [
+						nh
+						dix
 					];
+					commands = namedList {
+						# NixOs management
+						switch.command = "nh os switch . -a";
+						test.command = "nh os test .";
+						diff.command = /* bash */ ''
+							if ! [ -e /run/current-system ]; then
+								echo "Error: /run/current-system does not exist."
+								exit 1
+							fi
+
+							current_drv=$(nix-store --query --deriver $(realpath /run/current-system))
+							next_drv=$(nix --no-warn-dirty eval .#nixosConfigurations.$(hostname).config.system.build.toplevel.drvPath --raw)
+							dix $current_drv $next_drv
+						'';
+						# Hm management
+						hm-switch.command = "nh home switch . -a";
+						# General
+						update.command = "nix flake update";
+					};
 				};
 			};
 	};
