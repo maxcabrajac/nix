@@ -130,8 +130,8 @@
 					];
 					commands = namedList (injectKeys "category" {
 						"[OS]" = {
-							os-switch.command = "nh os switch . -a";
-							os-test.command = "nh os test .";
+							os-switch.command = "nh os switch $PRJ_ROOT -a";
+							os-test.command = "nh os test $PRJ_ROOT";
 							os-diff.command = /* bash */ ''
 								if ! [ -e /run/current-system ]; then
 									echo "Error: /run/current-system does not exist."
@@ -139,15 +139,15 @@
 								fi
 
 								current_drv=$(nix-store --query --deriver $(realpath /run/current-system))
-								next_drv=$(nix --no-warn-dirty eval .#nixosConfigurations.$(hostname).config.system.build.toplevel.drvPath --raw)
+								next_drv=$(nix --no-warn-dirty eval $PRJ_ROOT#nixosConfigurations.$(hostname).config.system.build.toplevel.drvPath --raw)
 								dix $current_drv $next_drv
 							'';
 						};
 						"[HM]" = {
-							hm-switch.command = "nh home switch . -a";
+							hm-switch.command = "nh home switch $PRJ_ROOT -a";
 						};
 						"[general commands]" = {
-							update.command = "nix flake update";
+							update.command = "cd $PRJ_ROOT && nix flake update";
 						};
 					});
 				};
