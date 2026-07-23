@@ -132,6 +132,7 @@
 						"[OS]" = {
 							os-switch.command = "nh os switch $PRJ_ROOT -a";
 							os-test.command = "nh os test $PRJ_ROOT";
+							os-boot.command = "nh os boot $PRJ_ROOT";
 							os-diff.command = /* bash */ ''
 								if ! [ -e /run/current-system ]; then
 									echo "Error: /run/current-system does not exist."
