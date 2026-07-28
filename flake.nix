@@ -119,7 +119,6 @@
 			};
 
 			perSystem = { pkgs, ... }: let
-				bins = lib.mapAttrs (_: lib.getExe) pkgs;
 				# Convert { a.b.c = 1; } into { b = { key = a; c = 1; }; }
 				injectKeys = key: attrs: let
 					setKeyTo = value: attr: attr // { "${key}" = value; };
@@ -135,6 +134,10 @@
 					packages = with pkgs; [
 						nh
 						dix
+						sops
+						jq
+						bitwarden-cli
+						ssh-to-age
 					];
 					commands = namedList (injectKeys "category" {
 						"[OS]" = {
@@ -157,6 +160,36 @@
 						};
 						"[general commands]" = {
 							update.command = "cd $PRJ_ROOT && nix flake update";
+							sops-init.command = ''
+								if ! [ -n "''${BW_SESSION+is_set}" ]; then
+									export BW_SESSION="$(bw login --raw || bw unlock --raw)"
+								fi
+								bw sync
+
+								SECRET_NAME="sops-nix age"
+
+								function query() {
+									jq --arg name "$SECRET_NAME" "$@"
+								}
+
+								KEY="$(bw list items --search "$SECRET_NAME" | query 'map(select(.name == $name))')"
+								if $(echo "$KEY" | query 'length == 0'); then
+									echo "No key on bitwarden"
+									exit 1
+								fi
+								KEY="$(echo "$KEY" | query '.[0].sshKey')"
+
+								PK="$(echo "$KEY" | query -r '.privateKey')"
+								PUB="$(echo "$KEY" | query -r '.publicKey')"
+
+								AGE_PK=$(echo "$PK" | ssh-to-age -private-key)
+								OUT="$HOME/.config/sops/age/keys.txt"
+								if ! grep -q "$AGE_PK" "$OUT"; then
+									echo "$AGE_PK" >> "$OUT"
+								fi
+								echo Your pub key is:
+								echo "$PUB" | ssh-to-age
+							'';
 						};
 					});
 				};
