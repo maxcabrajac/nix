@@ -61,6 +61,11 @@
 			url = "github:AceSLS/SLSsteam";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+
+		sops-nix = {
+			url = "github:mic92/sops-nix";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	nixConfig = {
@@ -108,6 +113,9 @@
 			systems = import inputs.systems;
 			flake = {
 				inherit util inputs;
+				homeModules = {
+					inherit (inputs.sops-nix.homeManagerModules) sops;
+				};
 			};
 
 			perSystem = { pkgs, ... }: let
