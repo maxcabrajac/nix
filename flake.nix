@@ -108,6 +108,7 @@
 				hosts = ./hosts;
 				modules = ./modules;
 				packages = ./pkgs;
+				users = ./users;
 			};
 
 			systems = import inputs.systems;
