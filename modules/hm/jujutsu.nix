@@ -13,4 +13,7 @@ in
 				COMPLETE=fish jj > $out
 			'';
 		};
+
+		# Required for git backend
+		home.packages = [ pkgs.git ];
 	}
