@@ -67,7 +67,6 @@
 				social = true;
 			};
 			programs.fish.enable = true;
-			home.stateVersion = "25.05"; # Did you read the comment?
 		};
 	};
 
