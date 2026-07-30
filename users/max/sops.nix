@@ -8,6 +8,7 @@ in {
 				options = {
 					enable = mkOption {
 						type = types.bool;
+						default = true;
 					};
 					src = mkOption {
 						type = types.pathInStore;
