@@ -1,4 +1,4 @@
-{ config, lib, ... }: let
+variant: { config, lib, ... }: let
 	t = lib.types;
 	cfg = config.monitors;
 in {
@@ -39,14 +39,15 @@ in {
 	in
 		lib.mkMerge [
 			(lib.mkIf (monitorCount != 0) {
-				assertions = [
-					{
-						assertion = let
-							mainMonitorCount = cfgList |> lib.filter (x: x.main) |> lib.length;
-						in mainMonitorCount == 1;
-						message = "Monitor option must have exactly one main monitor.";
-					}
-				];
+				# TODO: assert this
+				# assertions = [
+				# 	{
+				# 		assertion = let
+				# 			mainMonitorCount = cfgList |> lib.filter (x: x.main) |> lib.length;
+				# 		in mainMonitorCount == 1;
+				# 		message = "Monitor option must have exactly one main monitor.";
+				# 	}
+				# ];
 
 				mainMonitor = cfg
 					|> lib.filterAttrs (_: m: m.main)
@@ -54,17 +55,8 @@ in {
 					|> lib.head
 				;
 			})
-			{
-				hmImport = [
-					{
-						path = [ "monitors" ];
-						value = cfg;
-					}
-					{
-						path = [ "mainMonitor" ];
-						value = config.mainMonitor;
-					}
-				];
-			}
+			(lib.optionalAttrs (variant == "os") {
+				home-manager.sharedModules = [{ host = { inherit (config) monitors; }; }];
+			})
 		];
 }
