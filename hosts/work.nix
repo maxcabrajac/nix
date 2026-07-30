@@ -1,11 +1,8 @@
-{ config, lib, pkgs, ... }: {
+{ lib, ... }: {
 	humans."maximilian.cabrajac".hm = {
 		from = "max";
 		extraConfigs = {
-			programs.fish.enable = true;
-
-			home.shellAliases.ghi = "ggh inloco";
-			home.sessionPath = [ "$HOME/.local/bin" ];
+			variant = "work";
 		};
 	};
 
