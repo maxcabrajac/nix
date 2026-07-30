@@ -184,6 +184,8 @@
 
 								AGE_PK=$(echo "$PK" | ssh-to-age -private-key)
 								OUT="$HOME/.config/sops/age/keys.txt"
+								mkdir -p "$(dirname "$OUT")"
+								touch "$OUT"
 								if ! grep -q "$AGE_PK" "$OUT"; then
 									echo "$AGE_PK" >> "$OUT"
 								fi
