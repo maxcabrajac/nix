@@ -2,6 +2,10 @@
 	cfg = config.terminal;
 in {
 	options.terminal = {
+		enable = lib.mkEnableOption "" // {
+			default = config.profiles.gui;
+		};
+
 		package = lib.mkOption {
 			type = with lib.types; package;
 		};
@@ -22,7 +26,7 @@ in {
 		{
 			terminal.bin = lib.getExe cfg.package;
 		}
-		(lib.mkIf config.profiles.gui {
+		(lib.mkIf cfg.enable {
 			home = {
 				packages = [ cfg.package ];
 			};
