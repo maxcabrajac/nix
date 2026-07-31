@@ -157,7 +157,10 @@
 							'';
 						};
 						"[HM]" = {
-							hm-switch.command = "nh home switch $PRJ_ROOT -a";
+							hm-switch.command = ''
+								variant=''${1-''${HOME_MANAGER_VARIANT-default}}
+								nh home switch $PRJ_ROOT -a -c "''${USER}#''${variant}@$(uname -m)-linux"
+							'';
 						};
 						"[general commands]" = {
 							update.command = "cd $PRJ_ROOT && nix flake update";

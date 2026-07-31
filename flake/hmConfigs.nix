@@ -14,9 +14,14 @@
 		modules = lib.flatten [
 			(config.flake.homeModules |> lib.attrValues)
 			homes.${user}
-			{
-				home.username = if alias != null then alias else user;
-			}
+			({ config, ... }: {
+				home = {
+					username = if alias != null then alias else user;
+
+					# TODO: Move this somewhere else
+					sessionVariables.HOME_MANAGER_VARIANT = config.variant;
+				};
+			})
 		];
 	};
 in {
@@ -28,9 +33,11 @@ in {
 	};
 
 	config.flake = {
-		homeModules.variantSelector.options.variant = lib.mkOption {
-			type = lib.types.enum [ "default" ];
-			default = "default";
+		homeModules.variantSelector = { config, ... }: {
+			options.variant = lib.mkOption {
+				type = lib.types.enum [ "default" ];
+				default = "default";
+			};
 		};
 		homeConfigurations = config.systems
 			|> map (system:
