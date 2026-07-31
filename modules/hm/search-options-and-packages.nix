@@ -1,9 +1,5 @@
-{ inputs, config, lib, pkgs, ... }: let
+{ config, lib, pkgs, ... }: let
 	bins = pkgs |> lib.mapAttrs (_: lib.getExe);
-	toCfgFile = name: cfg: pkgs.writeTextFile {
-		name = "nix-search-${name}-cfg";
-		text = builtins.toJSON cfg;
-	};
 
 	cfgs = {
 		opt = {
@@ -15,71 +11,42 @@
 				value = value.optionsJSON + "/share/doc/nixos/options.json";
 			});
 		};
+
 		pkg = {
 			indexes = [ "nixpkgs" ];
 		};
 	};
 
-	inherit (config.xdg) cacheHome;
+	packages = cfgs |> lib.mapAttrs (name: cfg: let
+		cfgFile = pkgs.writeTextFile {
+			name = "nix-search-${name}-cfg";
+			text = builtins.toJSON <| cfg // {
+				enable_waiting_message = false;
+				cache_dir = config.xdg.cacheHome + "/nix-search-tv-wrappers/" + name;
+			};
+		};
 
-	cfgFor = name: {
-		enable_waiting_message = false;
-		cache_dir = cacheHome + "/nix-search-tv-wrappers/" + name;
-	};
-
-	backends = cfgs |> lib.mapAttrs (name: base_cfg: let
-		cfg = base_cfg // (cfgFor name);
-	in cmd:
-		''${bins.nix-search-tv} ${cmd} --config "${toCfgFile name cfg}"''
+		wrapper = cmd: ''${bins.nix-search-tv} ${cmd} --config "${cfgFile}"'';
+	in
+		pkgs.writeShellScriptBin "search-${name}" ''
+			${wrapper "print"} | ${bins.fzf} --preview '${wrapper "preview {}"}'
+		''
 	);
-
-	cmdModule = with lib.types; { config, ... }: {
-		options = {
-			enable = lib.mkEnableOption "enable";
-			name = lib.mkOption {
-				type = str;
-				internal = true;
-			};
-			cmd = lib.mkOption {
-				type = str;
-				internal = true;
-			};
-			package = lib.mkOption {
-				type = package;
-				readOnly = true;
-			};
-			indirect = lib.mkOption {
-				type = bool;
-				default = false;
-			};
-			optionPath = lib.mkOption {
-				type = str;
-			};
-			finalPackage = lib.mkOption {
-				type = package;
-				readOnly = true;
-			};
-		};
-
-		config = let
-			writeScript = pkgs.writeShellScriptBin "search-${config.name}";
-		in {
-			package = writeScript config.cmd;
-			finalPackage =
-				if config.indirect
-				then writeScript ''
-						PATH=${lib.makeBinPath [ pkgs.coreutils pkgs.hostname pkgs.nix ]}
-						nix run "${cacheHome}/currentFlake#homeConfigurations.''$(whoami)@''$(hostname).config.${config.optionPath}.package"
-				''
-				else config.package
-			;
-		};
-	};
 in {
 	options.programs.nix-search = lib.foldr lib.recursiveUpdate {} [
 		(
-			backends |> lib.mapAttrs (_: _: lib.mkOption {
-				type = with lib.types; (submodule cmdModule);
+			packages |> lib.mapAttrs (_: p: lib.mkOption {
+				type = with lib.types; (submodule {
+					options = {
+						enable = lib.mkEnableOption "enable" // {
+							default = config.programs.nix-search.enable;
+						};
+						package = lib.mkOption {
+							type = lib.types.package;
+							default = p;
+						};
+					};
+				});
 			})
 		)
 		{
@@ -88,24 +55,11 @@ in {
 	];
 
 	config = {
-		xdg.cacheFile.currentFlake = {
-			source = inputs.self.outPath;
-		};
-
-		programs.nix-search = backends |> lib.mapAttrs (name: backend: {
-			enable = lib.mkDefault config.programs.nix-search.enable;
-
-			inherit name;
-			optionPath = "programs.nix-search.${name}";
-			indirect = name == "opt";
-			cmd = ''${backend "print"} | ${bins.fzf} --preview '${backend "preview {}"}' --scheme history'';
-		});
-
-		home.packages = backends
+		home.packages = packages
 			|> lib.attrNames
 			|> map (x: config.programs.nix-search.${x})
 			|> lib.filter (x: x.enable)
-			|> map (x: x.finalPackage)
+			|> map (x: x.package)
 		;
 	};
 }
