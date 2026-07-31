@@ -111,6 +111,10 @@
 				users = ./users;
 			};
 
+			userAliases = {
+				max = ["maximilian.cabrajac"];
+			};
+
 			systems = import inputs.systems;
 			flake = {
 				inherit util inputs;
