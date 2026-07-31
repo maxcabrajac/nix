@@ -1,8 +1,9 @@
 variant: { config, lib, ... }: let
 	t = lib.types;
-	cfg = config.monitors;
+	wrapWithHost = x: if variant == "hm" then { host = x; } else x;
+	cfg = if variant == "hm" then config.host.monitors else config.monitors;
 in {
-	options = {
+	options = wrapWithHost {
 		monitors = lib.mkOption {
 			type = t.attrsOf <| t.submodule {
 				options = let
@@ -38,7 +39,7 @@ in {
 		monitorCount = cfgList |> lib.length;
 	in
 		lib.mkMerge [
-			(lib.mkIf (monitorCount != 0) {
+			(lib.mkIf (monitorCount != 0) <| wrapWithHost {
 				# TODO: assert this
 				# assertions = [
 				# 	{
