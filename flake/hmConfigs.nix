@@ -15,6 +15,7 @@
 			(config.flake.homeModules |> lib.attrValues)
 			homes.${user}
 			{ home.username = lib.mkDefault user; }
+			{ nixpkgs.config.allowUnfree = true; }
 		];
 	};
 in {

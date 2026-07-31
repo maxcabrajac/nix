@@ -1,4 +1,4 @@
-{ lib, config, ... }: let
+{ lib, config, pkgs, ... }: let
 	variantName = "work";
 	enable = { enable = true; };
 in {
@@ -11,7 +11,15 @@ in {
 		terminal = enable;
 		targets.genericLinux = enable;
 
-		home.shellAliases.ghi = "ggh inloco";
-		home.sessionPath = [ "$HOME/.local/bin" ];
+		home = {
+			packages = [
+				pkgs.terraform
+				pkgs.kubernetes-helm
+				pkgs.awscli
+			];
+
+			shellAliases.ghi = "ggh inloco";
+			sessionPath = [ "$HOME/.local/bin" ];
+		};
 	};
 }
