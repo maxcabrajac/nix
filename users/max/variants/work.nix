@@ -7,14 +7,17 @@ in {
 	};
 
 	config = lib.mkIf (config.variant == variantName) {
-		programs.fish = enable;
-		terminal = enable;
 		targets.genericLinux = enable;
-		programs.awscli = enable // {
-			aws_profile.filters = [
-				"sre-1"
-				"sre-0"
-			];
+		terminal = enable;
+		programs = {
+			fish = enable;
+			awscli = enable // {
+				aws_profile.filters = [
+					"sre-1"
+					"sre-0"
+				];
+			};
+			kubectl = enable;
 		};
 
 		home = {
