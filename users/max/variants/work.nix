@@ -10,10 +10,15 @@ in {
 		programs.fish = enable;
 		terminal = enable;
 		targets.genericLinux = enable;
+		programs.awscli = enable // {
+			aws_profile.filters = [
+				"sre-1"
+				"sre-0"
+			];
+		};
 
 		home = {
 			packages = with pkgs; [
-				awscli
 				kubernetes-helm
 				telegram-desktop
 				terraform
