@@ -12,10 +12,11 @@ in {
 		targets.genericLinux = enable;
 
 		home = {
-			packages = [
-				pkgs.terraform
-				pkgs.kubernetes-helm
-				pkgs.awscli
+			packages = with pkgs; [
+				awscli
+				kubernetes-helm
+				telegram-desktop
+				terraform
 			];
 
 			shellAliases.ghi = "ggh inloco";
