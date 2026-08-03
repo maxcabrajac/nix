@@ -22,9 +22,22 @@ in {
 
 		home = {
 			packages = with pkgs; [
+				# management
 				kubernetes-helm
-				telegram-desktop
 				terraform
+				sops
+				gnumake
+
+				# langs
+				uv
+				poetry
+				go
+
+				# misc
+				jq
+				yq-go
+				telegram-desktop
+				codex
 			];
 
 			shellAliases.ghi = "ggh inloco";
