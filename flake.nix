@@ -95,6 +95,7 @@
 				inputs.fp-devshell.flakeModule
 				inputs.home-manager.flakeModules.home-manager
 				(util.allNixFiles ./flake)
+				(util.allNixFiles ./modules/den)
 			];
 
 			_module.args = {
