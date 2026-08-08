@@ -1,0 +1,129 @@
+{ lib, ... }: {
+	host.nixos = { config, pkgs, ... }: {
+		boot = {
+			loader = {
+				systemd-boot.enable = true;
+				efi.canTouchEfiVariables = true;
+			};
+		};
+
+		# Enable OpenGL
+		hardware.graphics = {
+			enable = true;
+		};
+
+		# Load nvidia driver for Xorg and Wayland
+		services.xserver.videoDrivers = ["nvidia"];
+
+		hardware.nvidia = {
+			open = false;
+			# Enable the Nvidia settings menu,
+			# accessible via `nvidia-settings`.
+			nvidiaSettings = false;
+		};
+
+		console = {
+			font = "Lat2-Terminus16";
+			keyMap = "colemak";
+		};
+
+		services.displayManager.ly = {
+			enable = true;
+			x11Support = false;
+		};
+
+		services.pipewire = {
+			enable = true;
+			pulse.enable = true;
+		};
+
+		services.automatic-timezoned.enable = true;
+
+		monitors = {
+			"HDMI-A-1" = {
+				x = 0;
+				y = 450;
+
+				w = 1920;
+				h = 1080;
+				refresh = 144.001;
+			};
+
+			"DP-1" = {
+				x = 1920;
+				y = 0;
+
+				w = 2560;
+				h = 1440;
+				refresh = 164.833;
+
+				main = true;
+			};
+		};
+
+		# List packages installed in system profile.
+		# You can use https://search.nixos.org/ to find more packages (and options).
+		environment.systemPackages = with pkgs; [
+			gnumake
+			wget
+			kitty
+			git
+			jujutsu
+			gcc
+			neovim
+			nh
+			dix
+			jq
+			nix-output-monitor
+			nix-tree
+		];
+
+		system.stateVersion = "25.05"; # Did you read the comment?
+
+		programs.steam = {
+			enable = true;
+			remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+			dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+			localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+		};
+
+		virtualisation.docker = {
+			enable = true;
+			storageDriver = "btrfs";
+		};
+
+		# HARDWARE
+
+		hardware.enableRedistributableFirmware = true;
+
+		boot = {
+			initrd = {
+				availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
+				kernelModules = [ ];
+			};
+			kernelModules = [ "kvm-amd" ];
+			extraModulePackages = [ ];
+		};
+
+		fileSystems = {
+			"/" = {
+				device = "/dev/disk/by-uuid/3ad17340-7122-4887-983d-09ab4d7cccdd";
+				fsType = "btrfs";
+			};
+
+			"/boot" = {
+				device = "/dev/disk/by-uuid/C65C-15B2";
+				fsType = "vfat";
+				options = [ "fmask=0022" "dmask=0022" ];
+			};
+		};
+
+		swapDevices = [ {
+			device = "/var/lib/swapfile";
+			size = 16 * 1024;
+		} ];
+
+		nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+		hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+	};
+}

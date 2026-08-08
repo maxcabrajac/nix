@@ -1,32 +1,29 @@
-{ lib, config, ... }: let
-	cfg = config.terminal;
-in {
-	options.terminal = {
-		enable = lib.mkEnableOption "" // {
-			default = config.profiles.gui;
+{ lib, ... }: {
+	# TODO: ponder on this module. I feel weird about it
+	hm.base = { config, ... }: let
+		cfg = config.terminal;
+	in {
+		options.terminal = {
+			enable = lib.mkEnableOption "";
+
+			package = lib.mkOption {
+				type = with lib.types; package;
+			};
+
+			desktopFile = lib.mkOption {
+				type = lib.types.pathInStore;
+				default = cfg.package
+					|> (p: "${p}/share/applications/${p.pname}.desktop")
+				;
+			};
+
+			bin = lib.mkOption {
+				type = lib.types.str;
+				default = lib.getExe cfg.package;
+			};
 		};
 
-		package = lib.mkOption {
-			type = with lib.types; package;
-		};
-
-		desktopFile = lib.mkOption {
-			type = lib.types.pathInStore;
-			default = cfg.package
-				|> (p: "${p}/share/applications/${p.pname}.desktop")
-			;
-		};
-
-		bin = lib.mkOption {
-			type = lib.types.str;
-		};
-	};
-
-	config = lib.mkMerge [
-		{
-			terminal.bin = lib.getExe cfg.package;
-		}
-		(lib.mkIf cfg.enable {
+		config = lib.mkIf cfg.enable {
 			home = {
 				packages = [ cfg.package ];
 			};
@@ -45,6 +42,6 @@ in {
 					];
 				};
 			};
-		})
-	];
+		};
+	};
 }

@@ -5,6 +5,7 @@
 		nixpkgs.url = "nixpkgs/nixos-unstable";
 
 		flake-parts.url = "github:hercules-ci/flake-parts";
+		import-tree.url = "github:denful/import-tree";
 		fp-devshell = {
 			url = "github:numtide/devshell";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -94,34 +95,26 @@
 			imports = lib.flatten [
 				inputs.fp-devshell.flakeModule
 				inputs.home-manager.flakeModules.home-manager
-				(util.allNixFiles ./flake)
-				(util.allNixFiles ./modules/den)
+				(inputs.import-tree ./modules)
 			];
 
 			_module.args = {
 				inherit util;
 			};
 
-			altPkgs = {
-			};
-
-			dirs = {
-				hosts = ./hosts;
-				modules = ./modules;
-				packages = ./pkgs;
-				users = ./users;
-			};
+			flakeRoot = ./.;
 
 			userAliases = {
 				max = ["maximilian.cabrajac"];
 			};
 
+			hm.base.imports = [
+				inputs.sops-nix.homeManagerModules.sops
+			];
+
 			systems = import inputs.systems;
 			flake = {
 				inherit util inputs;
-				homeModules = {
-					inherit (inputs.sops-nix.homeManagerModules) sops;
-				};
 			};
 
 			perSystem = { pkgs, ... }: let

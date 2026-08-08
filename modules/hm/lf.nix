@@ -1,26 +1,29 @@
-{ lib, config, ... }: let
-	cfg = config.programs.lf;
-in {
-	options.programs.lf = {
-		useAsXdgPortalOn = lib.mkOption {
-			type = with lib.types; attrsOf bool;
-			default = {};
+{ lib, ... }: {
+	hm.base = { config, ... }: let
+		cfg = config.programs.lf;
+	in {
+		options.programs.lf = {
+			useAsXdgPortal = lib.mkOption {
+				type = lib.types.bool;
+				default = true;
+			};
+
+			lfcd = lib.mkEnableOption "lfcd";
 		};
 
-		lfcd = lib.mkEnableOption "lfcd";
-	};
+		config = lib.mkIf cfg.enable {
+			programs = let
+				lf = lib.getExe cfg.package;
+			in lib.mkIf cfg.lfcd {
+				fish.shellAliases.lfcd = "cd (${lf} -print-last-dir)";
+				bash.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
+				zsh.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
+			};
 
-	config = lib.mkIf cfg.enable {
-		programs = let
-			lf = lib.getExe cfg.package;
-		in lib.mkIf cfg.lfcd {
-			fish.shellAliases.lfcd = "cd (${lf} -print-last-dir)";
-			bash.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
-			zsh.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
+			# TODO: uncoment this
+			# xdg.portal.termfilechooser = lib.mkIf cfg.useAsXdgPortal {
+			# 	cmd = "lf-wrapper.sh";
+			# });
 		};
-
-		xdg.portal.termfilechooser = cfg.useAsXdgPortalOn |> lib.mapAttrs (_: enable: lib.mkIf enable {
-			cmd = "lf-wrapper.sh";
-		});
 	};
 }

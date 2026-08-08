@@ -1,3 +1,3 @@
 {
-	systemd.user.enable = true;
+	hm.base.systemd.user.enable = true;
 }

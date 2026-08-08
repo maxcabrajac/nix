@@ -1,3 +1,3 @@
 {
-	xdg.enable = true;
+	hm.base.xdg.enable = true;
 }
