@@ -23,7 +23,7 @@
 			prLink = "https://github.com/flatpak/xdg-desktop-portal/pull/1867";
 			alarmMessage = "A new xdg-portal release (${base.version}) hit nixpkgs. Time to check if ${prLink} is upstreamed.";
 		in
-			lib.warnIf (base.version != "1.20.4") alarmMessage xdp-git;
+			lib.warnIf (base.version != "1.22.1") alarmMessage xdp-git;
 	};
 }
 

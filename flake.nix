@@ -17,7 +17,7 @@
 		};
 
 		niri-flake = {
-			url = "github:sodiboo/niri-flake";
+			url = "github:epireyn/niri-flake";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
@@ -29,7 +29,7 @@
 		};
 
 		xdp-git = {
-			url = "github:flatpak/xdg-desktop-portal/1.21.1";
+			url = "github:maxcabrajac/xdg-desktop-portal/multiple_cfgs_per_dir_backport";
 			flake = false;
 		};
 
