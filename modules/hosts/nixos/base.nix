@@ -7,11 +7,6 @@
 			};
 		};
 
-		# Enable OpenGL
-		hardware.graphics = {
-			enable = true;
-		};
-
 		# Load nvidia driver for Xorg and Wayland
 		services.xserver.videoDrivers = ["nvidia"];
 
@@ -93,17 +88,8 @@
 		};
 
 		# HARDWARE
-
-		hardware.enableRedistributableFirmware = true;
-
-		boot = {
-			initrd = {
-				availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
-				kernelModules = [ ];
-			};
-			kernelModules = [ "kvm-amd" ];
-			extraModulePackages = [ ];
-		};
+		hardware.facter.enable = true;
+		hardware.facter.reportPath = ./facter.json;
 
 		fileSystems = {
 			"/" = {
@@ -122,8 +108,5 @@
 			device = "/var/lib/swapfile";
 			size = 16 * 1024;
 		} ];
-
-		nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-		hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 	};
 }
