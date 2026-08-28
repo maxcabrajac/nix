@@ -20,10 +20,11 @@
 				zsh.shellAliases.lfcd = "cd $(${lf} -print-last-dir)";
 			};
 
-			# TODO: uncoment this
-			# xdg.portal.termfilechooser = lib.mkIf cfg.useAsXdgPortal {
-			# 	cmd = "lf-wrapper.sh";
-			# });
+		};
+	};
+	hm.termfilechooser = { config, ... }: {
+		xdg.portal.termfilechooser = lib.mkIf config.programs.lf.useAsXdgPortal {
+			cmd = "lf-wrapper.sh";
 		};
 	};
 }
