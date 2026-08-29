@@ -87,9 +87,6 @@
 
 	outputs = inputs@{ flake-parts, nixpkgs, home-manager, ... }: let
 		lib = nixpkgs.lib // home-manager.lib;
-		util = import ./util {
-			inherit lib inputs;
-		};
 	in
 		flake-parts.lib.mkFlake { inherit inputs; } {
 			imports = lib.flatten [
@@ -97,10 +94,6 @@
 				inputs.home-manager.flakeModules.home-manager
 				(inputs.import-tree ./modules)
 			];
-
-			_module.args = {
-				inherit util;
-			};
 
 			flakeRoot = ./.;
 
@@ -114,7 +107,7 @@
 
 			systems = import inputs.systems;
 			flake = {
-				inherit util inputs;
+				inherit inputs;
 			};
 
 			perSystem = { pkgs, ... }: let

@@ -1,8 +1,8 @@
-{ inputs, util, ... }: {
+{ inputs, ... }: {
 	os.base = {
 		imports = [ inputs.home-manager.nixosModules.home-manager ];
 		home-manager = {
-			extraSpecialArgs = { inherit util inputs; };
+			extraSpecialArgs = { inherit inputs; };
 			useGlobalPkgs = true;
 		};
 	};

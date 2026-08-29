@@ -1,5 +1,5 @@
-{ lib, ... }: {
-	hm.base = { util, config, pkgs, ... }: with lib; {
+{ lib, assertNoCollisions, ... }: {
+	hm.base = { config, pkgs, ... }: with lib; {
 		options.global = let
 			keybind = { config, ... }: {
 				options = with types; {
@@ -79,7 +79,7 @@
 
 		config = {
 			assertions = [
-				(util.assertions.noCollisions "global.keybinds" (k: k.finalCombo) config.global.finalKeybinds)
+				(assertNoCollisions "global.keybinds" (k: k.finalCombo) config.global.finalKeybinds)
 			];
 
 			global.finalKeybinds = config.global.keybinds

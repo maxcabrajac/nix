@@ -1,11 +1,11 @@
-{ config, lib, util, inputs, ... }: let
+{ config, lib, inputs, ... }: let
 	overlays = config.flake.overlays |> lib.attrValues;
 
 	# TODO: Refactor this. This is bad...
 	hmConfig = { module, system }: inputs.home-manager.lib.homeManagerConfiguration {
 		pkgs = import inputs.nixpkgs { inherit system overlays; };
 		# TODO: Remove this
-		extraSpecialArgs = { inherit inputs util; };
+		extraSpecialArgs = { inherit inputs; };
 		modules = [
 			module
 			{ nixpkgs.config.allowUnfree = true; }

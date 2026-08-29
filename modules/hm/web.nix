@@ -1,14 +1,26 @@
-{ lib, util, ... }: {
-	hm.base = { pkgs, config, ... }: with lib; let
-		inherit (util)
-			checkCollisions
-		;
-		inherit (util.types.web)
-			site
-			search_engine
-		;
-
+{ lib, assertNoCollisions, ... }: {
+	hm.base = { pkgs, config, ... }: with lib; with types; let
 		cfg = config.web;
+		searchEngineT = strMatching ".*%%.*";
+		websiteT = submodule ({config, ...}: {
+			options = {
+				name = mkOption {
+					type = str;
+				};
+				alias = mkOption {
+					type = str;
+					default = toLower config.name;
+					defaultText = literalExpression "lib.toLower config.name";
+				};
+				bookmark = mkOption {
+					type = str;
+				};
+				search_engine = mkOption {
+					type = nullOr searchEngineT;
+					default = null;
+				};
+			};
+		});
 	in {
 		options.web = with types; {
 			browser = mkOption {
@@ -17,14 +29,12 @@
 			};
 
 			sites = mkOption {
-				type = listOf site;
+				type = listOf websiteT;
 				default = [];
-				# TODO: use assertions instead
-				apply = checkCollisions "web.sites" (x: x.alias);
 			};
 
 			default_search_engine = mkOption {
-				type = either site search_engine;
+				type = either websiteT searchEngineT;
 				default = "google.com/search?q=%%";
 				apply = se:
 					if isString se then
@@ -36,6 +46,10 @@
 		};
 
 		config = {
+			assertions = [
+				(assertNoCollisions "web.sites" (x: x.alias) cfg.sites)
+			];
+
 			home.packages = lib.mkIf config.profiles.gui [ cfg.browser ];
 		};
 	};
