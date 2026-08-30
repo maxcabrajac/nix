@@ -53,6 +53,7 @@
 
 		nvf = {
 			url = "github:NotAShelf/nvf";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		# max-nvim
