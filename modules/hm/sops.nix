@@ -1,9 +1,13 @@
-{ config, lib, ... }: let
-	inherit (lib) mkOption types;
-	inherit (types) attrsOf submodule nullOr;
-in {
-	options = {
-		secretFiles = mkOption {
+{ lib, inputs, ... }: {
+	hm.base = { config, ... }: let
+		inherit (lib) mkOption types;
+		inherit (types) attrsOf submodule nullOr;
+	in {
+		imports = [
+			inputs.sops-nix.homeManagerModules.sops
+		];
+
+		options.secretFiles = mkOption {
 			type = attrsOf (submodule {
 				options = {
 					enable = mkOption {
@@ -25,10 +29,8 @@ in {
 			});
 			default = {};
 		};
-	};
 
-	config = {
-		sops = {
+		config.sops = {
 			age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
 			secrets = config.secretFiles
 				|> lib.filterAttrs (_: attr: attr.enable)

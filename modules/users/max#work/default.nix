@@ -1,4 +1,5 @@
 { config, ... }: {
+	userAliases.max = [ "maximilian.cabrajac" ];
 	user."max#work" = let
 		enable = { enable = true; };
 	in
