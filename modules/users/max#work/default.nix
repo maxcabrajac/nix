@@ -45,8 +45,9 @@
 				shellAliases.ghi = "ggh inloco";
 				sessionPath = [ "$HOME/.local/bin" ];
 
-				# Work ssh keys are managed manually
-				sshKeys = false;
 			};
+
+			# Work ssh keys are managed manually
+			sshKey = false;
 		};
 }
