@@ -1,5 +1,5 @@
-{ lib, ... }: {
-	host.nixos = { config, pkgs, ... }: {
+{
+	host.nixos = { pkgs, ... }: {
 		boot = {
 			loader = {
 				systemd-boot.enable = true;
@@ -26,13 +26,6 @@
 			enable = true;
 			x11Support = false;
 		};
-
-		services.pipewire = {
-			enable = true;
-			pulse.enable = true;
-		};
-
-		services.automatic-timezoned.enable = true;
 
 		monitors = {
 			"HDMI-A-1" = {
