@@ -57,7 +57,7 @@
 		statusline = {
 			lualine = {
 				enable = true;
-				theme = "ayu_dark";
+				setupOpts.options.theme = "ayu_dark";
 			};
 		};
 
