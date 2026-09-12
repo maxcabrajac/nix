@@ -50,19 +50,17 @@
 		};
 
 		cachy-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+		nix-gaming-edge.url = "github:powerofthe69/nix-gaming-edge";
+		greenluma = {
+			url = "github:AceSLS/SLSsteam";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 
 		nvf = {
 			url = "github:NotAShelf/nvf";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-
-		# max-nvim
 		nvim-ayu = { url = "github:Luxed/ayu-vim"; flake = false; };
-
-		greenluma = {
-			url = "github:AceSLS/SLSsteam";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
 
 		sops-nix = {
 			url = "github:mic92/sops-nix";
@@ -78,11 +76,13 @@
 		extra-substituters = [
 			"https://walker-git.cachix.org"
 			"https://attic.xuyh0120.win/lantian" # cachy-kernel
+			"https://nix-cache.tokidoki.dev/tokidoki" # nix-gaming-edge
 		];
 
 		extra-trusted-public-keys = [
 			"walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
 			"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" # cachy-kernel
+			"tokidoki:MD4VWt3kK8Fmz3jkiGoNRJIW31/QAm7l1Dcgz2Xa4hk=" # nix-gaming-edge
 		];
 	};
 
