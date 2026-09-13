@@ -1,6 +1,6 @@
 { config, ... }: {
 	host.nixos.imports = with config.os; [
-		x86v3
+		x86_64
 		gaming
 		gui
 	];
