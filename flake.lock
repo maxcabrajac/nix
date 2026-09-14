@@ -474,6 +474,7 @@
         "nvim-ayu": "nvim-ayu",
         "sops-nix": "sops-nix",
         "systems": "systems",
+        "telegram-nixpkgs": "telegram-nixpkgs",
         "walker": "walker",
         "wallpkgs": "wallpkgs",
         "xdp-git": "xdp-git"
@@ -512,6 +513,21 @@
         "owner": "nix-systems",
         "repo": "default-linux",
         "type": "github"
+      }
+    },
+    "telegram-nixpkgs": {
+      "locked": {
+        "lastModified": 1788179007,
+        "narHash": "sha256-hn1oU2rue2SYK8dAr8+WNZWtbsz1S2W5mnHlSEuh3bo=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "34ab99075ac4f7e40cf037eef32cb1c360bb85e9",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "rev": "34ab99075ac4f7e40cf037eef32cb1c360bb85e9",
+        "type": "indirect"
       }
     },
     "walker": {

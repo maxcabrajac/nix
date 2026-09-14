@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ config, inputs, ... }: {
 	userAliases.max = [ "maximilian.cabrajac" ];
 	user."max#work" = let
 		enable = { enable = true; };
@@ -38,7 +38,8 @@
 					# misc
 					jq
 					yq-go
-					telegram-desktop
+					# See users/max/_legacy/social.nix
+					inputs.telegram-nixpkgs.legacyPackages.${pkgs.stdenv.targetPlatform.system}.telegram-desktop
 					codex
 				];
 
