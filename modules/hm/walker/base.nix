@@ -8,12 +8,13 @@
 					"clipboard"
 					"symbols"
 					"providerlist"
-					"websearch"
+					"menus"
 					"windows"
 				];
 			};
 			walker = {
 				runAsService = true;
+				config.providers.default = [ "desktopapplications" ];
 			};
 		};
 	};

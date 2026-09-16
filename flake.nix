@@ -38,14 +38,8 @@
 		# this is HUGE
 		wallpkgs.url = "github:NotAShelf/wallpkgs";
 
-		elephant = {
-			url = "github:maxcabrajac/elephant/websearch";
-			inputs.nixpkgs.follows = "nixpkgs";
-			inputs.systems.follows = "systems";
-		};
 		walker = {
-			url = "github:abenz1267/walker/v2.15.2";
-			inputs.elephant.follows = "elephant";
+			url = "github:abenz1267/walker";
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.systems.follows = "systems";
 		};

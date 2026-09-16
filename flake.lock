@@ -45,23 +45,24 @@
     "elephant": {
       "inputs": {
         "nixpkgs": [
+          "walker",
           "nixpkgs"
         ],
         "systems": [
+          "walker",
           "systems"
         ]
       },
       "locked": {
-        "lastModified": 1767379800,
-        "narHash": "sha256-j7h636UbkZQ7p/V6GDKSxxnzt++AoCMYlM248zIDVBU=",
-        "owner": "maxcabrajac",
+        "lastModified": 1775706155,
+        "narHash": "sha256-h7Rw0vlb0n0Jsk21WJPm7H+1T1bG+PEuxE5cJ2TZl8A=",
+        "owner": "abenz1267",
         "repo": "elephant",
-        "rev": "a5f192596715e6dc31bba1b491f1e473c778edeb",
+        "rev": "376ee71c66db38683daabd57350bf3f6f086eaf8",
         "type": "github"
       },
       "original": {
-        "owner": "maxcabrajac",
-        "ref": "websearch",
+        "owner": "abenz1267",
         "repo": "elephant",
         "type": "github"
       }
@@ -460,7 +461,6 @@
     "root": {
       "inputs": {
         "cachy-kernel": "cachy-kernel",
-        "elephant": "elephant",
         "flake-parts": "flake-parts_2",
         "fp-devshell": "fp-devshell",
         "greenluma": "greenluma",
@@ -532,9 +532,7 @@
     },
     "walker": {
       "inputs": {
-        "elephant": [
-          "elephant"
-        ],
+        "elephant": "elephant",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -543,16 +541,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1773212610,
-        "narHash": "sha256-jYvDe44MLx444BfiO1EtCKgHoKfXeIG1DvAw7P2qCrY=",
+        "lastModified": 1784217994,
+        "narHash": "sha256-gxHJsrJZo2qbKK47Kf/9ho3i/HhRwkL8XvPnczGPd9E=",
         "owner": "abenz1267",
         "repo": "walker",
-        "rev": "04ec7aa1b0cf2524370d99d43283c3050178a813",
+        "rev": "42b3ed88abf50bc52638fb2835b7f17e3ea3ac4c",
         "type": "github"
       },
       "original": {
         "owner": "abenz1267",
-        "ref": "v2.15.2",
         "repo": "walker",
         "type": "github"
       }

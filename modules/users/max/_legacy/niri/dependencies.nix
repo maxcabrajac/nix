@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }: lib.mkIf config.programs.niri.enable {
 	global.keybinds = {
 		M-Space.pkg = config.programs.walker.package;
-		M-O.sh = "${lib.getExe config.programs.walker.package} -m websearch";
+		M-O.sh = "${lib.getExe config.programs.walker.package} -m menus:websearch";
 	};
  	programs.walker.enable = true;
  	services.playerctld.enable = true;
