@@ -3,7 +3,6 @@
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
-		telegram-nixpkgs.url = "nixpkgs/34ab99075ac4f7e40cf037eef32cb1c360bb85e9";
 
 		flake-parts.url = "github:hercules-ci/flake-parts";
 		import-tree.url = "github:denful/import-tree";
@@ -42,6 +41,7 @@
 			url = "github:abenz1267/walker";
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.systems.follows = "systems";
+			inputs.elephant.url = "github:Ori-Riaru/elephant/fix-buildgomodules";
 		};
 
 		cachy-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";

@@ -38,8 +38,7 @@
 					# misc
 					jq
 					yq-go
-					# See users/max/_legacy/social.nix
-					inputs.telegram-nixpkgs.legacyPackages.${pkgs.stdenv.targetPlatform.system}.telegram-desktop
+					telegram-desktop
 					codex
 				];
 
