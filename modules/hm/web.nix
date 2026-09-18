@@ -1,7 +1,12 @@
 { lib, assertNoCollisions, ... }: {
 	hm.base = { pkgs, config, ... }: with lib; with types; let
 		cfg = config.web;
-		searchEngineT = strMatching ".*%%.*";
+		prependHttps = mapNullable (s:
+			if s |> hasInfix "://"
+			then s
+			else "https://${s}"
+		);
+
 		websiteT = submodule ({config, ...}: {
 			options = {
 				name = mkOption {
@@ -13,11 +18,14 @@
 					defaultText = literalExpression "lib.toLower config.name";
 				};
 				bookmark = mkOption {
-					type = str;
+					type = nullOr str;
+					default = null;
+					apply = prependHttps;
 				};
 				search_engine = mkOption {
-					type = nullOr searchEngineT;
+					type = nullOr <| strMatching ".*%%.*";
 					default = null;
+					apply = prependHttps;
 				};
 			};
 		});
@@ -34,21 +42,23 @@
 			};
 
 			default_search_engine = mkOption {
-				type = either websiteT searchEngineT;
-				default = "google.com/search?q=%%";
-				apply = se:
-					if isString se then
-						se
-					else
-						throwIf (isNull se.search_engine)
-							"web.default_search_engine.search_engine is null/not set" se.search_engine;
+				type = coercedTo str (search_engine: {
+					name = "Internet";
+					alias = "search";
+					inherit search_engine;
+				}) websiteT;
 			};
 		};
 
 		config = {
 			assertions = [
 				(assertNoCollisions "web.sites" (x: x.alias) cfg.sites)
+				{
+					assertion = config.web.default_search_engine.search_engine != null;
+					message = "Invalid web.default_search_engine";
+				}
 			];
+			web.default_search_engine = mkDefault "google.com/search?q=%%";
 
 			home.packages = lib.mkIf config.profiles.gui [ cfg.browser ];
 		};

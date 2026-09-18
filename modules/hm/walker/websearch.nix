@@ -5,25 +5,7 @@
 			Icon = "edit-find";
 			Action = "${pkgs.xdg-utils}/bin/xdg-open %VALUE%";
 			SearchPriority = [ "keywords" ];
-			engines = let
-				baseEngines = config.web.sites
-					|> map ({ name, alias, bookmark, search_engine }: {
-						inherit alias name;
-						url = "https://${bookmark}";
-						default = false;
-					} // (lib.optionalAttrs (!isNull search_engine) {
-						search_url = "https://${search_engine}";
-					}));
-				defaultEngine = {
-					name = "the Internet";
-					alias = "search";
-					search_url = "https://${config.web.default_search_engine}";
-					default = true;
-				};
-			in
-				baseEngines ++ [defaultEngine]
-			;
-
+			engines = config.web.sites ++ [ (config.web.default_search_engine // { default = true; }) ];
 			urlEncode = lib.mkLuaInline /* lua */ ''
 				function(str)
 					function encodeChar(c)
@@ -35,7 +17,7 @@
 
 			searchUrl = lib.mkLuaInline /* lua */ ''
 				function(engine, term)
-					return engine.search_url:gsub("%%%%", urlEncode(term):gsub("%%", "%%%%"))
+					return engine.search_engine:gsub("%%%%", urlEncode(term):gsub("%%", "%%%%"))
 				end
 			'';
 
@@ -76,16 +58,16 @@
 					term = query:sub(tag_end + 2)
 
 					for i, engine in ipairs(engines) do
-						if engine.url then
+						if engine.bookmark then
 							entries:add({
 								Text = engine.name,
 								-- Extra space so this gets used when term is empty
 								Keywords = { engine.alias .. " " },
-								Value = engine.url,
+								Value = engine.bookmark,
 							})
 						end
 
-						if engine.search_url then
+						if engine.search_engine then
 							if tag == engine.alias and term:len() ~= 0 then
 								entries:add(searchEntry(engine, term, query))
 							end
