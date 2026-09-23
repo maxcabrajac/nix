@@ -21,7 +21,6 @@
 				dix
 				sops
 				jq
-				bitwarden-cli
 				ssh-to-age
 			];
 			commands = namedList (injectKeys "category" {
@@ -49,6 +48,9 @@
 				"[general commands]" = {
 					update.command = "cd $PRJ_ROOT && nix flake update";
 					sops-init.command = ''
+						# TODO: refactor this out of here.
+						export PATH=$(nix build --print-out-paths $PRJ_ROOT#inputs.nixpkgs.legacyPackages.x86_64-linux.bitwarden-cli)/bin:$PATH
+
 						if ! [ -n "''${BW_SESSION+is_set}" ]; then
 							export BW_SESSION="$(bw login --raw || bw unlock --raw)"
 						fi
