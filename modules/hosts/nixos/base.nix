@@ -75,6 +75,11 @@
 			localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
 		};
 
+		services.transmission = {
+			enable = true;
+			package = pkgs.transmission_4;
+		};
+
 		virtualisation.docker = {
 			enable = true;
 			storageDriver = "btrfs";
