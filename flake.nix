@@ -70,7 +70,8 @@
 
 		extra-substituters = [
 			"https://walker-git.cachix.org"
-			"https://attic.xuyh0120.win/lantian" # cachy-kernel
+			# TODO: Follow https://github.com/xddxdd/nix-cachyos-kernel/issues/110
+			# "https://attic.xuyh0120.win/lantian" # cachy-kernel
 			"https://nix-cache.tokidoki.dev/tokidoki" # nix-gaming-edge
 		];
 
