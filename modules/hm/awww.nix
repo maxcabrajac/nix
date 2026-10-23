@@ -5,10 +5,11 @@
 	in {
 		options.services.awww.rngLoop = {
 			enable = lib.mkEnableOption "" // {
-				default = (cfg.dir or "") != "";
+				default = cfg.dir != "";
 			};
 			dir = lib.mkOption {
 				type = with lib.types; either path str;
+				default = "";
 			};
 			fps = lib.mkOption {
 				type = lib.types.int;
