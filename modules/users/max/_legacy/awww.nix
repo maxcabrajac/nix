@@ -3,9 +3,8 @@
 	baseService = ["awww.service"];
 	wallpaperDrv = inputs.wallpkgs.wallpapers
 		|> lib.attrsets.collect (x: x ? path)
-		|> map ({ path, ... }: path)
-		|> lib.concatLines
-		|> builtins.toFile "wallpaper-set"
+		|> map ({ hash, path, ... }: { name = hash; inherit path; })
+		|> pkgs.linkFarm "wallpaper-dir"
 	;
 in
 	lib.mkIf cfg.enable {
@@ -18,13 +17,13 @@ in
 				Service = {
 					Type = "oneshot";
 					ExecStart = pkgs.writeShellScript "wallpaper-loop" /* bash */ ''
-						PATH=${pkgs.coreutils}/bin:${cfg.package}/bin
+						PATH=${pkgs.coreutils}/bin:${cfg.package}/bin:${pkgs.findutils}/bin
 						export AWWW_TRANSITION=any
 						# this is dumb =P
 						export AWWW_TRANSITOIN_FPS=120
 
 						for MONITOR in $(awww query | cut -d: -f2); do
-							SELECTED=$(shuf -n 1 ${wallpaperDrv})
+							SELECTED=$(find ${wallpaperDrv} | shuf -n 1)
 							echo "[$MONITOR] = $SELECTED"
 							awww img --outputs $MONITOR $SELECTED
 						done
