@@ -22,10 +22,7 @@
 			keyMap = "colemak";
 		};
 
-		services.displayManager.ly = {
-			enable = true;
-			x11Support = false;
-		};
+		services.displayManager.ly.enable = true;
 
 		monitors = {
 			"HDMI-A-1" = {
