@@ -1,10 +1,8 @@
 {
 	host.nixos = { pkgs, ... }: {
-		boot = {
-			loader = {
-				systemd-boot.enable = true;
-				efi.canTouchEfiVariables = true;
-			};
+		boot.loader = {
+			systemd-boot.enable = true;
+			efi.canTouchEfiVariables = true;
 		};
 
 		# Load nvidia driver for Xorg and Wayland
@@ -63,8 +61,6 @@
 			nix-tree
 		];
 
-		system.stateVersion = "25.05"; # Did you read the comment?
-
 		programs.steam.enable = true;
 
 		services.transmission = {
@@ -76,6 +72,8 @@
 			enable = true;
 			storageDriver = "btrfs";
 		};
+
+		system.stateVersion = "25.05"; # Did you read the comment?
 
 		# HARDWARE
 		hardware.facter.enable = true;
