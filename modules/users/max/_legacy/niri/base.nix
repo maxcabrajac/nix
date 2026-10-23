@@ -94,8 +94,12 @@ in {
 				"Mod+Shift+I".action.set-column-width = "+5%";
 
 				"Mod+J".action.focus-monitor-left = {};
+				"Mod+L".action.focus-workspace-down = {};
+				"Mod+U".action.focus-workspace-up = {};
 				"Mod+Y".action.focus-monitor-right = {};
 				"Mod+Alt+J".action.move-column-to-monitor-left = {};
+				"Mod+Alt+L".action.move-column-to-workspace-down = {};
+				"Mod+Alt+U".action.move-column-to-workspace-up = {};
 				"Mod+Alt+Y".action.move-column-to-monitor-right = {};
 
 				"Mod+Z".action.maximize-column = {};

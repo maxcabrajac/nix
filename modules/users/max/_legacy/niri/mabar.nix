@@ -77,6 +77,31 @@ in {
 						'
 					'';
 				};
+				workspaces = {
+					init = /* bash */ ''
+						monitor=$1
+						refreshMonitorData() {
+							monitorData=$(${niriMsg} workspaces | ${jq} --arg monitor "$monitor" '
+								map(select(.output == $monitor))
+								| sort_by(.idx)
+								| map({
+									id: .id,
+									focused: .is_active,
+									empty: .active_window_id == null
+								})
+							')
+						}
+
+						while [ -z "$monitorData" ] || $(echo $monitorData | ${jq} 'any(.focused) | not'); do
+							refreshMonitorData
+						done
+					'';
+					on = [ "WorkspaceActivated" ];
+					run = /* bash */ ''
+						refreshMonitorData
+						echo "[$monitorData]"
+					'';
+				};
 			};
 
 			overrides.wmInterface = let
