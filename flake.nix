@@ -29,11 +29,6 @@
 			inputs.flake-parts.follows = "flake-parts";
 		};
 
-		xdp-git = {
-			url = "github:maxcabrajac/xdg-desktop-portal/multiple_cfgs_per_dir_backport";
-			flake = false;
-		};
-
 		# this is HUGE
 		wallpkgs.url = "github:NotAShelf/wallpkgs";
 

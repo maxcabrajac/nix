@@ -476,8 +476,7 @@
         "sops-nix": "sops-nix",
         "systems": "systems",
         "walker": "walker",
-        "wallpkgs": "wallpkgs",
-        "xdp-git": "xdp-git"
+        "wallpkgs": "wallpkgs"
       }
     },
     "sops-nix": {
@@ -551,23 +550,6 @@
       "original": {
         "owner": "NotAShelf",
         "repo": "wallpkgs",
-        "type": "github"
-      }
-    },
-    "xdp-git": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1786358435,
-        "narHash": "sha256-3I0NXUoII8wEvynFawayMGA2fCpnmHTXBdAFYsfzYLg=",
-        "owner": "maxcabrajac",
-        "repo": "xdg-desktop-portal",
-        "rev": "dc5dbe0f360b680b47587c14bfe60aaa35d48c08",
-        "type": "github"
-      },
-      "original": {
-        "owner": "maxcabrajac",
-        "ref": "multiple_cfgs_per_dir_backport",
-        "repo": "xdg-desktop-portal",
         "type": "github"
       }
     },
