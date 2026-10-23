@@ -1,5 +1,5 @@
-{ config, lib, ... }: {
-	programs.niri.settings.outputs = config.host.monitors |> lib.mapAttrs (_: m: {
+{ config, lib, osConfig, ... }: {
+	programs.niri.settings.outputs = osConfig.monitors or {} |> lib.mapAttrs (_: m: {
 		mode = {
 			height = m.h;
 			width = m.w;

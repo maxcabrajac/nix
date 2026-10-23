@@ -1,0 +1,56 @@
+{ lib, ... }: {
+	os.base = { config, ... }: let
+		t = lib.types;
+		cfg = config.monitors;
+	in {
+		options = {
+			monitors = lib.mkOption {
+				type = t.attrsOf <| t.submodule {
+					options = let
+						optT = type: lib.mkOption { inherit type; };
+						numOpt = optT t.number;
+					in {
+						x = numOpt;
+						y = numOpt;
+						w = numOpt;
+						h = numOpt;
+						refresh = numOpt;
+
+						main = lib.mkOption {
+							type = t.bool;
+							default = false;
+						};
+					};
+				};
+
+				default = {};
+ 			};
+
+			mainMonitor = lib.mkOption {
+				type = t.nullOr t.str;
+				default = null;
+			};
+		};
+
+		config = let
+			cfgList = cfg |> lib.attrValues;
+			monitorCount = cfgList |> lib.length;
+		in
+			(lib.mkIf (monitorCount != 0) <| {
+				assertions = [
+					{
+						assertion = let
+							mainMonitorCount = cfgList |> lib.filter (x: x.main) |> lib.length;
+						in mainMonitorCount == 1;
+						message = "Monitor option must have exactly one main monitor.";
+					}
+				];
+
+				mainMonitor = cfg
+					|> lib.filterAttrs (_: m: m.main)
+					|> lib.attrNames
+					|> lib.head
+				;
+			});
+	};
+}
