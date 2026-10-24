@@ -82,6 +82,16 @@ in {
 						monitor=$1
 						refreshMonitorData() {
 							monitorData=$(${niriMsg} workspaces | ${jq} --arg monitor "$monitor" '
+								def batch(batchSize):
+									batchSize as $batchSize
+									| (length / batchSize | ceil) as $batchCount
+
+									| [
+										range($batchCount) as $i
+										| .[$batchSize * $i : $batchSize * ($i + 1)]
+									]
+								;
+
 								map(select(.output == $monitor))
 								| sort_by(.idx)
 								| map({
@@ -89,6 +99,9 @@ in {
 									focused: .is_active,
 									empty: .active_window_id == null
 								})
+								| batch(3)
+								| transpose
+								| map(map(select(.)))
 							')
 						}
 
@@ -96,10 +109,13 @@ in {
 							refreshMonitorData
 						done
 					'';
-					on = [ "WorkspaceActivated" ];
+					on = [
+						"WorkspaceActivated"
+						"WorkspacesChanged"
+					];
 					run = /* bash */ ''
 						refreshMonitorData
-						echo "[$monitorData]"
+						echo "$monitorData"
 					'';
 				};
 			};
