@@ -35,8 +35,6 @@
 		walker = {
 			url = "github:abenz1267/walker";
 			inputs.nixpkgs.follows = "nixpkgs";
-			inputs.systems.follows = "systems";
-			inputs.elephant.url = "github:Ori-Riaru/elephant/fix-buildgomodules";
 		};
 
 		cachy-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
@@ -69,15 +67,12 @@
 		];
 
 		extra-substituters = [
-			"https://walker-git.cachix.org"
-			# TODO: Follow https://github.com/xddxdd/nix-cachyos-kernel/issues/110
-			# "https://attic.xuyh0120.win/lantian" # cachy-kernel
+			"https://cache.lantian.pub/lantian" # cachy-kernel
 			"https://nix-cache.tokidoki.dev/tokidoki" # nix-gaming-edge
 		];
 
 		extra-trusted-public-keys = [
-			"walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
-			"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" # cachy-kernel
+			"lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ=" # cachy-kernel
 			"tokidoki:MD4VWt3kK8Fmz3jkiGoNRJIW31/QAm7l1Dcgz2Xa4hk=" # nix-gaming-edge
 		];
 	};
