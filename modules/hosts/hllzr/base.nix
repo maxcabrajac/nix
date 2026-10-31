@@ -13,6 +13,8 @@
 			networkmanager.enable = true;
 		};
 
+		services.openssh.enable = true;
+
 		monitors = {
 			"eDP-1" = {
 				x = 0;
