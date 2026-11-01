@@ -14,6 +14,10 @@
 		};
 
 		services.openssh.enable = true;
+		services.systemUpgrader = {
+			enable = true;
+			flake = "github:maxcabrajac/nix";
+		};
 
 		monitors = {
 			"eDP-1" = {
