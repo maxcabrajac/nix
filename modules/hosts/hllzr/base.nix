@@ -5,7 +5,7 @@
 			efi.canTouchEfiVariables = true;
 		};
 
-		services.displayManager.ly.enable = true;
+		services.displayManager.gdm.enable = true;
 		programs.steam.enable = true;
 
 		networking = {
