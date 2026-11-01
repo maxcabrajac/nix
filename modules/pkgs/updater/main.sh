@@ -14,6 +14,7 @@ BRANCH=""
 NH_FLAGS="--accept-flake-config --refresh --bypass-root-check"
 NIX_FLAGS=""
 CONFIRM="true"
+BUILD_WRAPPER=""
 
 while [[ $# -gt 0 ]]; do
 	ARG="$1"
@@ -45,6 +46,7 @@ while [[ $# -gt 0 ]]; do
 		# Profiles
 		--slow)
 			append NH_FLAGS --cores 1 --max-jobs 1
+			BUILD_WRAPPER="nice -n100"
 		;;
 		--no-pretty)
 			append NH_FLAGS --no-nom
@@ -70,7 +72,7 @@ if [[ "$OP" != "build" ]]; then
 fi
 
 # shellcheck disable=SC2086
-nh os build $NH_FLAGS "${FLAKE}${BRANCH}" -- $NIX_FLAGS
+$BUILD_WRAPPER nh os build $NH_FLAGS "${FLAKE}${BRANCH}" -- $NIX_FLAGS
 [[ "$OP" == "build" ]] && exit 0
 
 if "$CONFIRM"; then
