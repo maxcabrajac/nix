@@ -83,7 +83,11 @@ fi
 
 STC=$OUT/bin/switch-to-configuration
 
-sudo "$STC" boot
+sudo systemd-inhibit \
+	--what=sleep:shutdown \
+	--who="System Upgrader" \
+	--why="Writting boot options" \
+	"$STC" boot
 [[ "$OP" == "boot" ]] && exit 0
 
 sudo "$STC" test
