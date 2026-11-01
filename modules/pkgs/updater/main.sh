@@ -93,7 +93,7 @@ $BUILD_WRAPPER nh os build $NH_FLAGS "${FLAKE}${BRANCH}" -- $NIX_FLAGS
 [[ "$OP" == "build" ]] && exit 0
 
 if "$CONFIRM"; then
-	read -p "Apply? (y) " -n 1 -r
+	read -r -p "Apply? (y) "
 	if ! [[ "$REPLY" =~ ^[Yy]?$ ]]; then
 		echo "Cancelled"
 		exit 1
@@ -109,7 +109,7 @@ if "$RECREATE_BOOT_ENTRY" || ! grep -q "$REAL_OUT" <(readlink /nix/var/nix/profi
 		--why="Writting boot options" \
 		nixos-rebuild boot --store-path "$REAL_OUT"
 else
-	echo "Skipped writting boot entry"
+	echo "Skipped writting boot entry."
 fi
 [[ "$OP" == "boot" ]] && exit 0
 
