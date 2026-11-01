@@ -8,6 +8,20 @@ append() {
 	target_var="$target_var $*"
 }
 
+log_on_failure() {
+	local output
+	local exit_code
+	output="$("$@" 2>&1)"
+	exit_code="$?"
+
+	if [ "$exit_code" -ne 0 ]; then
+		echo "Failed while running: $*" >&2
+		echo "Output:" >&2
+		echo "$output" >&2
+		return $exit_code
+	fi
+}
+
 OP=""
 FLAKE=""
 BRANCH=""
@@ -87,16 +101,17 @@ if "$CONFIRM"; then
 fi
 
 REAL_OUT=$(readlink "$OUT")
-
 if "$RECREATE_BOOT_ENTRY" || ! grep -q "$REAL_OUT" <(readlink /nix/var/nix/profiles/system-*-link); then
-	sudo systemd-inhibit \
+	echo "Writting boot entry..."
+	log_on_failure sudo systemd-inhibit \
 		--what=sleep:shutdown \
 		--who="System Upgrader" \
 		--why="Writting boot options" \
 		nixos-rebuild boot --store-path "$REAL_OUT"
 else
-	echo "WARN: Skipping boot entry creation"
+	echo "Skipped writting boot entry"
 fi
 [[ "$OP" == "boot" ]] && exit 0
 
-sudo nixos-rebuild test --store-path "$REAL_OUT"
+echo "Activating..."
+log_on_failure sudo nixos-rebuild test --store-path "$REAL_OUT"
