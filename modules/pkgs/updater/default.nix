@@ -51,6 +51,19 @@ in {
 			(lib.mkIf cfg.install {
 				environment.systemPackages = [ cfg.finalPackage ];
 			})
+			(lib.mkIf cfg.enable {
+				systemd = {
+					services.systemUpgrader = {
+						script = "${lib.getExe cfg.finalPackage} boot --yes --slow --no-recreate-entry --no-pretty";
+						startAt = "daily";
+						wants = [ "network-online.target" ];
+						after = [ "network-online.target" ];
+						serviceConfig.Type = "oneshot";
+						path = [ config.nix.package ];
+					};
+					timers.systemUpgrader.timerConfig.Persistent = "true";
+				};
+			})
 		];
 	};
 }
