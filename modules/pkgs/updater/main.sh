@@ -15,6 +15,7 @@ NH_FLAGS="--accept-flake-config --refresh --bypass-root-check"
 NIX_FLAGS=""
 CONFIRM="true"
 BUILD_WRAPPER=""
+RECREATE_BOOT_ENTRY="true"
 
 while [[ $# -gt 0 ]]; do
 	ARG="$1"
@@ -51,7 +52,9 @@ while [[ $# -gt 0 ]]; do
 		--no-pretty)
 			append NH_FLAGS --no-nom
 		;;
-
+		--no-recreate-entry)
+			RECREATE_BOOT_ENTRY=false
+		;;
 		*)
 			echo "Unknown arg: $ARG"
 			exit 1
@@ -83,13 +86,17 @@ if "$CONFIRM"; then
 	fi
 fi
 
-STC=$OUT/bin/switch-to-configuration
+REAL_OUT=$(readlink "$OUT")
 
-sudo systemd-inhibit \
-	--what=sleep:shutdown \
-	--who="System Upgrader" \
-	--why="Writting boot options" \
-	"$STC" boot
+if "$RECREATE_BOOT_ENTRY" || ! grep -q "$REAL_OUT" <(readlink /nix/var/nix/profiles/system-*-link); then
+	sudo systemd-inhibit \
+		--what=sleep:shutdown \
+		--who="System Upgrader" \
+		--why="Writting boot options" \
+		nixos-rebuild boot --store-path "$REAL_OUT"
+else
+	echo "WARN: Skipping boot entry creation"
+fi
 [[ "$OP" == "boot" ]] && exit 0
 
-sudo "$STC" test
+sudo nixos-rebuild test --store-path "$REAL_OUT"
