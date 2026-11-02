@@ -1,4 +1,4 @@
-{ lib, withSystem, ... }: let
+{ lib, ... }: let
 	t = lib.types;
 in {
 	packages.os = {
@@ -12,14 +12,13 @@ in {
 			text = builtins.readFile ./main.sh;
 		};
 
-	os.base = { config, pkgs, ... }: let
+	os.base = { config, pkgs, withSystem, ... }: let
 		cfg = config.services.systemUpgrader;
 	in {
 		options.services.systemUpgrader = {
 			package = lib.mkOption {
 				type = t.package;
-				# TODO: Add a helper for this
-				default = withSystem pkgs.stdenv.hostPlatform.system ({ config, ... }: config.packages.os);
+				default = withSystem.packages.os;
 			};
 			# TODO: write updater service
 			enable = lib.mkOption {
