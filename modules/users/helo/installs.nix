@@ -4,7 +4,6 @@
 		home.packages = with pkgs; [
 			kitty
 			lf
-			neovim
 			nh
 			pavucontrol
 		];
