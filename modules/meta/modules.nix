@@ -4,6 +4,7 @@
 		hm = {};
 		host = { imports = [ config.os.base ]; };
 		user = { imports = [ config.hm.base ]; };
+		nvf = {};
 	};
 in {
 	imports = moduleSystems
