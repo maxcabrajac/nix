@@ -6,15 +6,23 @@
 			opt = {
 				indexes = [];
 				experimental.options_file = let
-						# search-opt breaks if config.docs has a single value.
-						# Add a placeholder empty json so it doesn't break
-						baseConfig = { placeholder = pkgs.writeText "search-opt-placeholder" "{}"; };
-					in baseConfig // (config.docs |> lib.mapAttrs' (name: value: {
-					name = if name == "self"
-						then "hm"
-						else name;
-					value = value.optionsJSON + "/share/doc/nixos/options.json";
-				}));
+					# search-opt breaks if config.docs has a single value.
+					# Add a placeholder empty json so it doesn't break
+					baseConfig = { placeholder = pkgs.writeText "search-opt-placeholder" "{}"; };
+				in
+					config.optionSets
+					|> lib.mapAttrs (_: options:
+						pkgs.nixosOptionsDoc {
+							inherit options;
+							warningsAreErrors = false;
+							transformOptions = opt: opt // {
+								# Remove declarations so it doesn't bloat the output
+								declarations = [];
+							};
+						}
+						|> (x: x.optionsJSON + "/share/doc/nixos/options.json")
+					)
+					|> (x: baseConfig // x);
 			};
 
 			pkg = {
