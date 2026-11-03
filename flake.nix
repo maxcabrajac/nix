@@ -18,8 +18,7 @@
 		};
 
 		niri-flake = {
-			# TODO: Watch https://github.com/epireyn/niri-flake/issues/238
-			url = "github:maxcabrajac/niri-flake/settings-fmt";
+			url = "github:epireyn/niri-flake";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
