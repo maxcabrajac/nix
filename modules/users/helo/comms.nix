@@ -1,7 +1,7 @@
 {
 	user.helo = { pkgs, ... }: {
-		programs.discord.enable = true;
 		home.packages = with pkgs; [
+			discord
 			telegram-desktop
 			element-desktop
 		];
