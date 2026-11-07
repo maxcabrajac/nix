@@ -3,10 +3,10 @@
 		|> lib.mapAttrs' (name: module: {
 			name = "nvf-${name}";
 			value = { pkgs }:
-				inputs.nvf.lib.neovimConfiguration {
-					inherit pkgs;
+				lib.makeOverridable inputs.nvf.lib.neovimConfiguration {
+					pkgs = pkgs;
 					modules = [ module ];
-				} |> (x: x.neovim)
+				} |> (x: x.neovim // { nvfRaw = x; })
 			;
 		})
 	;
