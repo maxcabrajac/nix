@@ -8,13 +8,6 @@
 		# Load nvidia driver for Xorg and Wayland
 		services.xserver.videoDrivers = ["nvidia"];
 
-		hardware.nvidia = {
-			open = false;
-			# Enable the Nvidia settings menu,
-			# accessible via `nvidia-settings`.
-			nvidiaSettings = false;
-		};
-
 		console = {
 			font = "Lat2-Terminus16";
 			keyMap = "colemak";
