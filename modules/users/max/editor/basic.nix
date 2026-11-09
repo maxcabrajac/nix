@@ -20,7 +20,9 @@
 				bash.enable = true;
 				python = {
 					enable = true;
-					lsp.servers = ["pyrefly"];
+					# TODO: https://github.com/NixOS/nixpkgs/issues/585245
+					# lsp.servers = ["pyrefly"];
+					lsp.servers = ["pyright"];
 				};
 				clang.enable = true;
 				go.enable = true;
