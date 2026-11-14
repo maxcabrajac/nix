@@ -7,6 +7,6 @@
 		];
 
 		programs.niri.package = pkgs.niri;
-		xdg.configFile.niri-config.enable = lib.mkForce (cfg.enable && cfg.finalConfig != null);
+		xdg.configFile.niri-config.enable = lib.mkForce (cfg.enable && cfg.finalConfigFile != null);
 	};
 }
