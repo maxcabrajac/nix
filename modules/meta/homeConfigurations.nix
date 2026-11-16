@@ -1,19 +1,16 @@
-{ config, lib, inputs, ... }: let
+{ config, lib, inputs, withSystem, ... }: let
 	overlays = config.flake.overlays |> lib.attrValues;
 
 	# TODO: Refactor this. This is bad...
 	hmConfig = { module, system }: inputs.home-manager.lib.homeManagerConfiguration {
-		pkgs = import inputs.nixpkgs { inherit system overlays; };
+		pkgs = withSystem system ({ pkgs, ... }: pkgs);
 		extraSpecialArgs = {
 			# TODO: Remove this
 			inherit inputs;
 
 			osConfig = null;
 		};
-		modules = [
-			module
-			{ nixpkgs.config.allowUnfree = true; }
-		];
+		modules = [module];
 	};
 
 	getUsername = (x:
