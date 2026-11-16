@@ -41,8 +41,9 @@
 				};
 				"[HM]" = {
 					hm-switch.command = ''
-						variant=''${1-''${HOME_MANAGER_VARIANT-default}}
-						nh home switch $PRJ_ROOT -a -c "''${USER}#''${variant}@$(uname -m)-linux"
+						SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+						NAME=''${1-''${HOME_MANAGER_STANDALONE_NAME-''${USER}}}
+						nh home build $PRJ_ROOT -a -c "''${SYSTEM}-''${NAME}"
 					'';
 				};
 				"[general commands]" = {

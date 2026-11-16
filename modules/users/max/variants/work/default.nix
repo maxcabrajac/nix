@@ -1,6 +1,5 @@
-{ config, inputs, ... }: {
-	userAliases.max = [ "maximilian.cabrajac" ];
-	user."max#work" = let
+{ config, ... }: {
+	user."maximilian.cabrajac" = let
 		enable = { enable = true; };
 	in
 		{ pkgs, ... }: {

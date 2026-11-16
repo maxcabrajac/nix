@@ -1,70 +1,39 @@
-{ config, lib, inputs, withSystem, ... }: let
-	overlays = config.flake.overlays |> lib.attrValues;
-
-	# TODO: Refactor this. This is bad...
-	hmConfig = { module, system }: inputs.home-manager.lib.homeManagerConfiguration {
-		pkgs = withSystem system ({ pkgs, ... }: pkgs);
-		extraSpecialArgs = {
-			# TODO: Remove this
-			inherit inputs;
-
-			osConfig = null;
-		};
-		modules = [module];
-	};
-
-	getUsername = (x:
-		x
-		|> lib.splitString "#"
-		|> lib.head
-	);
-in {
-	options = {
-		userAliases = lib.mkOption {
-			type = lib.types.attrsOf <| lib.types.listOf lib.types.str;
-		};
-	};
-
+{ config, lib, inputs, withSystem, ... }: {
 	config = {
-		userAliases = config.user
-			|> lib.attrNames
-			|> map getUsername
-			|> lib.unique
-			|> (names: lib.genAttrs names (x: [x]))
-		;
+		perSystem = { pkgs, ... }: {
+			options.homeConfigurations = lib.mkOption {
+				type = lib.types.lazyAttrsOf lib.types.raw;
+				internal = true;
+				readOnly = true;
+			};
 
-		flake = {
-			homeConfigurations = config.systems
-				|> map (system:
-					config.user
-					|> lib.mapAttrs (name: module: let
-						baseUsername = getUsername name;
-						variant = name
-							|> lib.removePrefix "${baseUsername}"
-							|> lib.removePrefix "#"
-						;
-					in
-					 	config.userAliases.${baseUsername}
-						|> map (username: {
-							"${username}#${variant}@${system}" = hmConfig {
-								inherit system;
-								module.imports = [
-									module
-									{
-										home = {
-											inherit username;
-											sessionVariables.HOME_MANAGER_VARIANT = variant;
-										};
-									}
-								];
-							};
-						})
-					)
-					|> lib.attrValues
+			config.homeConfigurations =
+				config.user
+				|> lib.mapAttrs (username: module:
+					inputs.home-manager.lib.homeManagerConfiguration {
+						inherit pkgs;
+						extraSpecialArgs = {
+							# TODO: Remove these
+							inherit inputs;
+							osConfig = null;
+						};
+						modules = [
+							module
+							# Can this be moved somewhere else?
+							{ home.username = lib.mkDefault username; }
+						];
+					}
 				)
-				|> lib.flatten
-				|> lib.mergeAttrsList
 			;
 		};
+
+		flake.homeConfigurations = config.systems
+			|> lib.concatMap (s:
+				withSystem s ({ config, ... }: config.homeConfigurations)
+				|> lib.attrsToList
+				|> map (x: x // { name = "${s}-${x.name}"; })
+			)
+			|> lib.listToAttrs
+		;
 	};
 }
