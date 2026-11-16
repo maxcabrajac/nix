@@ -1,6 +1,6 @@
 { inputs, config, ... }: {
 	user.helo = {
-		imports = [ inputs.nvf.homeManagerModules.nvf ];
+		imports = [ inputs.nvf.homeModules.nvf ];
 		programs.nvf = {
 			enable = true;
 			defaultEditor = true;
