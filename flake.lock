@@ -295,26 +295,6 @@
         "type": "gitlab"
       }
     },
-    "greenluma": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1794605168,
-        "narHash": "sha256-CZbUyU5MhQLSkaQuNuUPnYO92n9De7TPzdatdu/b1iw=",
-        "owner": "AceSLS",
-        "repo": "SLSsteam",
-        "rev": "db6314bce380d94c709c4b1b0c45591271a38e04",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AceSLS",
-        "repo": "SLSsteam",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -628,7 +608,6 @@
         "cachy-kernel": "cachy-kernel",
         "flake-parts": "flake-parts_2",
         "fp-devshell": "fp-devshell",
-        "greenluma": "greenluma",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "mabar": "mabar",

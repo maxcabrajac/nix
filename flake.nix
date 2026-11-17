@@ -39,10 +39,6 @@
 
 		cachy-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 		nix-gaming-edge.url = "github:powerofthe69/nix-gaming-edge";
-		greenluma = {
-			url = "github:AceSLS/SLSsteam";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
 
 		nvf = {
 			url = "github:NotAShelf/nvf";
