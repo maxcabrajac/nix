@@ -1,0 +1,3 @@
+{ lib, ... }: {
+	flake = { inherit lib; };
+}
