@@ -8,7 +8,7 @@ in {
 		};
 
 		config.optionSets.hm = let
-			# When hm modules are use as part of nixos systems option names are prefixed with "home-manager.users.<username>"
+			# When hm modules are used as part of nixos systems option names are prefixed with "home-manager.users.<username>"
 			removeHmUsersPrefixFromOpt = opt: opt // lib.optionalAttrs (lib.lists.hasPrefix [ "home-manager" "users" ] opt.loc) {
 				loc = lib.drop 3 opt.loc;
 			};
