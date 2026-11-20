@@ -43,7 +43,7 @@
 					hm-switch.command = ''
 						SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
 						NAME=''${1-''${HOME_MANAGER_STANDALONE_NAME-''${USER}}}
-						nh home build $PRJ_ROOT -a -c "''${SYSTEM}-''${NAME}"
+						nh home switch $PRJ_ROOT -a -c "''${SYSTEM}-''${NAME}"
 					'';
 				};
 				"[general commands]" = {
